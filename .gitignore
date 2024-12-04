@@ -1,0 +1,5 @@
+.DS_Store
+.ruff_cache
+.venv
+.env
+__pycache__
