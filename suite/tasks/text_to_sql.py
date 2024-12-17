@@ -15,7 +15,9 @@ def compare(actual, expected) -> bool:
     return True
 
 
-def run(conn: psycopg.Connection, path: str, inp: str, agent_fn: callable, strict: bool) -> bool:
+def run(
+    conn: psycopg.Connection, path: str, inp: str, agent_fn: callable, strict: bool
+) -> bool:
     with open(f"{path}/eval.json", "r") as fp:
         gold_query = json.load(fp).get("query")
     query = agent_fn(conn, inp)

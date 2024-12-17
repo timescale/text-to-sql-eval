@@ -39,8 +39,12 @@ for i in range(len(questions)):
     eval_directory = evals_directory / str(i + 1).zfill(zfill)
     eval_directory.mkdir()
     with (eval_directory / "eval.json").open("w") as f:
-        json.dump({
-            "database": question["db_id"],
-            "question": question["question"],
-            "query": question["query"],
-        }, f, indent=4)
+        json.dump(
+            {
+                "database": question["db_id"],
+                "question": question["question"],
+                "query": question["query"],
+            },
+            f,
+            indent=4,
+        )

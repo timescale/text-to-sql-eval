@@ -4,10 +4,14 @@ from sql_metadata import Parser
 
 
 def compare(actual, expected, strict: bool) -> bool:
-    return set(actual) == set(expected) if strict else set(expected).issubset(set(actual))
+    return (
+        set(actual) == set(expected) if strict else set(expected).issubset(set(actual))
+    )
 
 
-def run(conn: psycopg.Connection, path: str, inp: str, agent_fn: callable, strict: bool) -> bool:
+def run(
+    conn: psycopg.Connection, path: str, inp: str, agent_fn: callable, strict: bool
+) -> bool:
     with open(f"{path}/eval.json", "r") as fp:
         query = json.load(fp).get("query")
     parser = Parser(query)
