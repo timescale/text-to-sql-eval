@@ -12,6 +12,7 @@ from tasks.text_to_sql import run as text_to_sql
 from baseline import text_to_sql as baseline_text_to_sql
 from baseline import get_tables as baseline_get_tables
 from pgai import get_tables as pgai_get_tables
+from pgai import text_to_sql as pgai_text_to_sql
 
 load_dotenv()
 
@@ -139,10 +140,7 @@ def eval(task, agent, dataset, strict):
     datasets = sorted(os.listdir("datasets") if dataset == "all" else [dataset])
     task_fn = get_tables if task == "get_tables" else text_to_sql
     if agent == "pgai":
-        if task == "get_tables":
-            agent_fn = pgai_get_tables
-        else:
-            raise NotImplementedError
+        agent_fn = pgai_text_to_sql if task == "text_to_sql" else pgai_get_tables
     elif agent == "baseline":
         agent_fn = (
             baseline_text_to_sql if task == "text_to_sql" else baseline_get_tables
