@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what are the rivers in the state of illinois",
+    "query": "SELECT river_name FROM river WHERE traverse  =  \"illinois\";"
+}

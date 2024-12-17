@@ -1,0 +1,5 @@
+{
+    "database": "scholar",
+    "question": "Which authors published papers in 2015 ?",
+    "query": "SELECT DISTINCT t1.authorid FROM writes AS t1 JOIN paper AS t2 ON t1.paperid  =  t2.paperid WHERE t2.year  =  2015;"
+}

@@ -1,0 +1,5 @@
+{
+    "database": "scholar",
+    "question": "Which paper from EMNLP 2010 was cited most ?",
+    "query": "SELECT DISTINCT t3.citedpaperid  ,  COUNT ( t3.citedpaperid ) FROM paper AS t1 JOIN cite AS t3 ON t1.paperid  =  t3.citedpaperid JOIN venue AS t2 ON t2.venueid  =  t1.venueid WHERE t1.year  =  2010 AND t2.venuename  =  \"EMNLP\" GROUP BY t3.citedpaperid ORDER BY COUNT ( t3.citedpaperid ) DESC;"
+}

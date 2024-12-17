@@ -1,0 +1,5 @@
+{
+    "database": "academic",
+    "question": "return me the total citations of all the papers in PVLDB .",
+    "query": "SELECT SUM ( t2.citation_num ) FROM publication AS t2 JOIN journal AS t1 ON t2.jid  =  t1.jid WHERE t1.name  =  \"PVLDB\";"
+}

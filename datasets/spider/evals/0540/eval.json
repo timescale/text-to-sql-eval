@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what are the major rivers in the us",
+    "query": "SELECT river_name FROM river;"
+}

@@ -1,0 +1,5 @@
+{
+    "database": "academic",
+    "question": "return me the authors who have more than 10 papers in the VLDB conference .",
+    "query": "SELECT t1.name FROM publication AS t4 JOIN conference AS t2 ON t4.cid  =  t2.cid JOIN writes AS t3 ON t3.pid  =  t4.pid JOIN author AS t1 ON t3.aid  =  t1.aid WHERE t2.name  =  \"VLDB\" GROUP BY t1.name HAVING COUNT ( DISTINCT t4.title )  >  10;"
+}

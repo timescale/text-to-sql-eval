@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "which is the highest peak not in alaska",
+    "query": "SELECT mountain_name FROM mountain WHERE mountain_altitude  =  ( SELECT MAX ( mountain_altitude ) FROM mountain WHERE state_name != \"alaska\" );"
+}

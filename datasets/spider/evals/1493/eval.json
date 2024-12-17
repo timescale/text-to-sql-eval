@@ -1,0 +1,5 @@
+{
+    "database": "restaurants",
+    "question": "where can we find some restaurants on bethel island rd in bethel island ?",
+    "query": "SELECT t2.house_number  ,  t1.name FROM restaurant AS t1 JOIN LOCATION AS t2 ON t1.id  =  t2.restaurant_id WHERE t2.city_name  =  \"bethel island\" AND t2.street_name  =  \"bethel island rd\";"
+}

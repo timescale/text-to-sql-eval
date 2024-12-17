@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what is the height of the highest point in the usa",
+    "query": "SELECT MAX ( highest_elevation ) FROM highlow;"
+}

@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "in what state is mount whitney",
+    "query": "SELECT state_name FROM mountain WHERE mountain_name  =  \"whitney\";"
+}

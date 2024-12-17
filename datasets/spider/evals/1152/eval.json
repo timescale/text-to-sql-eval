@@ -1,0 +1,5 @@
+{
+    "database": "yelp",
+    "question": "find all the restaurant in Pennsylvania",
+    "query": "SELECT t1.name FROM category AS t2 JOIN business AS t1 ON t2.business_id  =  t1.business_id WHERE t1.state  =  \"Pennsylvania\" AND t2.category_name  =  \"restaurant\";"
+}

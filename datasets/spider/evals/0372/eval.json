@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what is the most populous state through which the mississippi runs",
+    "query": "SELECT state_name FROM state WHERE population  =  ( SELECT MAX ( population ) FROM state WHERE state_name IN ( SELECT traverse FROM river WHERE river_name  =  \"mississippi\" ) ) AND state_name IN ( SELECT traverse FROM river WHERE river_name  =  \"mississippi\" );"
+}

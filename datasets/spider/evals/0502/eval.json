@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what state has the shortest river",
+    "query": "SELECT DISTINCT traverse FROM river WHERE LENGTH  =  ( SELECT MIN ( DISTINCT LENGTH ) FROM river );"
+}

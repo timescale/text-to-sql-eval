@@ -1,0 +1,5 @@
+{
+    "database": "scholar",
+    "question": "monte carlo simulation papers later than 2011",
+    "query": "SELECT DISTINCT t3.paperid FROM paperkeyphrase AS t2 JOIN keyphrase AS t1 ON t2.keyphraseid  =  t1.keyphraseid JOIN paper AS t3 ON t3.paperid  =  t2.paperid WHERE t1.keyphrasename  =  \"monte carlo simulation\" AND t3.year  >  2011;"
+}

@@ -1,0 +1,5 @@
+{
+    "database": "scholar",
+    "question": "who published the most in syntactic parsing ?",
+    "query": "SELECT DISTINCT COUNT ( t4.paperid )  ,  t3.authorid FROM paperkeyphrase AS t1 JOIN keyphrase AS t2 ON t1.keyphraseid  =  t2.keyphraseid JOIN paper AS t4 ON t4.paperid  =  t1.paperid JOIN writes AS t3 ON t3.paperid  =  t4.paperid WHERE t2.keyphrasename  =  \"syntactic parsing\" GROUP BY t3.authorid ORDER BY COUNT ( t4.paperid ) DESC;"
+}

@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "show me all the major lakes in the us",
+    "query": "SELECT lake_name FROM lake WHERE area  >  750;"
+}

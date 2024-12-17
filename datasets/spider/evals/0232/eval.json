@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "how many colorado rivers are there",
+    "query": "SELECT COUNT ( river_name ) FROM river WHERE river_name  =  \"colorado\";"
+}

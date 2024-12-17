@@ -1,0 +1,5 @@
+{
+    "database": "academic",
+    "question": "return me the year of \" Making database systems usable \" .",
+    "query": "SELECT YEAR FROM publication WHERE title  =  \"Making database systems usable\";"
+}

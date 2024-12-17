@@ -1,0 +1,5 @@
+{
+    "database": "restaurants",
+    "question": "how many places for french are there in palo alto ?",
+    "query": "SELECT COUNT ( * ) FROM restaurant AS t1 JOIN LOCATION AS t2 ON t1.id  =  t2.restaurant_id WHERE t2.city_name  =  \"palo alto\" AND t1.food_type  =  \"french\";"
+}

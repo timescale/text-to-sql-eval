@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "tell me what cities are in texas",
+    "query": "SELECT city_name FROM city WHERE state_name  =  \"texas\";"
+}

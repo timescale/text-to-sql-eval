@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "how many states does the missouri river run through",
+    "query": "SELECT COUNT ( traverse ) FROM river WHERE river_name  =  \"missouri\";"
+}

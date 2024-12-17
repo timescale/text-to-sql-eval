@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what state has the largest urban population",
+    "query": "SELECT state_name FROM city GROUP BY state_name ORDER BY SUM ( population ) DESC LIMIT 1;"
+}

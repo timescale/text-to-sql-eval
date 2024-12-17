@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "could you tell me what is the highest point in the state of texas",
+    "query": "SELECT highest_point FROM highlow WHERE state_name  =  \"texas\";"
+}

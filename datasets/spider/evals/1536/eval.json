@@ -1,0 +1,5 @@
+{
+    "database": "restaurants",
+    "question": "where is a good arabic restaurant in mountain view ?",
+    "query": "SELECT t2.house_number  ,  t1.name FROM restaurant AS t1 JOIN LOCATION AS t2 ON t1.id  =  t2.restaurant_id WHERE t2.city_name  =  \"mountain view\" AND t1.food_type  =  \"arabic\" AND t1.rating  >  2.5;"
+}

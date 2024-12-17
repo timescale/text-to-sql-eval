@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what states high point are higher than that of colorado",
+    "query": "SELECT state_name FROM highlow WHERE highest_elevation  >  ( SELECT highest_elevation FROM highlow WHERE state_name  =  \"colorado\" );"
+}

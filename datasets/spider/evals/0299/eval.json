@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what city in the united states has the highest population density",
+    "query": "SELECT city_name FROM city WHERE population  =  ( SELECT MAX ( population ) FROM city );"
+}

@@ -1,0 +1,5 @@
+{
+    "database": "academic",
+    "question": "return me the domain where \" H. V. Jagadish \" is focused .",
+    "query": "SELECT t2.name FROM domain_author AS t3 JOIN author AS t1 ON t3.aid  =  t1.aid JOIN DOMAIN AS t2 ON t2.did  =  t3.did WHERE t1.name  =  \"H. V. Jagadish\";"
+}

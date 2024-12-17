@@ -1,0 +1,5 @@
+{
+    "database": "scholar",
+    "question": "What is the year of publication of \" A Switching Architecture For ISDN \" ?",
+    "query": "SELECT DISTINCT title  ,  YEAR FROM paper WHERE title  =  \"A Switching Architecture For ISDN\";"
+}

@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "where is massachusetts",
+    "query": "SELECT country_name FROM state WHERE state_name  =  \"massachusetts\";"
+}

@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what is the biggest capital city in the us",
+    "query": "SELECT city_name FROM city WHERE population  =  ( SELECT MAX ( t1.population ) FROM state AS t2 JOIN city AS t1 ON t2.capital  =  t1.city_name );"
+}

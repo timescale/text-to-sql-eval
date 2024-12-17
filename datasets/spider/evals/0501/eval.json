@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "how many major rivers cross ohio",
+    "query": "SELECT COUNT ( river_name ) FROM river WHERE LENGTH  >  750 AND traverse  =  \"ohio\";"
+}

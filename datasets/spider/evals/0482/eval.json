@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what are the lakes in states bordering texas",
+    "query": "SELECT lake_name FROM lake WHERE state_name IN ( SELECT border FROM border_info WHERE state_name  =  \"texas\" );"
+}

@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "which states lie on the largest river in the united states",
+    "query": "SELECT traverse FROM river WHERE LENGTH  =  ( SELECT MAX ( LENGTH ) FROM river );"
+}

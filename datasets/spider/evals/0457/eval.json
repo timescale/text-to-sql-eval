@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "how many rivers do not traverse the state with the capital albany",
+    "query": "SELECT COUNT ( river_name ) FROM river WHERE traverse NOT IN ( SELECT state_name FROM state WHERE capital  =  \"albany\" );"
+}

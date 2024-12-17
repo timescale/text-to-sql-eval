@@ -390,6 +390,27 @@ wheels = [
 ]
 
 [[package]]
+name = "sql-metadata"
+version = "2.15.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "sqlparse" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/c3/98/6a67f99196742054762d6965cc0b4685d919f733d24243540c399843b83a/sql_metadata-2.15.0.tar.gz", hash = "sha256:77de90f0eea2981547c7f96cd7fce3a9b854d06572b4e0346637bdb178ce4235", size = 22437 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a5/dc/04c4858753bb5f261a005ea5cd1975638f9e4be02b622773b6b46bcedeff/sql_metadata-2.15.0-py3-none-any.whl", hash = "sha256:69648f9b4a46bcf5651f825e587469eba3cbc3f41307e816d5db36a284fb96d7", size = 22372 },
+]
+
+[[package]]
+name = "sqlparse"
+version = "0.5.3"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/e5/40/edede8dd6977b0d3da179a342c198ed100dd2aba4be081861ee5911e4da4/sqlparse-0.5.3.tar.gz", hash = "sha256:09f67787f56a0b16ecdbde1bfc7f5d9c3371ca683cfeaa8e6ff60b4807ec9272", size = 84999 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a9/5c/bfd6bd0bf979426d405cc6e71eceb8701b148b16c21d2dc3c261efc61c7b/sqlparse-0.5.3-py3-none-any.whl", hash = "sha256:cf2196ed3418f3ba5de6af7e82c694a9fbdbfecccdfc72e281548517081f16ca", size = 44415 },
+]
+
+[[package]]
 name = "text-to-sql-eval"
 version = "0.1.0"
 source = { virtual = "." }
@@ -400,6 +421,7 @@ dependencies = [
     { name = "pydantic" },
     { name = "python-dotenv" },
     { name = "simplejson" },
+    { name = "sql-metadata" },
 ]
 
 [package.dev-dependencies]
@@ -415,6 +437,7 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.10.3" },
     { name = "python-dotenv", specifier = ">=1.0.1" },
     { name = "simplejson", specifier = ">=3.19.3" },
+    { name = "sql-metadata", specifier = ">=2.15.0" },
 ]
 
 [package.metadata.requires-dev]

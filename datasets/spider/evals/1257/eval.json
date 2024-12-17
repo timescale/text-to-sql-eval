@@ -1,0 +1,5 @@
+{
+    "database": "academic",
+    "question": "return me the references of \" Making database systems usable \" .",
+    "query": "SELECT reference_num FROM publication WHERE title  =  \"Making database systems usable\";"
+}

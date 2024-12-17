@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what is the population density in the state with capital austin",
+    "query": "SELECT density FROM state WHERE capital  =  \"austin\";"
+}

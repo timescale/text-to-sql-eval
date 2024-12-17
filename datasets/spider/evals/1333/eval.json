@@ -1,0 +1,5 @@
+{
+    "database": "academic",
+    "question": "return me the number of keywords .",
+    "query": "SELECT COUNT ( DISTINCT keyword ) FROM keyword;"
+}

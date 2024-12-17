@@ -1,0 +1,5 @@
+{
+    "database": "academic",
+    "question": "return me the number of papers after 2000 .",
+    "query": "SELECT COUNT ( DISTINCT title ) FROM publication WHERE YEAR  >  2000;"
+}

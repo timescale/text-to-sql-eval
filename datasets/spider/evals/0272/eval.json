@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what are the cities of the state with the highest point",
+    "query": "SELECT city_name FROM city WHERE state_name IN ( SELECT state_name FROM highlow WHERE highest_elevation  =  ( SELECT MAX ( highest_elevation ) FROM highlow ) );"
+}

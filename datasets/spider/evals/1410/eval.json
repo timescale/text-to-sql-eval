@@ -1,0 +1,5 @@
+{
+    "database": "academic",
+    "question": "return me the paper after 2000 with the most citations .",
+    "query": "SELECT title FROM publication WHERE YEAR  >  2000 ORDER BY citation_num DESC LIMIT 1;"
+}

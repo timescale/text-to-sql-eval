@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what is the state with the largest population density",
+    "query": "SELECT state_name FROM state WHERE density  =  ( SELECT MAX ( density ) FROM state );"
+}

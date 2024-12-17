@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what cities in wyoming have the highest number of citizens",
+    "query": "SELECT city_name FROM city WHERE population  =  ( SELECT MAX ( population ) FROM city WHERE state_name  =  \"wyoming\" ) AND state_name  =  \"wyoming\";"
+}

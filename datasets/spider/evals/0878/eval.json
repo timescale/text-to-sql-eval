@@ -1,0 +1,5 @@
+{
+    "database": "scholar",
+    "question": "who does Noah A Smith collaborate with ?",
+    "query": "SELECT DISTINCT t1.authorid FROM writes AS t3 JOIN author AS t2 ON t3.authorid  =  t2.authorid JOIN writes AS t4 ON t4.paperid  =  t3.paperid JOIN author AS t1 ON t4.authorid  =  t1.authorid WHERE t2.authorname  =  \"Noah A Smith\";"
+}

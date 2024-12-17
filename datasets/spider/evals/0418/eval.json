@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what states border the most populous state",
+    "query": "SELECT border FROM border_info WHERE state_name  =  ( SELECT state_name FROM state WHERE population  =  ( SELECT MAX ( population ) FROM state ) );"
+}

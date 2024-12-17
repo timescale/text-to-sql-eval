@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what is the total length of all rivers in the usa",
+    "query": "SELECT SUM ( LENGTH ) FROM river;"
+}

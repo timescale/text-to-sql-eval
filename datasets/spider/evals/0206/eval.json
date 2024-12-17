@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "which states border no other states",
+    "query": "SELECT state_name FROM state WHERE state_name NOT IN ( SELECT state_name FROM border_info );"
+}

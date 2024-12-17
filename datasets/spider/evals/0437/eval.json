@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what state has the highest elevation",
+    "query": "SELECT state_name FROM highlow WHERE highest_elevation  =  ( SELECT MAX ( highest_elevation ) FROM highlow );"
+}

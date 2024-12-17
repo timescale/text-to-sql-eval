@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "how many states have a city named springfield",
+    "query": "SELECT COUNT ( state_name ) FROM city WHERE city_name  =  \"springfield\";"
+}

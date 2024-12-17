@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what is the highest point in the states bordering colorado",
+    "query": "SELECT highest_point FROM highlow WHERE state_name IN ( SELECT border FROM border_info WHERE state_name  =  \"colorado\" ) ORDER BY highest_elevation DESC LIMIT 1;"
+}

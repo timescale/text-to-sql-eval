@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what is the smallest city in alaska",
+    "query": "SELECT city_name FROM city WHERE population  =  ( SELECT MIN ( population ) FROM city WHERE state_name  =  \"alaska\" ) AND state_name  =  \"alaska\";"
+}

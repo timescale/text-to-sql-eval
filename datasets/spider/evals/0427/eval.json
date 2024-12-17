@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "which is the density of the state that the largest river in the united states runs through",
+    "query": "SELECT density FROM state WHERE state_name IN ( SELECT traverse FROM river WHERE LENGTH  =  ( SELECT MAX ( LENGTH ) FROM river ) );"
+}

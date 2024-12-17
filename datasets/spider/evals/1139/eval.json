@@ -1,0 +1,5 @@
+{
+    "database": "yelp",
+    "question": "Find the cities of businesses rated below 1.5",
+    "query": "SELECT city FROM business WHERE rating  <  1.5;"
+}

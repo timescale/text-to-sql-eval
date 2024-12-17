@@ -1,0 +1,5 @@
+{
+    "database": "yelp",
+    "question": "Find all states in which there is a Whataburger",
+    "query": "SELECT state FROM business WHERE name  =  \"Whataburger\";"
+}

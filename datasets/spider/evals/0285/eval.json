@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what are the population densities of each us state",
+    "query": "SELECT density FROM state;"
+}

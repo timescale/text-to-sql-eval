@@ -1,0 +1,5 @@
+{
+    "database": "scholar",
+    "question": "What is oren etzioni 's latest paper ?",
+    "query": "SELECT DISTINCT t2.paperid FROM writes AS t2 JOIN author AS t1 ON t2.authorid  =  t1.authorid JOIN paper AS t3 ON t2.paperid  =  t3.paperid WHERE t1.authorname  =  \"oren etzioni\" ORDER BY t3.year DESC;"
+}

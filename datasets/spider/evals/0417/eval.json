@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what states border texas and have a major river",
+    "query": "SELECT state_name FROM border_info WHERE border  =  \"texas\" AND state_name IN ( SELECT traverse FROM river WHERE LENGTH  >  750 );"
+}

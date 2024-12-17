@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what is the capital of states that have cities named durham",
+    "query": "SELECT t2.capital FROM state AS t2 JOIN city AS t1 ON t2.state_name  =  t1.state_name WHERE t1.city_name  =  \"durham\";"
+}

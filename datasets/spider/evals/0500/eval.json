@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "name all the lakes of us",
+    "query": "SELECT lake_name FROM lake;"
+}

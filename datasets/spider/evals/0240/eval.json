@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "how many people live in the united states",
+    "query": "SELECT SUM ( population ) FROM state;"
+}

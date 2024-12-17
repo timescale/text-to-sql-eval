@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what rivers run through the state with the lowest point in the usa",
+    "query": "SELECT river_name FROM river WHERE traverse IN ( SELECT state_name FROM highlow WHERE lowest_elevation  =  ( SELECT MIN ( lowest_elevation ) FROM highlow ) );"
+}

@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what are the biggest rivers in texas",
+    "query": "SELECT river_name FROM river WHERE LENGTH  =  ( SELECT MAX ( LENGTH ) FROM river WHERE traverse  =  \"texas\" ) AND traverse  =  \"texas\";"
+}

@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "kentucky borders how many states",
+    "query": "SELECT COUNT ( border ) FROM border_info WHERE state_name  =  \"kentucky\";"
+}

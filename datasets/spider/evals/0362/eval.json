@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "which is the lowest point of the states that the mississippi runs through",
+    "query": "SELECT lowest_point FROM highlow WHERE state_name IN ( SELECT traverse FROM river WHERE river_name  =  \"mississippi\" ) ORDER BY lowest_elevation LIMIT 1;"
+}

@@ -1,0 +1,5 @@
+{
+    "database": "scholar",
+    "question": "Has mirella lapata written any papers in 2016 ?",
+    "query": "SELECT DISTINCT COUNT ( t3.paperid )  ,  t2.authorid FROM writes AS t2 JOIN author AS t1 ON t2.authorid  =  t1.authorid JOIN paper AS t3 ON t2.paperid  =  t3.paperid WHERE t1.authorname  =  \"mirella lapata\" AND t3.year  =  2016 GROUP BY t2.authorid;"
+}

@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "give me all the states of usa",
+    "query": "SELECT state_name FROM state;"
+}

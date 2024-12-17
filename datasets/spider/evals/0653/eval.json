@@ -1,0 +1,5 @@
+{
+    "database": "scholar",
+    "question": "machine networks for one shot learning",
+    "query": "SELECT DISTINCT paperid FROM paper WHERE title  =  \"machine networks for one shot learning\";"
+}

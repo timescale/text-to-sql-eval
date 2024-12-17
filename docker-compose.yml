@@ -1,14 +1,12 @@
 services:
   db:
-    image: timescale/timescaledb:latest-pg16
+    image: postgres:16
     ports:
       - 5432:5432
     environment:
       POSTGRES_PASSWORD: postgres
     volumes:
-      - timescale_data:/var/lib/postgresql/data
-      - ./datasets:/datasets
-      - ./init.sh:/docker-entrypoint-initdb.d/init.sh
+      - data:/var/lib/postgresql/data
 
 volumes:
-  timescale_data:
+  data:

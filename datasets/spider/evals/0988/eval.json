@@ -1,0 +1,5 @@
+{
+    "database": "scholar",
+    "question": "who is the most cited author at CVPR ?",
+    "query": "SELECT DISTINCT COUNT ( DISTINCT t4.citingpaperid )  ,  t1.authorid FROM venue AS t3 JOIN paper AS t2 ON t3.venueid  =  t2.venueid JOIN writes AS t1 ON t1.paperid  =  t2.paperid JOIN cite AS t4 ON t1.paperid  =  t4.citedpaperid WHERE t3.venuename  =  \"CVPR\" GROUP BY t1.authorid ORDER BY COUNT ( DISTINCT t4.citingpaperid ) DESC;"
+}

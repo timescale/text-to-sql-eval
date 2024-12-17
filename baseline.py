@@ -99,7 +99,7 @@ group by relname;
             },
             {
                 "role": "user",
-                "content": f"Generate a SQL query that answers the following question:\n\n{inp}",
+                "content": f"Generate a SQL query for PostgreSQL that answers the following question:\n\n{inp}",
             },
         ],
         model="gpt-4o-mini",

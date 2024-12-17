@@ -1,0 +1,5 @@
+{
+    "database": "academic",
+    "question": "return me the authors who have papers in VLDB conference before 2002 after 1995 .",
+    "query": "SELECT t1.name FROM publication AS t4 JOIN conference AS t2 ON t4.cid  =  t2.cid JOIN writes AS t3 ON t3.pid  =  t4.pid JOIN author AS t1 ON t3.aid  =  t1.aid WHERE t2.name  =  \"VLDB\" AND t4.year  <  2002 AND t4.year  >  1995;"
+}

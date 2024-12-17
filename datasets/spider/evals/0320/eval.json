@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what is the capital of the state with the longest river",
+    "query": "SELECT capital FROM state WHERE state_name IN ( SELECT traverse FROM river WHERE LENGTH  =  ( SELECT MAX ( LENGTH ) FROM river ) );"
+}

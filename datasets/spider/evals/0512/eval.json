@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what is the largest state traversed by the rio grande river",
+    "query": "SELECT state_name FROM state WHERE area  =  ( SELECT MAX ( area ) FROM state WHERE state_name IN ( SELECT traverse FROM river WHERE river_name  =  \"rio grande\" ) ) AND state_name IN ( SELECT traverse FROM river WHERE river_name  =  \"rio grande\" );"
+}

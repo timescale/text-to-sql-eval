@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "how many citizens in boulder",
+    "query": "SELECT population FROM city WHERE city_name  =  \"boulder\";"
+}

@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what are the populations of all the major cities in wisconsin",
+    "query": "SELECT population FROM city WHERE population  >  150000 AND state_name  =  \"wisconsin\";"
+}

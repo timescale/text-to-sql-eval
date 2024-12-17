@@ -1,0 +1,5 @@
+{
+    "database": "scholar",
+    "question": "brian curless 's papers on convolution",
+    "query": "SELECT DISTINCT t1.authorid  ,  t3.paperid FROM paperkeyphrase AS t2 JOIN keyphrase AS t5 ON t2.keyphraseid  =  t5.keyphraseid JOIN paper AS t3 ON t3.paperid  =  t2.paperid JOIN writes AS t4 ON t4.paperid  =  t3.paperid JOIN author AS t1 ON t4.authorid  =  t1.authorid WHERE t1.authorname  =  \"brian curless\" AND t5.keyphrasename  =  \"convolution\";"
+}

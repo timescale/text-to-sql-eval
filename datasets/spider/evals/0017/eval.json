@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what is the size of new mexico",
+    "query": "SELECT area FROM state WHERE state_name  =  \"new mexico\";"
+}

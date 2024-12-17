@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what are the cities in states through which the mississippi runs",
+    "query": "SELECT city_name FROM city WHERE state_name IN ( SELECT traverse FROM river WHERE river_name  =  \"mississippi\" );"
+}

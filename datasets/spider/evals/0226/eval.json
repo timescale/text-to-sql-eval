@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "how many cities does the usa have",
+    "query": "SELECT COUNT ( city_name ) FROM city;"
+}

@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what is the shortest river in the united states",
+    "query": "SELECT river_name FROM river WHERE LENGTH  =  ( SELECT MIN ( LENGTH ) FROM river );"
+}

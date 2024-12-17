@@ -1,0 +1,5 @@
+{
+    "database": "scholar",
+    "question": "Who wrote on the topic of Bacterial Wilt in 2016 ?",
+    "query": "SELECT DISTINCT t3.authorid FROM paperkeyphrase AS t1 JOIN keyphrase AS t2 ON t1.keyphraseid  =  t2.keyphraseid JOIN paper AS t4 ON t4.paperid  =  t1.paperid JOIN writes AS t3 ON t3.paperid  =  t4.paperid JOIN author AS t5 ON t3.authorid  =  t5.authorid WHERE t2.keyphrasename  =  \"Bacterial Wilt\" AND t4.year  =  2016;"
+}

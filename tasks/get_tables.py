@@ -1,16 +1,19 @@
 import json
 import psycopg
+from sql_metadata import Parser
 
 
-def compare(actual, expected) -> bool:
-    return set(actual) == set(expected)
+def compare(actual, expected, strict: bool) -> bool:
+    return set(actual) == set(expected) if strict else set(expected).issubset(set(actual))
 
 
-def run(conn: psycopg.Connection, path: str, inp: str, agent_fn: callable) -> bool:
-    with open(f"{path}/tables.json", "r") as fp:
-        expected = json.load(fp)
+def run(conn: psycopg.Connection, path: str, inp: str, agent_fn: callable, strict: bool) -> bool:
+    with open(f"{path}/eval.json", "r") as fp:
+        query = json.load(fp).get("query")
+    parser = Parser(query)
+    # normalize table names as query uses mix of uppercase/lowercase to reference them
+    expected = list(set([table.lower() for table in parser.tables]))
     actual = agent_fn(conn, inp)
     with open(f"{path}/actual_get_tables.json", "w") as fp:
         json.dump(actual, fp)
-    passing = compare(actual, expected)
-    return passing
+    return compare(actual, expected, strict)

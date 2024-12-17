@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "how many citizens live in california",
+    "query": "SELECT population FROM state WHERE state_name  =  \"california\";"
+}

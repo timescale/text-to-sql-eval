@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what is the total area of the usa",
+    "query": "SELECT SUM ( area ) FROM state;"
+}

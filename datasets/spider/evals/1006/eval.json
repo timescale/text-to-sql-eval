@@ -1,0 +1,5 @@
+{
+    "database": "scholar",
+    "question": "what papers have fewer than 5 citations by ACL papers",
+    "query": "SELECT DISTINCT t3.citingpaperid FROM paper AS t1 JOIN cite AS t3 ON t1.paperid  =  t3.citedpaperid JOIN venue AS t2 ON t2.venueid  =  t1.venueid WHERE t2.venuename  =  \"ACL\" GROUP BY t3.citingpaperid HAVING COUNT ( DISTINCT t3.citedpaperid )  <  5;"
+}

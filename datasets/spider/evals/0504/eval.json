@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what is the height of mount mckinley",
+    "query": "SELECT mountain_altitude FROM mountain WHERE mountain_name  =  \"mckinley\";"
+}

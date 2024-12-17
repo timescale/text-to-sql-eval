@@ -1,0 +1,5 @@
+{
+    "database": "academic",
+    "question": "return me the total citations of the papers containing keyword \" Natural Language \"",
+    "query": "SELECT SUM ( t3.citation_num ) FROM publication_keyword AS t2 JOIN keyword AS t1 ON t2.kid  =  t1.kid JOIN publication AS t3 ON t3.pid  =  t2.pid WHERE t1.keyword  =  \"Natural Language\";"
+}

@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what is the population of seattle washington",
+    "query": "SELECT population FROM city WHERE city_name  =  \"seattle\" AND state_name  =  \"washington\";"
+}

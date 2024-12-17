@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what is the highest point in the state with capital des moines",
+    "query": "SELECT highest_point FROM highlow WHERE state_name IN ( SELECT state_name FROM state WHERE capital  =  \"des moines\" );"
+}

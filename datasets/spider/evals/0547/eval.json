@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what is the average population of the us by state",
+    "query": "SELECT AVG ( population ) FROM state;"
+}

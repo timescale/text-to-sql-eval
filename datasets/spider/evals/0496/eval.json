@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "how many major cities are in states bordering nebraska",
+    "query": "SELECT COUNT ( city_name ) FROM city WHERE population  >  150000 AND state_name IN ( SELECT border FROM border_info WHERE state_name  =  \"nebraska\" );"
+}

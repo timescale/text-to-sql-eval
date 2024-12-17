@@ -1,0 +1,5 @@
+{
+  "database": "world",
+  "question": "What is the name of the continent with the greatest population?",
+  "query": "SELECT continent FROM country GROUP BY continent ORDER BY SUM(population) DESC LIMIT 1;"
+}

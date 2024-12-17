@@ -1,0 +1,5 @@
+{
+    "database": "academic",
+    "question": "return me the homepage of \" H. V. Jagadish \" .",
+    "query": "SELECT homepage FROM author WHERE name  =  \"H. V. Jagadish\";"
+}

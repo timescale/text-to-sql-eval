@@ -1,0 +1,5 @@
+{
+    "database": "yelp",
+    "question": "How many reviews does \" Acacia Cafe \" have ?",
+    "query": "SELECT review_count FROM business WHERE name  =  \"Acacia Cafe\";"
+}

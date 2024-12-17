@@ -1,0 +1,5 @@
+{
+  "database": "world",
+  "question": "What is the name of the country that has the greatest population?",
+  "query": "SELECT name FROM country ORDER BY population DESC LIMIT 1;"
+}

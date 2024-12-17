@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "how many major cities are there",
+    "query": "SELECT COUNT ( city_name ) FROM city WHERE population  >  150000;"
+}

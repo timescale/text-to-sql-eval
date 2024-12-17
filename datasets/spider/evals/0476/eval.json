@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "name the 50 capitals in the usa",
+    "query": "SELECT DISTINCT capital FROM state;"
+}

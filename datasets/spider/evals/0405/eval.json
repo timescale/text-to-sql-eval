@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "which of the states bordering oklahoma has the largest population",
+    "query": "SELECT state_name FROM state WHERE state_name IN ( SELECT border FROM border_info WHERE state_name  =  \"oklahoma\" ) ORDER BY population DESC LIMIT 1;"
+}

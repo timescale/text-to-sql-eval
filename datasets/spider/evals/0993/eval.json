@@ -1,0 +1,5 @@
+{
+    "database": "scholar",
+    "question": "papers published in the last year",
+    "query": "SELECT DISTINCT paperid FROM paper WHERE YEAR  =  ( SELECT MAX ( YEAR ) FROM paper );"
+}

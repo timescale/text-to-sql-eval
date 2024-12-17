@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "how many states do not have rivers",
+    "query": "SELECT COUNT ( DISTINCT state_name ) FROM state WHERE state_name NOT IN ( SELECT traverse FROM river );"
+}

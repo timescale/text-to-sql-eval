@@ -1,0 +1,5 @@
+{
+    "database": "academic",
+    "question": "return me the number of papers published on PVLDB before 2000 .",
+    "query": "SELECT COUNT ( DISTINCT t2.title ) FROM publication AS t2 JOIN journal AS t1 ON t2.jid  =  t1.jid WHERE t1.name  =  \"PVLDB\" AND t2.year  <  2000;"
+}

@@ -1,0 +1,5 @@
+{
+    "database": "academic",
+    "question": "return me the paper after 2000 in Databases area with more than 200 citations .",
+    "query": "SELECT t3.title FROM DOMAIN AS t2 JOIN domain_publication AS t1 ON t2.did  =  t1.did JOIN publication AS t3 ON t3.pid  =  t1.pid WHERE t2.name  =  \"Databases\" AND t3.citation_num  >  200 AND t3.year  >  2000;"
+}

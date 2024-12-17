@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "count the states which have elevations lower than what alabama has",
+    "query": "SELECT COUNT ( state_name ) FROM highlow WHERE lowest_elevation  <  ( SELECT lowest_elevation FROM highlow WHERE state_name  =  \"alabama\" );"
+}

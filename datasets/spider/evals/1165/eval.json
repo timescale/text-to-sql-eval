@@ -1,0 +1,5 @@
+{
+    "database": "yelp",
+    "question": "Find all businesses in Texas with a rating below 2",
+    "query": "SELECT name FROM business WHERE rating  <  2 AND state  =  \"Texas\";"
+}

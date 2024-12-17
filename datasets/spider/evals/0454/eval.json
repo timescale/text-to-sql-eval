@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "which states have a major city named austin",
+    "query": "SELECT state_name FROM city WHERE city_name  =  \"austin\" AND population  >  150000;"
+}

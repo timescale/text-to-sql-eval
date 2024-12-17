@@ -1,0 +1,5 @@
+{
+    "database": "yelp",
+    "question": "Find all Bars reviewed by Patrick",
+    "query": "SELECT t1.name FROM category AS t2 JOIN business AS t1 ON t2.business_id  =  t1.business_id JOIN review AS t3 ON t3.business_id  =  t1.business_id JOIN USER AS t4 ON t4.user_id  =  t3.user_id WHERE t2.category_name  =  \"Bars\" AND t4.name  =  \"Patrick\";"
+}

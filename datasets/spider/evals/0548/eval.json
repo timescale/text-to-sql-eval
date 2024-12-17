@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what rivers flow through the largest state",
+    "query": "SELECT river_name FROM river WHERE traverse IN ( SELECT state_name FROM state WHERE area  =  ( SELECT MAX ( area ) FROM state ) );"
+}

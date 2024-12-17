@@ -1,0 +1,5 @@
+{
+    "database": "yelp",
+    "question": "List all businesses with rating 3.5",
+    "query": "SELECT name FROM business WHERE rating  =  3.5;"
+}

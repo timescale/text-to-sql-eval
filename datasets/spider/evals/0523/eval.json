@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what are the major cities in the largest state",
+    "query": "SELECT city_name FROM city WHERE population  >  150000 AND state_name  =  ( SELECT state_name FROM state WHERE area  =  ( SELECT MAX ( area ) FROM state ) );"
+}

@@ -1,0 +1,5 @@
+{
+    "database": "scholar",
+    "question": "papers about Parsing that used Jeopardy! Questions and were published at ACL 2014",
+    "query": "SELECT DISTINCT t2.paperid FROM paperdataset AS t3 JOIN dataset AS t5 ON t3.datasetid  =  t5.datasetid JOIN paperkeyphrase AS t4 ON t4.paperid  =  t3.paperid JOIN paper AS t2 ON t2.paperid  =  t3.paperid JOIN venue AS t6 ON t6.venueid  =  t2.venueid JOIN keyphrase AS t1 ON t4.keyphraseid  =  t1.keyphraseid WHERE t5.datasetname  =  \"Jeopardy! Questions\" AND t1.keyphrasename  =  \"Parsing\" AND t2.year  =  2014 AND t6.venuename  =  \"ACL\";"
+}

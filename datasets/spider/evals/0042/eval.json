@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "name the major lakes in michigan",
+    "query": "SELECT lake_name FROM lake WHERE area  >  750 AND state_name  =  \"michigan\";"
+}

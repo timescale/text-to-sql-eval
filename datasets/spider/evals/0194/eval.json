@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what state has the sparsest population density",
+    "query": "SELECT state_name FROM state WHERE density  =  ( SELECT MIN ( density ) FROM state );"
+}

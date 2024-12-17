@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "how large is the largest city in alaska",
+    "query": "SELECT population FROM city WHERE population  =  ( SELECT MAX ( population ) FROM city WHERE state_name  =  \"alaska\" ) AND state_name  =  \"alaska\";"
+}

@@ -1,0 +1,5 @@
+{
+    "database": "scholar",
+    "question": "citations for Daniel Jurafsky",
+    "query": "SELECT DISTINCT t3.paperid FROM paper AS t3 JOIN cite AS t4 ON t3.paperid  =  t4.citingpaperid JOIN writes AS t2 ON t2.paperid  =  t4.citedpaperid JOIN author AS t1 ON t2.authorid  =  t1.authorid WHERE t1.authorname  =  \"Daniel Jurafsky\";"
+}

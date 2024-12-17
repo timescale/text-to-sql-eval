@@ -1,0 +1,5 @@
+{
+    "database": "restaurants",
+    "question": "how many jamerican cuisine are there in santa cruz county ?",
+    "query": "SELECT COUNT ( * ) FROM restaurant AS t1 JOIN geographic AS t2 ON t1.city_name  =  t2.city_name WHERE t2.county  =  \"santa cruz county\" AND t1.name  =  \"jamerican cuisine\";"
+}

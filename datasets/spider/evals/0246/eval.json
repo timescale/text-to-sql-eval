@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "how many states are in the united states",
+    "query": "SELECT COUNT ( state_name ) FROM state;"
+}

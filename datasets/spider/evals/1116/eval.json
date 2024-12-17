@@ -1,0 +1,5 @@
+{
+    "database": "scholar",
+    "question": "Number of ACL papers with more than 2 citations",
+    "query": "SELECT DISTINCT COUNT ( t3.citingpaperid ) FROM paper AS t1 JOIN cite AS t3 ON t1.paperid  =  t3.citedpaperid JOIN venue AS t2 ON t2.venueid  =  t1.venueid WHERE t2.venuename  =  \"ACL\" GROUP BY t3.citingpaperid HAVING COUNT ( DISTINCT t3.citedpaperid )  >  2;"
+}

@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "how many square kilometers in the us",
+    "query": "SELECT SUM ( area ) FROM state;"
+}

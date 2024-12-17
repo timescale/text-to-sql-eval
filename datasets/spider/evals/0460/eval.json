@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what is the population of the capital of the largest state through which the mississippi runs",
+    "query": "SELECT population FROM city WHERE city_name  =  ( SELECT capital FROM state WHERE area  =  ( SELECT MAX ( t1.area ) FROM state AS t1 JOIN river AS t2 ON t1.state_name  =  t2.traverse WHERE t2.river_name  =  \"mississippi\" ) );"
+}

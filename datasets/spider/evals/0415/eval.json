@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "which states border states through which the mississippi traverses",
+    "query": "SELECT border FROM border_info WHERE state_name IN ( SELECT traverse FROM river WHERE river_name  =  \"mississippi\" );"
+}

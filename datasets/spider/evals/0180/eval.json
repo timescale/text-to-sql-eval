@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what is the largest state in usa",
+    "query": "SELECT state_name FROM state WHERE area  =  ( SELECT MAX ( area ) FROM state );"
+}

@@ -1,0 +1,5 @@
+{
+    "database": "yelp",
+    "question": "Find the business which has the most number of categories",
+    "query": "SELECT t1.name FROM category AS t2 JOIN business AS t1 ON t2.business_id  =  t1.business_id GROUP BY t1.name ORDER BY COUNT ( DISTINCT t2.category_name ) DESC LIMIT 1;"
+}

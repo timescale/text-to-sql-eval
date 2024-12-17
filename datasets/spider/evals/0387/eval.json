@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what is the state with the smallest area",
+    "query": "SELECT state_name FROM state WHERE area  =  ( SELECT MIN ( area ) FROM state );"
+}

@@ -1,0 +1,5 @@
+{
+    "database": "academic",
+    "question": "return me all the keywords .",
+    "query": "SELECT keyword FROM keyword;"
+}

@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "how many states have major rivers",
+    "query": "SELECT COUNT ( traverse ) FROM river WHERE LENGTH  >  750;"
+}

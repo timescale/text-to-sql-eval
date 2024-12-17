@@ -1,0 +1,5 @@
+{
+    "database": "academic",
+    "question": "return me the number of authors who have cited the papers by \" H. V. Jagadish \" .",
+    "query": "SELECT COUNT ( DISTINCT t2.name ) FROM publication AS t7 JOIN cite AS t5 ON t7.pid  =  t5.citing JOIN publication AS t6 ON t6.pid  =  t5.cited JOIN writes AS t3 ON t3.pid  =  t7.pid JOIN writes AS t4 ON t4.pid  =  t6.pid JOIN author AS t2 ON t3.aid  =  t2.aid JOIN author AS t1 ON t4.aid  =  t1.aid WHERE t1.name  =  \"H. V. Jagadish\";"
+}

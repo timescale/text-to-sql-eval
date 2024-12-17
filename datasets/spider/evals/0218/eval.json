@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what length is the rio grande",
+    "query": "SELECT LENGTH FROM river WHERE river_name  =  \"rio grande\";"
+}

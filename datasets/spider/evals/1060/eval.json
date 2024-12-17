@@ -1,0 +1,5 @@
+{
+    "database": "scholar",
+    "question": "which venue publishes the most papers about deep learning",
+    "query": "SELECT DISTINCT COUNT ( t3.paperid )  ,  t4.venueid FROM paperkeyphrase AS t2 JOIN keyphrase AS t1 ON t2.keyphraseid  =  t1.keyphraseid JOIN paper AS t3 ON t3.paperid  =  t2.paperid JOIN venue AS t4 ON t4.venueid  =  t3.venueid WHERE t1.keyphrasename  =  \"deep learning\" GROUP BY t4.venueid ORDER BY COUNT ( t3.paperid ) DESC;"
+}

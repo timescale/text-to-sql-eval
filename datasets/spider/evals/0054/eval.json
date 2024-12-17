@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "which states does the ohio river pass through",
+    "query": "SELECT traverse FROM river WHERE river_name  =  \"ohio\";"
+}

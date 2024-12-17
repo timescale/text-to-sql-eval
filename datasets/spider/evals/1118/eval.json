@@ -1,0 +1,5 @@
+{
+    "database": "scholar",
+    "question": "How many papers used ImageNet datasets in cvpr ?",
+    "query": "SELECT DISTINCT COUNT ( t3.paperid ) FROM paperdataset AS t2 JOIN dataset AS t1 ON t2.datasetid  =  t1.datasetid JOIN paper AS t3 ON t3.paperid  =  t2.paperid JOIN venue AS t4 ON t4.venueid  =  t3.venueid WHERE t1.datasetname  =  \"ImageNet\" AND t4.venuename  =  \"cvpr\";"
+}

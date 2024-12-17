@@ -1,0 +1,5 @@
+{
+    "database": "geo",
+    "question": "what is the smallest state through which the longest river runs",
+    "query": "SELECT state_name FROM state WHERE area  =  ( SELECT MIN ( area ) FROM state WHERE state_name IN ( SELECT traverse FROM river WHERE LENGTH  =  ( SELECT MAX ( LENGTH ) FROM river ) ) ) AND state_name IN ( SELECT traverse FROM river WHERE LENGTH  =  ( SELECT MAX ( LENGTH ) FROM river ) );"
+}
