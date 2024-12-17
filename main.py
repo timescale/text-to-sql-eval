@@ -11,6 +11,8 @@ from tasks.text_to_sql import run as text_to_sql
 
 from baseline import text_to_sql as baseline_text_to_sql
 from baseline import get_tables as baseline_get_tables
+from pgai import get_tables as pgai_get_tables
+from pgai import text_to_sql as pgai_text_to_sql
 
 load_dotenv()
 
@@ -18,6 +20,7 @@ root_directory = Path(__file__).resolve().parent
 
 env = os.environ.copy()
 env["PGPASSWORD"] = os.environ["POSTGRES_PASSWORD"]
+OLLAMA_HOST = "http://ollama:11434"
 
 @click.group()
 def cli():
@@ -31,6 +34,7 @@ def load(dataset, pgai):
     datasets = os.listdir("datasets") if dataset == "all" else [dataset]
     for dataset in datasets:
         for entry in Path(f"datasets/{dataset}/databases").iterdir():
+            db_name = f"{dataset}_{entry.stem}"
             subprocess.run(
                 ["psql", "-h", os.environ["POSTGRES_HOST"], "-U", os.environ["POSTGRES_USER"], "-d", "postgres", "-c", f"DROP DATABASE IF EXISTS {dataset}_{entry.stem}"],
                 env=env,
@@ -40,18 +44,87 @@ def load(dataset, pgai):
                 env=env,
             )
             if pgai:
-                subprocess.run(
-                    ["psql", "-h", os.environ["POSTGRES_HOST"], "-U", os.environ["POSTGRES_USER"], "-d", f"{dataset}_{entry.stem}", "-c", "select set_config('ai.enable_feature_flag_text_to_sql', 'true', false)"],
-                    env=env,
-                )
-                subprocess.run(
-                    ["psql", "-h", os.environ["POSTGRES_HOST"], "-U", os.environ["POSTGRES_USER"], "-d", f"{dataset}_{entry.stem}", "-c", "CREATE EXTENSION ai CASCADE"],
-                    env=env,
-                )
+                with psycopg.connect(
+                    f"host=127.0.0.1 dbname={db_name} user=postgres password=postgres"
+                ) as db:
+                    with db.cursor() as cur:
+                        cur.execute("select set_config('ai.enable_feature_flag_text_to_sql', 'true', false)")
+                        cur.execute("CREATE EXTENSION ai CASCADE")
             subprocess.run(
-                ["psql", "-h", os.environ["POSTGRES_HOST"], "-U", os.environ["POSTGRES_USER"], "-d", f"{dataset}_{entry.stem}", "-f", str(entry)],
+                ["psql", "-h", os.environ["POSTGRES_HOST"], "-U", os.environ["POSTGRES_USER"], "-d", db_name, "-f", str(entry)],
                 env=env,
             )
+            if pgai:
+                with psycopg.connect(
+                    f"host=127.0.0.1 dbname={db_name} user=postgres password=postgres"
+                ) as db:
+                    with db.cursor() as cur:
+                        cur.execute("select set_config('ai.enable_feature_flag_text_to_sql', 'true', false)")
+                        cur.execute("select ai.grant_ai_usage('postgres', true)")
+                        cur.execute(
+                            """
+                            select ai.initialize_semantic_catalog
+                                ( embedding=>ai.embedding_ollama
+                                    ( 'smollm:135m'
+                                    , 576
+                                    , base_url=>%s
+                                    )
+                                )
+                            """,
+                            (OLLAMA_HOST,),
+                        )
+                        db.commit()
+                        cur.execute(
+                            """
+                                SELECT table_name
+                                FROM information_schema.tables
+                                WHERE table_schema = 'public'
+                                AND table_type = 'BASE TABLE';
+                            """
+                        )
+                        tables = []
+                        for row in cur.fetchall():
+                            tables.append(row[0])
+                        cur.execute(
+                            """
+                            SELECT
+                                table_schema,
+                                table_name,
+                                column_name,
+                                col_description(('"' || table_schema || '"."' || table_name || '"')::regclass::oid, ordinal_position) AS column_comment
+                            FROM
+                                information_schema.columns
+                            WHERE
+                                table_schema = 'public'
+                            ORDER BY
+                                table_schema,
+                                table_name,
+                                ordinal_position;
+                            """
+                        )
+                        columns = []
+                        for row in cur.fetchall():
+                            columns.append(row)
+                        for table in tables:
+                            cur.execute(f"select ai.set_description('{table}', '{table}');")
+                        for column in columns:
+                            cur.execute(f"select ai.set_column_description('{column[1]}', '{column[2]}', '{column[1]}.{column[2]}');")
+                        db.commit()
+                        cur.execute(
+                            """
+                            insert into ai.semantic_catalog_obj_1_store(embedding_uuid, objtype, objnames, objargs, chunk_seq, chunk, embedding)
+                            select
+                            gen_random_uuid()
+                            , objtype, objnames, objargs
+                            , 0
+                            , description
+                            , ai.ollama_embed('smollm:135m', description, host=>%s)
+                            from ai.semantic_catalog_obj
+                            """,
+                            (OLLAMA_HOST,),
+                        )
+                        cur.execute("delete from ai._vectorizer_q_1")
+
 
 
 @cli.command()
@@ -67,7 +140,7 @@ def eval(task, agent, dataset, strict):
     datasets = sorted(os.listdir("datasets") if dataset == "all" else [dataset])
     task_fn = get_tables if task == "get_tables" else text_to_sql
     if agent == "pgai":
-        raise NotImplementedError
+        agent_fn = pgai_text_to_sql if task == "text_to_sql" else pgai_get_tables
     elif agent == "baseline":
         agent_fn = (
             baseline_text_to_sql if task == "text_to_sql" else baseline_get_tables
