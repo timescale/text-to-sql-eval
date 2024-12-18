@@ -7,10 +7,10 @@ from dotenv import load_dotenv
 import click
 import psycopg
 
-from agents import get_agent_fn
-from tasks.get_tables import run as get_tables
-from tasks.text_to_sql import run as text_to_sql
-from utils import get_psycopg_str
+from .agents import get_agent_fn
+from .tasks.get_tables import run as get_tables
+from .tasks.text_to_sql import run as text_to_sql
+from .utils import get_psycopg_str
 
 
 root_directory = Path(__file__).resolve().parent.parent
@@ -210,6 +210,3 @@ def eval(task, agent, dataset, strict):
         print(f"  {round(passing/total, 2)}")
         if len(failed_evals[dataset]) > 0:
             print(f"Failed evals:\n{failed_evals[dataset]}")
-
-if __name__ == "__main__":
-    cli()

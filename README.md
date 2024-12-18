@@ -20,7 +20,7 @@ docker compose up
 ## Running the suite
 
 ```text
-$ uv run suite --help
+$ uv run python3 -m suite --help
 Usage: suite [OPTIONS] COMMAND [ARGS]...
 
 Options:
