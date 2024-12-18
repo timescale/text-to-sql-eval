@@ -28,7 +28,8 @@ def cli():
 
 @cli.command()
 @click.option("--dataset", default="all", help="Dataset to evaluate")
-def load(dataset):
+@click.option("--model", default="smollm:135m", help="Model to use for Ollama embeddings")
+def load(dataset, model):
     """
     Load the datasets into the database.
     """
@@ -157,10 +158,10 @@ def load(dataset):
                             , objtype, objnames, objargs
                             , 0
                             , description
-                            , ai.ollama_embed('smollm:135m', description, host=>%s)
+                            , ai.ollama_embed(%s, description, host=>%s)
                             from ai.semantic_catalog_obj
                             """,
-                            (OLLAMA_HOST,),
+                            (model, OLLAMA_HOST,),
                         )
                         cur.execute("delete from ai._vectorizer_q_1")
 
