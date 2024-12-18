@@ -1,7 +1,6 @@
 import json
 import os
 from pathlib import Path
-import subprocess
 
 from dotenv import load_dotenv
 import click
@@ -16,8 +15,7 @@ from .utils import get_psycopg_str
 root_directory = Path(__file__).resolve().parent.parent
 load_dotenv()
 
-env = os.environ.copy()
-env["PGPASSWORD"] = os.environ["POSTGRES_PASSWORD"]
+
 OLLAMA_HOST = "http://ollama:11434"
 
 
@@ -28,94 +26,70 @@ def cli():
 
 @cli.command()
 @click.option("--dataset", default="all", help="Dataset to evaluate")
-@click.option("--model", default="smollm:135m", help="Model to use for Ollama embeddings")
+@click.option(
+    "--model", default="smollm:135m", help="Model to use for Ollama embeddings"
+)
 def load(dataset, model):
     """
     Load the datasets into the database.
     """
+
     datasets = os.listdir("datasets") if dataset == "all" else [dataset]
-    with psycopg.connect(get_psycopg_str()) as db:
-        with db.cursor() as cur:
+    with psycopg.connect(get_psycopg_str()) as root_db:
+        with root_db.cursor() as cur:
             cur.execute("SELECT * FROM pg_available_extensions WHERE name = 'ai'")
             pgai = len(cur.fetchall()) > 0
-    for dataset in datasets:
-        for entry in (root_directory / "datasets" / dataset / "databases").iterdir():
+    print(f"pgai: {pgai}")
+    print("Loading datasets...")
+    for i in range(len(datasets)):
+        if i > 0:
+            print()
+        dataset = datasets[i]
+        print(f"  {dataset}")
+        for entry in (
+            root_directory / "datasets" / dataset / "databases"
+        ).iterdir():
             db_name = f"{dataset}_{entry.stem}"
-            subprocess.run(
-                [
-                    "psql",
-                    "-h",
-                    os.environ["POSTGRES_HOST"],
-                    "-U",
-                    os.environ["POSTGRES_USER"],
-                    "-d",
-                    "postgres",
-                    "-c",
-                    f"DROP DATABASE IF EXISTS {dataset}_{entry.stem}",
-                ],
-                env=env,
-            )
-            subprocess.run(
-                [
-                    "psql",
-                    "-h",
-                    os.environ["POSTGRES_HOST"],
-                    "-U",
-                    os.environ["POSTGRES_USER"],
-                    "-d",
-                    "postgres",
-                    "-c",
-                    f"CREATE DATABASE {dataset}_{entry.stem}",
-                ],
-                env=env,
-            )
-            if pgai:
-                with psycopg.connect(get_psycopg_str(db_name)) as db:
+            with psycopg.connect(get_psycopg_str()) as root_db:
+                root_db.autocommit = True
+                print(f"    DROP DATABASE {db_name}")
+                root_db.execute(f"DROP DATABASE IF EXISTS {db_name}")
+                print(f"    CREATE DATABASE {db_name}")
+                root_db.execute(f"CREATE DATABASE {db_name}")
+            with psycopg.connect(get_psycopg_str(db_name)) as db:
+                print(f"    Restoring dump to {db_name}")
+                with entry.open() as fp:
+                    db.execute(fp.read())
+                if pgai:
+                    print(f"    Initializing pgai for {db_name}")
                     with db.cursor() as cur:
                         cur.execute(
                             "select set_config('ai.enable_feature_flag_text_to_sql', 'true', false)"
                         )
                         cur.execute("CREATE EXTENSION ai CASCADE")
-            subprocess.run(
-                [
-                    "psql",
-                    "-h",
-                    os.environ["POSTGRES_HOST"],
-                    "-U",
-                    os.environ["POSTGRES_USER"],
-                    "-d",
-                    db_name,
-                    "-f",
-                    str(entry),
-                ],
-                env=env,
-            )
-            if pgai:
-                with psycopg.connect(get_psycopg_str(db_name)) as db:
-                    with db.cursor() as cur:
                         cur.execute(
                             "select set_config('ai.enable_feature_flag_text_to_sql', 'true', false)"
                         )
                         cur.execute("select ai.grant_ai_usage('postgres', true)")
                         cur.execute(
                             """
-                            select ai.initialize_semantic_catalog
-                                ( embedding=>ai.embedding_ollama
-                                    ( 'smollm:135m'
-                                    , 576
-                                    , base_url=>%s
-                                    )
+                            select ai.initialize_semantic_catalog(
+                                embedding=>ai.embedding_ollama(
+                                    %s,
+                                    576,
+                                    base_url=>%s
                                 )
+                            )
                             """,
-                            (OLLAMA_HOST,),
+                            (model, OLLAMA_HOST,),
                         )
                         db.commit()
                         cur.execute(
                             """
-                                SELECT table_name
-                                FROM information_schema.tables
-                                WHERE table_schema = 'public'
-                                AND table_type = 'BASE TABLE';
+                            SELECT table_name
+                            FROM information_schema.tables
+                            WHERE table_schema = 'public'
+                            AND table_type = 'BASE TABLE';
                             """
                         )
                         tables = []
@@ -154,14 +128,19 @@ def load(dataset, model):
                             """
                             insert into ai.semantic_catalog_obj_1_store(embedding_uuid, objtype, objnames, objargs, chunk_seq, chunk, embedding)
                             select
-                            gen_random_uuid()
-                            , objtype, objnames, objargs
-                            , 0
-                            , description
-                            , ai.ollama_embed(%s, description, host=>%s)
+                                gen_random_uuid(),
+                                objtype,
+                                objnames,
+                                objargs,
+                                0,
+                                description,
+                                ai.ollama_embed(%s, description, host=>%s)
                             from ai.semantic_catalog_obj
                             """,
-                            (model, OLLAMA_HOST,),
+                            (
+                                model,
+                                OLLAMA_HOST,
+                            ),
                         )
                         cur.execute("delete from ai._vectorizer_q_1")
 
@@ -184,11 +163,10 @@ def eval(task, agent, dataset, strict):
     task_fn = get_tables if task == "get_tables" else text_to_sql
     agent_fn = get_agent_fn(agent, task)
     failed_evals = {}
-    first = True
-    for dataset in datasets:
-        if not first:
+    for i in range(len(datasets)):
+        if i > 0:
             print()
-        first = False
+        dataset = datasets[i]
         failed_evals[dataset] = []
         passing = 0
         total = 0
@@ -212,12 +190,9 @@ def eval(task, agent, dataset, strict):
                 except Exception as e:
                     result = False
                     exc = e
-                print(
-                    f"    {'PASS' if result else 'FAIL'}",
-                    end=''
-                )
+                print(f"    {'PASS' if result else 'FAIL'}", end="")
                 if exc:
-                    print(f" ({type(exc).__name__})", end='')
+                    print(f" ({type(exc).__name__})", end="")
                     with error_path.open("w") as fp:
                         fp.write(type(exc).__name__ + "\n\n")
                         fp.write(str(exc))
