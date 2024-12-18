@@ -182,7 +182,13 @@ def eval(task, agent, dataset, strict):
     datasets = sorted(os.listdir("datasets") if dataset == "all" else [dataset])
     task_fn = get_tables if task == "get_tables" else text_to_sql
     agent_fn = get_agent_fn(agent, task)
+    failed_evals = {}
+    first = True
     for dataset in datasets:
+        if not first:
+            print()
+        first = False
+        failed_evals[dataset] = []
         passing = 0
         total = 0
         print(f"Evaluating {dataset}...")
@@ -190,7 +196,7 @@ def eval(task, agent, dataset, strict):
         eval_paths = sorted(list(evals_path.iterdir()))
         for eval_path in eval_paths:
             total += 1
-            print(f"  {os.path.basename(eval_path)}:")
+            print(f"  {eval_path.name}:")
             with (eval_path / "eval.json").open() as fp:
                 inp = json.load(fp)
             with psycopg.connect(get_psycopg_str(f"{dataset}_{inp['database']}")) as db:
@@ -199,8 +205,11 @@ def eval(task, agent, dataset, strict):
                 print(f"    {'PASS' if result else 'FAIL'}")
                 if result:
                     passing += 1
+                else:
+                    failed_evals[dataset].append(eval_path.name)
         print(f"  {round(passing/total, 2)}")
-
+        if len(failed_evals[dataset]) > 0:
+            print(f"Failed evals:\n{failed_evals[dataset]}")
 
 if __name__ == "__main__":
     cli()
