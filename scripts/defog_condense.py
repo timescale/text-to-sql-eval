@@ -84,7 +84,11 @@ for entry in os.scandir(defog_data_dir):
     )
 
     subprocess.run(
-        ["uv", "run", "scripts/strip_postgres_dump.py", f"{str(root_directory)}/datasets/spider/databases/{dataset}.sql"],
-        cwd=str(root_directory)
+        [
+            "uv",
+            "run",
+            "scripts/strip_postgres_dump.py",
+            f"{str(root_directory)}/datasets/spider/databases/{dataset}.sql",
+        ],
+        cwd=str(root_directory),
     )
-

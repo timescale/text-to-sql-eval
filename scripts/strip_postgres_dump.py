@@ -7,6 +7,7 @@ Given a postgres dump file, run through the file and:
 
 import click
 
+
 @click.command()
 @click.argument("file_path")
 def main(file_path):

@@ -46,9 +46,7 @@ def load(dataset, model):
             print()
         dataset = datasets[i]
         print(f"  {dataset}")
-        for entry in (
-            root_directory / "datasets" / dataset / "databases"
-        ).iterdir():
+        for entry in (root_directory / "datasets" / dataset / "databases").iterdir():
             db_name = f"{dataset}_{entry.stem}"
             with psycopg.connect(get_psycopg_str()) as root_db:
                 root_db.autocommit = True
@@ -81,7 +79,10 @@ def load(dataset, model):
                                 )
                             )
                             """,
-                            (model, OLLAMA_HOST,),
+                            (
+                                model,
+                                OLLAMA_HOST,
+                            ),
                         )
                         db.commit()
                         cur.execute(

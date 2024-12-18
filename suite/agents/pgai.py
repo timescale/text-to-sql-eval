@@ -47,6 +47,6 @@ def text_to_sql(conn: psycopg.Connection, inp: str) -> TextToSql:
         )
         query = cur.fetchone()[0]
     return {
-        "messages": [{ "role": "user", "content": prompt }],
+        "messages": [{"role": "user", "content": prompt}],
         "query": query.replace("```sql", "").replace("```", "").strip(),
     }
