@@ -21,17 +21,17 @@ docker compose up
 
 ```text
 $ uv run suite --help
-Usage: main.py [OPTIONS] COMMAND [ARGS]...
+Usage: suite [OPTIONS] COMMAND [ARGS]...
 
 Options:
   --help  Show this message and exit.
 
 Commands:
-  eval
-  load
+  eval  Runs the eval suite for a given agent and task.
+  load  Load the datasets into the database.
 ```
 
-1. Use the `eval` command to load the datasets into your database.
-1. Use the `load` command to run the eval suite.
+1. Use the `load` command to load the datasets into your database.
+1. Use the `eval` command to run the eval suite.
 
 Both commands have various options/arguments, use `--help` to see more info.
