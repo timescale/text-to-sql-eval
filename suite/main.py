@@ -200,9 +200,27 @@ def eval(task, agent, dataset, strict):
             with (eval_path / "eval.json").open() as fp:
                 inp = json.load(fp)
             with psycopg.connect(get_psycopg_str(f"{dataset}_{inp['database']}")) as db:
-                result = task_fn(db, str(eval_path), inp["question"], agent_fn, strict)
-                # result = evaluate(dataset, inp, expected)
-                print(f"    {'PASS' if result else 'FAIL'}")
+                error_path = eval_path / "error.txt"
+                if error_path.exists():
+                    error_path.unlink()
+                exc = None
+                try:
+                    result = task_fn(
+                        db, str(eval_path), inp["question"], agent_fn, strict
+                    )
+                except Exception as e:
+                    result = False
+                    exc = e
+                print(
+                    f"    {'PASS' if result else 'FAIL'}",
+                    end=''
+                )
+                if exc:
+                    print(f" ({type(exc).__name__})", end='')
+                    with error_path.open("w") as fp:
+                        fp.write(type(exc).__name__ + "\n\n")
+                        fp.write(str(exc))
+                print()
                 if result:
                     passing += 1
                 else:

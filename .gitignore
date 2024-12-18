@@ -5,6 +5,7 @@
 !.env.sample
 __pycache__
 
-datasets/**/actual_*
+datasets/*/evals/*/actual_*
+datasets/*/evals/*/error.txt
 /spider_data*
 /defog-data
