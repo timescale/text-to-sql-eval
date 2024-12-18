@@ -26,7 +26,8 @@ def run(
     with open(f"{path}/eval.json", "r") as fp:
         gold_query = json.load(fp).get("query")
     try:
-        query = agent_fn(conn, inp)
+        result = agent_fn(conn, inp)
+        query = result["query"]
     except Exception as e:
         raise AgentFnError(e)
     with open(f"{path}/actual_query.sql", "w") as fp:

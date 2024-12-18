@@ -5,6 +5,7 @@ from openai import OpenAI
 import psycopg
 from pydantic import BaseModel
 
+from .types import TextToSql
 
 load_dotenv()
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
@@ -47,7 +48,7 @@ def get_tables(conn: psycopg.Connection, inp: str) -> list[str]:
     return chat.choices[0].message.parsed.tables
 
 
-def text_to_sql(conn: psycopg.Connection, inp: str) -> str:
+def text_to_sql(conn: psycopg.Connection, inp: str) -> TextToSql:
     tables = get_tables(conn, inp)
     table_ddl = []
     for table in tables:
@@ -87,24 +88,25 @@ group by relname;
             )
             table_ddl.append(cur.fetchone()[0])
 
+    messages = [
+        {
+            "role": "system",
+            "content": "You are a genius at generating SQL from natural language.",
+        },
+        {
+            "role": "system",
+            "content": f"Here are some tables that might help you answer the question:\n\n{'\n'.join(table_ddl)}",
+        },
+        {
+            "role": "user",
+            "content": f"Generate a SQL query for PostgreSQL that answers the following question:\n\n{inp}",
+        },
+    ]
     chat = client.beta.chat.completions.parse(
-        messages=[
-            {
-                "role": "system",
-                "content": "You are a genius at generating SQL from natural language.",
-            },
-            {
-                "role": "system",
-                "content": f"Here are some tables that might help you answer the question:\n\n{'\n'.join(table_ddl)}",
-            },
-            {
-                "role": "user",
-                "content": f"Generate a SQL query for PostgreSQL that answers the following question:\n\n{inp}",
-            },
-        ],
+        messages=messages,
         model="gpt-4o-mini",
         n=1,
         response_format=SQLQuery,
         temperature=0,
     )
-    return chat.choices[0].message.parsed.query
+    return {"llm_messages": messages, "query": chat.choices[0].message.parsed.query}
