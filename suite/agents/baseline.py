@@ -109,4 +109,4 @@ group by relname;
         response_format=SQLQuery,
         temperature=0,
     )
-    return {"llm_messages": messages, "query": chat.choices[0].message.parsed.query}
+    return {"messages": messages, "query": chat.choices[0].message.parsed.query}
