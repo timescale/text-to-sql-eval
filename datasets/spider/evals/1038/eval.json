@@ -1,5 +1,5 @@
 {
     "database": "scholar",
     "question": "What journals has Takashi Matsumoto published in ?",
-    "query": "SELECT DISTINCT t3.journalid FROM writes AS t2 JOIN author AS t1 ON t2.authorid  =  t1.authorid JOIN paper AS t3 ON t2.paperid  =  t3.paperid WHERE t1.authorname  =  \"Takashi Matsumoto\" GROUP BY t3.journalid;"
+    "query": "SELECT DISTINCT t3.journalid FROM writes AS t2 JOIN author AS t1 ON t2.authorid = t1.authorid JOIN paper AS t3 ON t2.paperid = t3.paperid WHERE t1.authorname = 'Takashi Matsumoto' GROUP BY t3.journalid"
 }

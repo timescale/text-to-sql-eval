@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what is the highest mountain in us",
-    "query": "SELECT mountain_name FROM mountain WHERE mountain_altitude  =  ( SELECT MAX ( mountain_altitude ) FROM mountain );"
+    "query": "SELECT mountain_name FROM mountain WHERE mountain_altitude = (SELECT MAX(mountain_altitude) FROM mountain)"
 }

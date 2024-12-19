@@ -1,5 +1,5 @@
 {
     "database": "academic",
     "question": "return me the number of citations of \" Making database systems usable \" in each year .",
-    "query": "SELECT YEAR  ,  SUM ( citation_num ) FROM publication WHERE title  =  \"Making database systems usable\" GROUP BY YEAR;"
+    "query": "SELECT YEAR, SUM(citation_num) FROM publication WHERE title = 'Making database systems usable' GROUP BY YEAR"
 }

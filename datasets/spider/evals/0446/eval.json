@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "which state has the lowest point that borders idaho",
-    "query": "SELECT state_name FROM highlow WHERE lowest_elevation  =  ( SELECT MIN ( lowest_elevation ) FROM highlow WHERE state_name IN ( SELECT border FROM border_info WHERE state_name  =  \"idaho\" ) ) AND state_name IN ( SELECT border FROM border_info WHERE state_name  =  \"idaho\" );"
+    "query": "SELECT state_name FROM highlow WHERE lowest_elevation = (SELECT MIN(lowest_elevation) FROM highlow WHERE state_name IN (SELECT border FROM border_info WHERE state_name = 'idaho')) AND state_name IN (SELECT border FROM border_info WHERE state_name = 'idaho')"
 }

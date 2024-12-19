@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what river runs through the most states",
-    "query": "SELECT river_name FROM river GROUP BY ( river_name ) ORDER BY COUNT ( DISTINCT traverse ) DESC LIMIT 1;"
+    "query": "SELECT river_name FROM river GROUP BY (river_name) ORDER BY COUNT(DISTINCT traverse) DESC NULLS LAST LIMIT 1"
 }

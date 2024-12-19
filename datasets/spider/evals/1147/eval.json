@@ -1,5 +1,5 @@
 {
     "database": "yelp",
     "question": "List all the reviews by Michelle for Italian restaurant",
-    "query": "SELECT t4.text FROM category AS t2 JOIN business AS t1 ON t2.business_id  =  t1.business_id JOIN category AS t3 ON t3.business_id  =  t1.business_id JOIN review AS t4 ON t4.business_id  =  t1.business_id JOIN USER AS t5 ON t5.user_id  =  t4.user_id WHERE t2.category_name  =  \"Italian\" AND t3.category_name  =  \"category_category_name1\" AND t5.name  =  \"Michelle\";"
+    "query": "SELECT t4.text FROM category AS t2 JOIN business AS t1 ON t2.business_id = t1.business_id JOIN category AS t3 ON t3.business_id = t1.business_id JOIN review AS t4 ON t4.business_id = t1.business_id JOIN USER AS t5 ON t5.user_id = t4.user_id WHERE t2.category_name = 'Italian' AND t3.category_name = 'category_category_name1' AND t5.name = 'Michelle'"
 }

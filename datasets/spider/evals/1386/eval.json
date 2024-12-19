@@ -1,5 +1,5 @@
 {
     "database": "academic",
     "question": "return me the number of papers written by \" H. V. Jagadish \" , \" Yunyao Li \" , and \" Cong Yu \" .",
-    "query": "SELECT COUNT ( DISTINCT t7.title ) FROM writes AS t4 JOIN author AS t2 ON t4.aid  =  t2.aid JOIN publication AS t7 ON t4.pid  =  t7.pid JOIN writes AS t5 ON t5.pid  =  t7.pid JOIN writes AS t6 ON t6.pid  =  t7.pid JOIN author AS t1 ON t5.aid  =  t1.aid JOIN author AS t3 ON t6.aid  =  t3.aid WHERE t2.name  =  \"Cong Yu\" AND t1.name  =  \"H. V. Jagadish\" AND t3.name  =  \"Yunyao Li\";"
+    "query": "SELECT COUNT(DISTINCT t7.title) FROM writes AS t4 JOIN author AS t2 ON t4.aid = t2.aid JOIN publication AS t7 ON t4.pid = t7.pid JOIN writes AS t5 ON t5.pid = t7.pid JOIN writes AS t6 ON t6.pid = t7.pid JOIN author AS t1 ON t5.aid = t1.aid JOIN author AS t3 ON t6.aid = t3.aid WHERE t2.name = 'Cong Yu' AND t1.name = 'H. V. Jagadish' AND t3.name = 'Yunyao Li'"
 }

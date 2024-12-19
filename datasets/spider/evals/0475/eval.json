@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "how many rivers are there in us",
-    "query": "SELECT COUNT ( river_name ) FROM river;"
+    "query": "SELECT COUNT(river_name) FROM river"
 }

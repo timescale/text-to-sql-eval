@@ -1,5 +1,5 @@
 {
     "database": "academic",
     "question": "return me all the papers in \" University of Michigan \" .",
-    "query": "SELECT t4.title FROM organization AS t2 JOIN author AS t1 ON t2.oid  =  t1.oid JOIN writes AS t3 ON t3.aid  =  t1.aid JOIN publication AS t4 ON t3.pid  =  t4.pid WHERE t2.name  =  \"University of Michigan\";"
+    "query": "SELECT t4.title FROM organization AS t2 JOIN author AS t1 ON t2.oid = t1.oid JOIN writes AS t3 ON t3.aid = t1.aid JOIN publication AS t4 ON t3.pid = t4.pid WHERE t2.name = 'University of Michigan'"
 }

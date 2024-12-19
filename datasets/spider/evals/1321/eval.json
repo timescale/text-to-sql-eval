@@ -1,5 +1,5 @@
 {
     "database": "academic",
     "question": "return me the number of citations of \" Making database systems usable \" before 2010 .",
-    "query": "SELECT COUNT ( DISTINCT t2.title ) FROM publication AS t3 JOIN cite AS t1 ON t3.pid  =  t1.cited JOIN publication AS t2 ON t2.pid  =  t1.citing WHERE t3.title  =  \"Making database systems usable\" AND t2.year  <  2010;"
+    "query": "SELECT COUNT(DISTINCT t2.title) FROM publication AS t3 JOIN cite AS t1 ON t3.pid = t1.cited JOIN publication AS t2 ON t2.pid = t1.citing WHERE t3.title = 'Making database systems usable' AND t2.year < 2010"
 }

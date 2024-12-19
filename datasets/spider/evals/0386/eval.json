@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what is the smallest state that the mississippi river runs through",
-    "query": "SELECT state_name FROM state WHERE area  =  ( SELECT MIN ( area ) FROM state WHERE state_name IN ( SELECT traverse FROM river WHERE river_name  =  \"mississippi\" ) ) AND state_name IN ( SELECT traverse FROM river WHERE river_name  =  \"mississippi\" );"
+    "query": "SELECT state_name FROM state WHERE area = (SELECT MIN(area) FROM state WHERE state_name IN (SELECT traverse FROM river WHERE river_name = 'mississippi')) AND state_name IN (SELECT traverse FROM river WHERE river_name = 'mississippi')"
 }

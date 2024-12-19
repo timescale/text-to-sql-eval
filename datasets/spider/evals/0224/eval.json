@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "how many capitals does rhode island have",
-    "query": "SELECT COUNT ( capital ) FROM state WHERE state_name  =  \"rhode island\";"
+    "query": "SELECT COUNT(capital) FROM state WHERE state_name = 'rhode island'"
 }

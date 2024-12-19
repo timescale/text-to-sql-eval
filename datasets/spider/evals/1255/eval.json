@@ -1,5 +1,5 @@
 {
     "database": "academic",
     "question": "return me the homepage of \" University of Michigan \" .",
-    "query": "SELECT homepage FROM organization WHERE name  =  \"University of Michigan\";"
+    "query": "SELECT homepage FROM organization WHERE name = 'University of Michigan'"
 }

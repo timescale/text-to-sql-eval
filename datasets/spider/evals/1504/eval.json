@@ -1,5 +1,5 @@
 {
     "database": "restaurants",
     "question": "give me the best american in the bay area ?",
-    "query": "SELECT t3.house_number  ,  t1.name FROM restaurant AS t1 JOIN geographic AS t2 ON t1.city_name  =  t2.city_name JOIN LOCATION AS t3 ON t1.id  =  t3.restaurant_id WHERE t2.region  =  \"bay area\" AND t1.food_type  =  \"american\" AND t1.rating  =  ( SELECT MAX ( t1.rating ) FROM restaurant AS t1 JOIN geographic AS t2 ON t1.city_name  =  t2.city_name WHERE t2.region  =  \"bay area\" AND t1.food_type  =  \"american\" );"
+    "query": "SELECT t3.house_number, t1.name FROM restaurant AS t1 JOIN geographic AS t2 ON t1.city_name = t2.city_name JOIN LOCATION AS t3 ON t1.id = t3.restaurant_id WHERE t2.region = 'bay area' AND t1.food_type = 'american' AND t1.rating = (SELECT MAX(t1.rating) FROM restaurant AS t1 JOIN geographic AS t2 ON t1.city_name = t2.city_name WHERE t2.region = 'bay area' AND t1.food_type = 'american')"
 }

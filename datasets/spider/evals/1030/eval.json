@@ -1,5 +1,5 @@
 {
     "database": "scholar",
     "question": "people working on sensor fusion",
-    "query": "SELECT DISTINCT t1.authorname FROM paperkeyphrase AS t2 JOIN keyphrase AS t4 ON t2.keyphraseid  =  t4.keyphraseid JOIN writes AS t3 ON t3.paperid  =  t2.paperid JOIN author AS t1 ON t3.authorid  =  t1.authorid WHERE t4.keyphrasename LIKE \"sensor fusion\";"
+    "query": "SELECT DISTINCT t1.authorname FROM paperkeyphrase AS t2 JOIN keyphrase AS t4 ON t2.keyphraseid = t4.keyphraseid JOIN writes AS t3 ON t3.paperid = t2.paperid JOIN author AS t1 ON t3.authorid = t1.authorid WHERE t4.keyphrasename LIKE 'sensor fusion'"
 }

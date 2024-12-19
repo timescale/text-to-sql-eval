@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "how many states border at least one other state",
-    "query": "SELECT COUNT ( DISTINCT state_name ) FROM border_info;"
+    "query": "SELECT COUNT(DISTINCT state_name) FROM border_info"
 }

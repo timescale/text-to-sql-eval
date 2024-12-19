@@ -1,5 +1,5 @@
 {
     "database": "scholar",
     "question": "How many publications were added to the Cell journal this year ?",
-    "query": "SELECT DISTINCT COUNT ( t3.paperid ) FROM paper AS t3 JOIN journal AS t2 ON t3.journalid  =  t2.journalid JOIN paperkeyphrase AS t1 ON t3.paperid  =  t1.paperid WHERE t2.journalname  =  \"Cell\" AND t3.year  =  2015;"
+    "query": "SELECT DISTINCT COUNT(t3.paperid) FROM paper AS t3 JOIN journal AS t2 ON t3.journalid = t2.journalid JOIN paperkeyphrase AS t1 ON t3.paperid = t1.paperid WHERE t2.journalname = 'Cell' AND t3.year = 2015"
 }

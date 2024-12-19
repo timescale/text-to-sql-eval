@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what is the highest point of the state with the smallest population density",
-    "query": "SELECT highest_point FROM highlow WHERE state_name IN ( SELECT state_name FROM state WHERE density  =  ( SELECT MIN ( density ) FROM state ) );"
+    "query": "SELECT highest_point FROM highlow WHERE state_name IN (SELECT state_name FROM state WHERE density = (SELECT MIN(density) FROM state))"
 }

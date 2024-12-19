@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what is the smallest city in the largest state",
-    "query": "SELECT city_name FROM city WHERE population  =  ( SELECT MIN ( population ) FROM city WHERE state_name IN ( SELECT state_name FROM state WHERE area  =  ( SELECT MAX ( area ) FROM state ) ) ) AND state_name IN ( SELECT state_name FROM state WHERE area  =  ( SELECT MAX ( area ) FROM state ) );"
+    "query": "SELECT city_name FROM city WHERE population = (SELECT MIN(population) FROM city WHERE state_name IN (SELECT state_name FROM state WHERE area = (SELECT MAX(area) FROM state))) AND state_name IN (SELECT state_name FROM state WHERE area = (SELECT MAX(area) FROM state))"
 }

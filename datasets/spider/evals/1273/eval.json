@@ -1,5 +1,5 @@
 {
     "database": "academic",
     "question": "return me the conference, which published \" Making database systems usable \" .",
-    "query": "SELECT t1.name FROM publication AS t2 JOIN conference AS t1 ON t2.cid  =  t1.cid WHERE t2.title  =  \"Making database systems usable\";"
+    "query": "SELECT t1.name FROM publication AS t2 JOIN conference AS t1 ON t2.cid = t1.cid WHERE t2.title = 'Making database systems usable'"
 }

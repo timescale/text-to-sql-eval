@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "give me the cities in usa",
-    "query": "SELECT city_name FROM city;"
+    "query": "SELECT city_name FROM city"
 }

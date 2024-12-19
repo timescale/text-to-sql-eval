@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what rivers flow through states that border the state with the largest population",
-    "query": "SELECT river_name FROM river WHERE traverse IN ( SELECT border FROM border_info WHERE state_name IN ( SELECT state_name FROM state WHERE population  =  ( SELECT MAX ( population ) FROM state ) ) );"
+    "query": "SELECT river_name FROM river WHERE traverse IN (SELECT border FROM border_info WHERE state_name IN (SELECT state_name FROM state WHERE population = (SELECT MAX(population) FROM state)))"
 }

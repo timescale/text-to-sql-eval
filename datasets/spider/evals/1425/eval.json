@@ -1,5 +1,5 @@
 {
     "database": "academic",
     "question": "return me the author in the \" University of Michigan \" in Databases area whose papers have more than 5000 total citations .",
-    "query": "SELECT t1.name FROM domain_author AS t6 JOIN author AS t1 ON t6.aid  =  t1.aid JOIN DOMAIN AS t3 ON t3.did  =  t6.did JOIN organization AS t5 ON t5.oid  =  t1.oid JOIN writes AS t2 ON t2.aid  =  t1.aid JOIN publication AS t4 ON t2.pid  =  t4.pid WHERE t3.name  =  \"Databases\" AND t5.name  =  \"University of Michigan\" GROUP BY t1.name HAVING SUM ( t4.citation_num )  >  5000;"
+    "query": "SELECT t1.name FROM domain_author AS t6 JOIN author AS t1 ON t6.aid = t1.aid JOIN DOMAIN AS t3 ON t3.did = t6.did JOIN organization AS t5 ON t5.oid = t1.oid JOIN writes AS t2 ON t2.aid = t1.aid JOIN publication AS t4 ON t2.pid = t4.pid WHERE t3.name = 'Databases' AND t5.name = 'University of Michigan' GROUP BY t1.name HAVING SUM(t4.citation_num) > 5000"
 }

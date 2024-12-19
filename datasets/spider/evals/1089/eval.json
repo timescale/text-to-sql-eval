@@ -1,5 +1,5 @@
 {
     "database": "scholar",
     "question": "papers with more than 10 citations",
-    "query": "SELECT DISTINCT t2.citingpaperid FROM paper AS t1 JOIN cite AS t2 ON t1.paperid  =  t2.citedpaperid GROUP BY t2.citingpaperid HAVING COUNT ( DISTINCT t2.citedpaperid )  >  10;"
+    "query": "SELECT DISTINCT t2.citingpaperid FROM paper AS t1 JOIN cite AS t2 ON t1.paperid = t2.citedpaperid GROUP BY t2.citingpaperid HAVING COUNT(DISTINCT t2.citedpaperid) > 10"
 }

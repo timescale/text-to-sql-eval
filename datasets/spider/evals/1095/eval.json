@@ -1,5 +1,5 @@
 {
     "database": "scholar",
     "question": "papers that were not published in the last year",
-    "query": "SELECT DISTINCT paperid FROM paper WHERE YEAR != 2015;"
+    "query": "SELECT DISTINCT paperid FROM paper WHERE YEAR <> 2015"
 }

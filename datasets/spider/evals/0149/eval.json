@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "which state has the longest river",
-    "query": "SELECT traverse FROM river WHERE LENGTH  =  ( SELECT MAX ( LENGTH ) FROM river );"
+    "query": "SELECT traverse FROM river WHERE LENGTH = (SELECT MAX(LENGTH) FROM river)"
 }

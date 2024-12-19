@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what is the capital of the texas state",
-    "query": "SELECT capital FROM state WHERE state_name  =  \"texas\";"
+    "query": "SELECT capital FROM state WHERE state_name = 'texas'"
 }

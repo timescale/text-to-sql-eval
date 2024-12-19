@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "which state has the smallest average urban population",
-    "query": "SELECT state_name FROM city GROUP BY state_name ORDER BY AVG ( population ) LIMIT 1;"
+    "query": "SELECT state_name FROM city GROUP BY state_name ORDER BY AVG(population) NULLS FIRST LIMIT 1"
 }

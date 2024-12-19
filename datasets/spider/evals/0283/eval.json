@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what are the major cities of the united states",
-    "query": "SELECT city_name FROM city WHERE population  >  150000;"
+    "query": "SELECT city_name FROM city WHERE population > 150000"
 }

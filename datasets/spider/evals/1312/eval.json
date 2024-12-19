@@ -1,5 +1,5 @@
 {
     "database": "academic",
     "question": "return me the paper after 2000 with more than 200 citations .",
-    "query": "SELECT title FROM publication WHERE citation_num  >  200 AND YEAR  >  2000;"
+    "query": "SELECT title FROM publication WHERE citation_num > 200 AND YEAR > 2000"
 }

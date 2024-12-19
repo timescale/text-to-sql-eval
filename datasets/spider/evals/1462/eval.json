@@ -1,5 +1,5 @@
 {
     "database": "restaurants",
     "question": "how many denny are there in the bay area ?",
-    "query": "SELECT COUNT ( * ) FROM restaurant AS t1 JOIN geographic AS t2 ON t1.city_name  =  t2.city_name WHERE t2.region  =  \"bay area\" AND t1.name  =  \"denny\";"
+    "query": "SELECT COUNT(*) FROM restaurant AS t1 JOIN geographic AS t2 ON t1.city_name = t2.city_name WHERE t2.region = 'bay area' AND t1.name = 'denny'"
 }

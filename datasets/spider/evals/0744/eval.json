@@ -1,5 +1,5 @@
 {
     "database": "scholar",
     "question": "keyphrases used by Luke S Zettlemoyer for each year",
-    "query": "SELECT DISTINCT t2.keyphraseid  ,  t3.year FROM paper AS t3 JOIN paperkeyphrase AS t2 ON t3.paperid  =  t2.paperid JOIN writes AS t4 ON t4.paperid  =  t3.paperid JOIN author AS t1 ON t4.authorid  =  t1.authorid WHERE t1.authorname  =  \"Luke S Zettlemoyer\" ORDER BY t3.year  ,  t2.keyphraseid;"
+    "query": "SELECT DISTINCT t2.keyphraseid, t3.year FROM paper AS t3 JOIN paperkeyphrase AS t2 ON t3.paperid = t2.paperid JOIN writes AS t4 ON t4.paperid = t3.paperid JOIN author AS t1 ON t4.authorid = t1.authorid WHERE t1.authorname = 'Luke S Zettlemoyer' ORDER BY t3.year NULLS FIRST, t2.keyphraseid NULLS FIRST"
 }

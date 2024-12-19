@@ -1,5 +1,5 @@
 {
     "database": "academic",
     "question": "return me the papers after 2000 .",
-    "query": "SELECT title FROM publication WHERE YEAR  >  2000;"
+    "query": "SELECT title FROM publication WHERE YEAR > 2000"
 }

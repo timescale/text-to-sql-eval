@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what is the size of the largest state in the usa",
-    "query": "SELECT MAX ( area ) FROM state;"
+    "query": "SELECT MAX(area) FROM state"
 }

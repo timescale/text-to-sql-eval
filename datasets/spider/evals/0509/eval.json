@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what mountains are in alaska",
-    "query": "SELECT mountain_name FROM mountain WHERE state_name  =  \"alaska\";"
+    "query": "SELECT mountain_name FROM mountain WHERE state_name = 'alaska'"
 }

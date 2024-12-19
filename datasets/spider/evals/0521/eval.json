@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "how many states in the us does the shortest river run through",
-    "query": "SELECT COUNT ( DISTINCT traverse ) FROM river WHERE LENGTH  =  ( SELECT MIN ( DISTINCT LENGTH ) FROM river );"
+    "query": "SELECT COUNT(DISTINCT traverse) FROM river WHERE LENGTH = (SELECT MIN(DISTINCT LENGTH) FROM river)"
 }

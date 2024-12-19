@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what is the population of the capital of the smallest state",
-    "query": "SELECT population FROM city WHERE city_name  =  ( SELECT capital FROM state WHERE area  =  ( SELECT MIN ( area ) FROM state ) );"
+    "query": "SELECT population FROM city WHERE city_name = (SELECT capital FROM state WHERE area = (SELECT MIN(area) FROM state))"
 }

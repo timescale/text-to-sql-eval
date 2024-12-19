@@ -1,5 +1,5 @@
 {
     "database": "scholar",
     "question": "how many papers by dan klein are cited by michael i. jordan",
-    "query": "SELECT DISTINCT COUNT ( t5.citingpaperid ) FROM writes AS t3 JOIN author AS t2 ON t3.authorid  =  t2.authorid JOIN cite AS t5 ON t3.paperid  =  t5.citedpaperid JOIN writes AS t4 ON t4.paperid  =  t5.citingpaperid JOIN author AS t1 ON t4.authorid  =  t1.authorid WHERE t2.authorname  =  \"michael i. jordan\" AND t1.authorname  =  \"dan klein\";"
+    "query": "SELECT DISTINCT COUNT(t5.citingpaperid) FROM writes AS t3 JOIN author AS t2 ON t3.authorid = t2.authorid JOIN cite AS t5 ON t3.paperid = t5.citedpaperid JOIN writes AS t4 ON t4.paperid = t5.citingpaperid JOIN author AS t1 ON t4.authorid = t1.authorid WHERE t2.authorname = 'michael i. jordan' AND t1.authorname = 'dan klein'"
 }

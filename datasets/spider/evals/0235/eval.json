@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "how many people live in seattle washington",
-    "query": "SELECT population FROM city WHERE city_name  =  \"seattle\" AND state_name  =  \"washington\";"
+    "query": "SELECT population FROM city WHERE city_name = 'seattle' AND state_name = 'washington'"
 }

@@ -1,5 +1,5 @@
 {
     "database": "scholar",
     "question": "How many papers are there ?",
-    "query": "SELECT DISTINCT COUNT ( DISTINCT paperid ) FROM paper;"
+    "query": "SELECT DISTINCT COUNT(DISTINCT paperid) FROM paper"
 }

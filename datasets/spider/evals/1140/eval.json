@@ -1,5 +1,5 @@
 {
     "database": "yelp",
     "question": "Find all cities which has a \" Taj Mahal \" .",
-    "query": "SELECT city FROM business WHERE name  =  \"Taj Mahal\";"
+    "query": "SELECT city FROM business WHERE name = 'Taj Mahal'"
 }

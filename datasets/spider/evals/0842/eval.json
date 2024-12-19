@@ -1,5 +1,5 @@
 {
     "database": "scholar",
     "question": "how many papers accepted in nature communications 2015",
-    "query": "SELECT DISTINCT COUNT ( t1.paperid ) FROM venue AS t2 JOIN paper AS t1 ON t2.venueid  =  t1.venueid WHERE t1.year  =  2015 AND t2.venuename  =  \"nature communications\";"
+    "query": "SELECT DISTINCT COUNT(t1.paperid) FROM venue AS t2 JOIN paper AS t1 ON t2.venueid = t1.venueid WHERE t1.year = 2015 AND t2.venuename = 'nature communications'"
 }

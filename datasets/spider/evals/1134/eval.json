@@ -1,5 +1,5 @@
 {
     "database": "yelp",
     "question": "List all the businesses with more than 4.5 stars",
-    "query": "SELECT name FROM business WHERE rating  >  4.5;"
+    "query": "SELECT name FROM business WHERE rating > 4.5"
 }

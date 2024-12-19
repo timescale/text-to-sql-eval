@@ -1,5 +1,5 @@
 {
     "database": "yelp",
     "question": "Find all Apple Store in \" Los Angeles \"",
-    "query": "SELECT business_id FROM business WHERE city  =  \"Los Angeles\" AND name  =  \"Apple Store\";"
+    "query": "SELECT business_id FROM business WHERE city = 'Los Angeles' AND name = 'Apple Store'"
 }

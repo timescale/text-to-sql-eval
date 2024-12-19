@@ -1,5 +1,5 @@
 {
     "database": "academic",
     "question": "return me the keyword, which have been contained by the most number of papers in VLDB conference .",
-    "query": "SELECT t1.keyword FROM publication_keyword AS t4 JOIN keyword AS t1 ON t4.kid  =  t1.kid JOIN publication AS t3 ON t3.pid  =  t4.pid JOIN conference AS t2 ON t3.cid  =  t2.cid WHERE t2.name  =  \"VLDB\" GROUP BY t1.keyword ORDER BY COUNT ( DISTINCT t3.title ) DESC LIMIT 1;"
+    "query": "SELECT t1.keyword FROM publication_keyword AS t4 JOIN keyword AS t1 ON t4.kid = t1.kid JOIN publication AS t3 ON t3.pid = t4.pid JOIN conference AS t2 ON t3.cid = t2.cid WHERE t2.name = 'VLDB' GROUP BY t1.keyword ORDER BY COUNT(DISTINCT t3.title) DESC NULLS LAST LIMIT 1"
 }

@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what is the population density of the state with the smallest area",
-    "query": "SELECT density FROM state WHERE area  =  ( SELECT MIN ( area ) FROM state );"
+    "query": "SELECT density FROM state WHERE area = (SELECT MIN(area) FROM state)"
 }

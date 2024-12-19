@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "where is the lowest point in the us",
-    "query": "SELECT lowest_point FROM highlow WHERE lowest_elevation  =  ( SELECT MIN ( lowest_elevation ) FROM highlow );"
+    "query": "SELECT lowest_point FROM highlow WHERE lowest_elevation = (SELECT MIN(lowest_elevation) FROM highlow)"
 }

@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "which rivers run through the state with the largest city in the us",
-    "query": "SELECT river_name FROM river WHERE traverse IN ( SELECT state_name FROM city WHERE population  =  ( SELECT MAX ( population ) FROM city ) );"
+    "query": "SELECT river_name FROM river WHERE traverse IN (SELECT state_name FROM city WHERE population = (SELECT MAX(population) FROM city))"
 }

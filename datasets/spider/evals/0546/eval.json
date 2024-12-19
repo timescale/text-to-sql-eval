@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what is the elevation of death valley",
-    "query": "SELECT lowest_elevation FROM highlow WHERE lowest_point  =  \"death valley\";"
+    "query": "SELECT lowest_elevation FROM highlow WHERE lowest_point = 'death valley'"
 }

@@ -1,5 +1,5 @@
 {
     "database": "restaurants",
     "question": "how many buttercup kitchen are there in san francisco ?",
-    "query": "SELECT COUNT ( * ) FROM restaurant AS t1 JOIN LOCATION AS t2 ON t1.id  =  t2.restaurant_id WHERE t2.city_name  =  \"san francisco\" AND t1.name  =  \"buttercup kitchen\";"
+    "query": "SELECT COUNT(*) FROM restaurant AS t1 JOIN LOCATION AS t2 ON t1.id = t2.restaurant_id WHERE t2.city_name = 'san francisco' AND t1.name = 'buttercup kitchen'"
 }

@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what is the highest point in the usa",
-    "query": "SELECT highest_point FROM highlow WHERE highest_elevation  =  ( SELECT MAX ( highest_elevation ) FROM highlow );"
+    "query": "SELECT highest_point FROM highlow WHERE highest_elevation = (SELECT MAX(highest_elevation) FROM highlow)"
 }

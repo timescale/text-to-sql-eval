@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what is the length of the colorado river in texas",
-    "query": "SELECT LENGTH FROM river WHERE river_name  =  \"colorado\" AND traverse  =  \"texas\";"
+    "query": "SELECT LENGTH FROM river WHERE river_name = 'colorado' AND traverse = 'texas'"
 }

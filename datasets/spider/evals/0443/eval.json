@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "which state has the lowest elevation",
-    "query": "SELECT state_name FROM highlow WHERE lowest_elevation  =  ( SELECT MIN ( lowest_elevation ) FROM highlow );"
+    "query": "SELECT state_name FROM highlow WHERE lowest_elevation = (SELECT MIN(lowest_elevation) FROM highlow)"
 }

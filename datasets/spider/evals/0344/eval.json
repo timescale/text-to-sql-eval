@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what is the largest state that borders california",
-    "query": "SELECT state_name FROM state WHERE area  =  ( SELECT MAX ( area ) FROM state WHERE state_name IN ( SELECT border FROM border_info WHERE state_name  =  \"california\" ) ) AND state_name IN ( SELECT border FROM border_info WHERE state_name  =  \"california\" );"
+    "query": "SELECT state_name FROM state WHERE area = (SELECT MAX(area) FROM state WHERE state_name IN (SELECT border FROM border_info WHERE state_name = 'california')) AND state_name IN (SELECT border FROM border_info WHERE state_name = 'california')"
 }

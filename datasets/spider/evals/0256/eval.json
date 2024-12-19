@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "name the major rivers in illinois",
-    "query": "SELECT river_name FROM river WHERE LENGTH  >  750 AND traverse  =  \"illinois\";"
+    "query": "SELECT river_name FROM river WHERE LENGTH > 750 AND traverse = 'illinois'"
 }

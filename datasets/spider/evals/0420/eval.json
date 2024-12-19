@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what states border the state with the smallest area",
-    "query": "SELECT border FROM border_info WHERE state_name  =  ( SELECT state_name FROM state WHERE area  =  ( SELECT MIN ( area ) FROM state ) );"
+    "query": "SELECT border FROM border_info WHERE state_name = (SELECT state_name FROM state WHERE area = (SELECT MIN(area) FROM state))"
 }

@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what state has no rivers",
-    "query": "SELECT state_name FROM state WHERE state_name NOT IN ( SELECT traverse FROM river );"
+    "query": "SELECT state_name FROM state WHERE NOT state_name IN (SELECT traverse FROM river)"
 }

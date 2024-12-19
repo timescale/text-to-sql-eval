@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "which rivers do not run through tennessee",
-    "query": "SELECT river_name FROM river WHERE river_name NOT IN ( SELECT river_name FROM river WHERE traverse  =  \"tennessee\" );"
+    "query": "SELECT river_name FROM river WHERE NOT river_name IN (SELECT river_name FROM river WHERE traverse = 'tennessee')"
 }

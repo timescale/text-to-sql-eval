@@ -1,5 +1,5 @@
 {
     "database": "academic",
     "question": "return me the area of PVLDB .",
-    "query": "SELECT t3.name FROM DOMAIN AS t3 JOIN domain_journal AS t1 ON t3.did  =  t1.did JOIN journal AS t2 ON t2.jid  =  t1.jid WHERE t2.name  =  \"PVLDB\";"
+    "query": "SELECT t3.name FROM DOMAIN AS t3 JOIN domain_journal AS t1 ON t3.did = t1.did JOIN journal AS t2 ON t2.jid = t1.jid WHERE t2.name = 'PVLDB'"
 }

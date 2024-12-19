@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what is the longest river that flows through a state that borders tennessee",
-    "query": "SELECT river_name FROM river WHERE LENGTH  =  ( SELECT MAX ( LENGTH ) FROM river WHERE traverse IN ( SELECT border FROM border_info WHERE state_name  =  \"tennessee\" ) ) AND traverse IN ( SELECT border FROM border_info WHERE state_name  =  \"tennessee\" );"
+    "query": "SELECT river_name FROM river WHERE LENGTH = (SELECT MAX(LENGTH) FROM river WHERE traverse IN (SELECT border FROM border_info WHERE state_name = 'tennessee')) AND traverse IN (SELECT border FROM border_info WHERE state_name = 'tennessee')"
 }

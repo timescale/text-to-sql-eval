@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what is the number of neighboring states for kentucky",
-    "query": "SELECT COUNT ( border ) FROM border_info WHERE state_name  =  \"kentucky\";"
+    "query": "SELECT COUNT(border) FROM border_info WHERE state_name = 'kentucky'"
 }

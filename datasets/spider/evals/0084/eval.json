@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "how many rivers does idaho have",
-    "query": "SELECT COUNT ( river_name ) FROM river WHERE traverse  =  \"idaho\";"
+    "query": "SELECT COUNT(river_name) FROM river WHERE traverse = 'idaho'"
 }

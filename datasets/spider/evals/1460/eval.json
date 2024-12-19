@@ -1,5 +1,5 @@
 {
     "database": "restaurants",
     "question": "how many italian restaurants are in the yolo county ?",
-    "query": "SELECT COUNT ( * ) FROM restaurant AS t1 JOIN geographic AS t2 ON t1.city_name  =  t2.city_name WHERE t2.county  =  \"yolo county\" AND t1.food_type  =  \"italian\";"
+    "query": "SELECT COUNT(*) FROM restaurant AS t1 JOIN geographic AS t2 ON t1.city_name = t2.city_name WHERE t2.county = 'yolo county' AND t1.food_type = 'italian'"
 }

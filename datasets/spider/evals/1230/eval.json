@@ -1,5 +1,5 @@
 {
     "database": "yelp",
     "question": "Find the total number of reviews written in March",
-    "query": "SELECT COUNT ( DISTINCT text ) FROM review WHERE MONTH  =  \"March\";"
+    "query": "SELECT COUNT(DISTINCT text) FROM review WHERE MONTH = 'March'"
 }

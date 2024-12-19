@@ -1,5 +1,5 @@
 {
     "database": "yelp",
     "question": "How many Bars in \" Dallas \" have a rating above 3.5 ?",
-    "query": "SELECT COUNT ( DISTINCT t1.name ) FROM category AS t2 JOIN business AS t1 ON t2.business_id  =  t1.business_id WHERE t1.city  =  \"Dallas\" AND t1.rating  >  3.5 AND t2.category_name  =  \"Bars\";"
+    "query": "SELECT COUNT(DISTINCT t1.name) FROM category AS t2 JOIN business AS t1 ON t2.business_id = t1.business_id WHERE t1.city = 'Dallas' AND t1.rating > 3.5 AND t2.category_name = 'Bars'"
 }

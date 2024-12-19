@@ -1,5 +1,5 @@
 {
     "database": "academic",
     "question": "return me all the organizations in Databases area .",
-    "query": "SELECT t2.name FROM domain_author AS t4 JOIN author AS t1 ON t4.aid  =  t1.aid JOIN DOMAIN AS t3 ON t3.did  =  t4.did JOIN organization AS t2 ON t2.oid  =  t1.oid WHERE t3.name  =  \"Databases\";"
+    "query": "SELECT t2.name FROM domain_author AS t4 JOIN author AS t1 ON t4.aid = t1.aid JOIN DOMAIN AS t3 ON t3.did = t4.did JOIN organization AS t2 ON t2.oid = t1.oid WHERE t3.name = 'Databases'"
 }

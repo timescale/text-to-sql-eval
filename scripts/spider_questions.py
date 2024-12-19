@@ -6,6 +6,7 @@
 import json
 from pathlib import Path
 import shutil
+import sqlglot
 
 root_directory = Path(__file__).resolve().parent.parent
 spider_data_directory = root_directory / "spider_data"
@@ -28,7 +29,6 @@ with (spider_data_directory / "train_spider.json").open() as f:
     all_questions.extend(json.load(f))
 questions = []
 for question in all_questions:
-    print(databases_directory / f"{question["db_id"]}.sql")
     if not (databases_directory / f"{question["db_id"]}.sql").exists():
         continue
     questions.append(question)
@@ -43,7 +43,9 @@ for i in range(len(questions)):
             {
                 "database": question["db_id"],
                 "question": question["question"],
-                "query": question["query"],
+                "query": sqlglot.transpile(
+                    question["query"], read="sqlite", write="postgres"
+                )[0].replace('"', "'"),
             },
             f,
             indent=4,

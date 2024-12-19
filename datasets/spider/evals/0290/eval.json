@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what are the populations of the states through which the mississippi run",
-    "query": "SELECT population FROM state WHERE state_name IN ( SELECT traverse FROM river WHERE river_name  =  \"mississippi\" );"
+    "query": "SELECT population FROM state WHERE state_name IN (SELECT traverse FROM river WHERE river_name = 'mississippi')"
 }

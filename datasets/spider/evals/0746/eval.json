@@ -1,5 +1,5 @@
 {
     "database": "scholar",
     "question": "recent papers by sanjeev arora",
-    "query": "SELECT DISTINCT t1.keyphrasename  ,  t3.year FROM paperkeyphrase AS t2 JOIN keyphrase AS t1 ON t2.keyphraseid  =  t1.keyphraseid JOIN paper AS t3 ON t3.paperid  =  t2.paperid JOIN writes AS t4 ON t4.paperid  =  t3.paperid JOIN author AS t5 ON t4.authorid  =  t5.authorid WHERE t5.authorname  =  \"sanjeev arora\" ORDER BY t3.year DESC;"
+    "query": "SELECT DISTINCT t1.keyphrasename, t3.year FROM paperkeyphrase AS t2 JOIN keyphrase AS t1 ON t2.keyphraseid = t1.keyphraseid JOIN paper AS t3 ON t3.paperid = t2.paperid JOIN writes AS t4 ON t4.paperid = t3.paperid JOIN author AS t5 ON t4.authorid = t5.authorid WHERE t5.authorname = 'sanjeev arora' ORDER BY t3.year DESC NULLS LAST"
 }

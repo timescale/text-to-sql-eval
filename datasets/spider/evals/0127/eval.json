@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what state is springfield located in",
-    "query": "SELECT state_name FROM city WHERE city_name  =  \"springfield\";"
+    "query": "SELECT state_name FROM city WHERE city_name = 'springfield'"
 }

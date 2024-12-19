@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "how high is the highest point of delaware",
-    "query": "SELECT highest_elevation FROM highlow WHERE state_name  =  \"delaware\";"
+    "query": "SELECT highest_elevation FROM highlow WHERE state_name = 'delaware'"
 }

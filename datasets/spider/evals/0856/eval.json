@@ -1,5 +1,5 @@
 {
     "database": "scholar",
     "question": "the papers on semantic parsing by li dong at acl in 2016",
-    "query": "SELECT DISTINCT t2.paperid FROM paperkeyphrase AS t5 JOIN keyphrase AS t3 ON t5.keyphraseid  =  t3.keyphraseid JOIN paper AS t2 ON t2.paperid  =  t5.paperid JOIN venue AS t6 ON t6.venueid  =  t2.venueid JOIN writes AS t4 ON t4.paperid  =  t2.paperid JOIN author AS t1 ON t4.authorid  =  t1.authorid WHERE t1.authorname  =  \"li dong\" AND t3.keyphrasename  =  \"semantic parsing\" AND t2.year  =  2016 AND t6.venuename  =  \"acl\";"
+    "query": "SELECT DISTINCT t2.paperid FROM paperkeyphrase AS t5 JOIN keyphrase AS t3 ON t5.keyphraseid = t3.keyphraseid JOIN paper AS t2 ON t2.paperid = t5.paperid JOIN venue AS t6 ON t6.venueid = t2.venueid JOIN writes AS t4 ON t4.paperid = t2.paperid JOIN author AS t1 ON t4.authorid = t1.authorid WHERE t1.authorname = 'li dong' AND t3.keyphrasename = 'semantic parsing' AND t2.year = 2016 AND t6.venuename = 'acl'"
 }

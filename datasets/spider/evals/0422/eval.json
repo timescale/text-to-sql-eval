@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what states contain at least one major rivers",
-    "query": "SELECT traverse FROM river WHERE LENGTH  >  750;"
+    "query": "SELECT traverse FROM river WHERE LENGTH > 750"
 }

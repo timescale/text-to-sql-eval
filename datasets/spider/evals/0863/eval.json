@@ -1,5 +1,5 @@
 {
     "database": "scholar",
     "question": "which year had the most NIPS papers ?",
-    "query": "SELECT DISTINCT COUNT ( t1.paperid )  ,  t1.year FROM venue AS t2 JOIN paper AS t1 ON t2.venueid  =  t1.venueid WHERE t2.venuename  =  \"NIPS\" GROUP BY t1.year ORDER BY COUNT ( t1.paperid ) DESC;"
+    "query": "SELECT DISTINCT COUNT(t1.paperid), t1.year FROM venue AS t2 JOIN paper AS t1 ON t2.venueid = t1.venueid WHERE t2.venuename = 'NIPS' GROUP BY t1.year ORDER BY COUNT(t1.paperid) DESC NULLS LAST"
 }

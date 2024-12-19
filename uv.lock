@@ -402,6 +402,15 @@ wheels = [
 ]
 
 [[package]]
+name = "sqlglot"
+version = "26.0.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/99/39/35cee255a3de5a4bfbe8780d200761423bb1949249ff541ba81420eebbf5/sqlglot-26.0.1.tar.gz", hash = "sha256:588cde7739029fda310fb7dd49afdc0a20b79e760e4cd6d5e1cd083e7e458b90", size = 19785413 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/62/ac/7cf4f8c133cd2cec68937c87322a5052987f3995f21b87e3d545b4d4aa02/sqlglot-26.0.1-py3-none-any.whl", hash = "sha256:ced4967ce3a4a713d35e2037492fbe1a5187936fdfbd72d7b9ace7815c2d2225", size = 437917 },
+]
+
+[[package]]
 name = "sqlparse"
 version = "0.5.3"
 source = { registry = "https://pypi.org/simple" }
@@ -422,6 +431,7 @@ dependencies = [
     { name = "python-dotenv" },
     { name = "simplejson" },
     { name = "sql-metadata" },
+    { name = "sqlglot" },
 ]
 
 [package.dev-dependencies]
@@ -438,6 +448,7 @@ requires-dist = [
     { name = "python-dotenv", specifier = ">=1.0.1" },
     { name = "simplejson", specifier = ">=3.19.3" },
     { name = "sql-metadata", specifier = ">=2.15.0" },
+    { name = "sqlglot", specifier = ">=26.0.1" },
 ]
 
 [package.metadata.requires-dev]

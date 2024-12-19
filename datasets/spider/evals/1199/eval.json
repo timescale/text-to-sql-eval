@@ -1,5 +1,5 @@
 {
     "database": "yelp",
     "question": "How many tips have been written in 2015",
-    "query": "SELECT COUNT ( DISTINCT text ) FROM tip WHERE YEAR  =  2015;"
+    "query": "SELECT COUNT(DISTINCT text) FROM tip WHERE YEAR = 2015"
 }

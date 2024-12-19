@@ -1,5 +1,5 @@
 {
     "database": "academic",
     "question": "return me the paper with the most citations .",
-    "query": "SELECT title FROM publication ORDER BY citation_num DESC LIMIT 1;"
+    "query": "SELECT title FROM publication ORDER BY citation_num DESC NULLS LAST LIMIT 1"
 }

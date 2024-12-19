@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "how long is the shortest river in the usa",
-    "query": "SELECT LENGTH FROM river WHERE LENGTH  =  ( SELECT MIN ( LENGTH ) FROM river );"
+    "query": "SELECT LENGTH FROM river WHERE LENGTH = (SELECT MIN(LENGTH) FROM river)"
 }

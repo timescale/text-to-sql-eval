@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "how many citizens does the biggest city have in the usa",
-    "query": "SELECT population FROM city WHERE population  =  ( SELECT MAX ( population ) FROM city );"
+    "query": "SELECT population FROM city WHERE population = (SELECT MAX(population) FROM city)"
 }

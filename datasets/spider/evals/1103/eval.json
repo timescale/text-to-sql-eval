@@ -1,5 +1,5 @@
 {
     "database": "scholar",
     "question": "What articles have been published since 2006 about the effects of juicing for cancer patients ?",
-    "query": "SELECT DISTINCT paperid  ,  title FROM paper WHERE title LIKE \"the effects of juicing for cancer patients\" AND YEAR  >  2006;"
+    "query": "SELECT DISTINCT paperid, title FROM paper WHERE title LIKE 'the effects of juicing for cancer patients' AND YEAR > 2006"
 }

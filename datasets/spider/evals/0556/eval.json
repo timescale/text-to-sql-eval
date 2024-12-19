@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what is the biggest american city in a state with a river",
-    "query": "SELECT DISTINCT t1.city_name FROM city AS t1 JOIN river AS t2 ON t2.traverse  =  t1.state_name WHERE t1.population  =  ( SELECT MAX ( t1.population ) FROM river AS t2 JOIN city AS t1 ON t2.traverse  =  t1.state_name );"
+    "query": "SELECT DISTINCT t1.city_name FROM city AS t1 JOIN river AS t2 ON t2.traverse = t1.state_name WHERE t1.population = (SELECT MAX(t1.population) FROM river AS t2 JOIN city AS t1 ON t2.traverse = t1.state_name)"
 }

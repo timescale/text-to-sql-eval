@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "which rivers run through states bordering alabama",
-    "query": "SELECT river_name FROM river WHERE traverse IN ( SELECT border FROM border_info WHERE state_name  =  \"alabama\" );"
+    "query": "SELECT river_name FROM river WHERE traverse IN (SELECT border FROM border_info WHERE state_name = 'alabama')"
 }

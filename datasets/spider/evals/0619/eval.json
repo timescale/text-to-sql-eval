@@ -1,5 +1,5 @@
 {
     "database": "scholar",
     "question": "papers where sharon goldwater is an author",
-    "query": "SELECT DISTINCT t2.paperid FROM writes AS t2 JOIN author AS t1 ON t2.authorid  =  t1.authorid WHERE t1.authorname  =  \"sharon goldwater\";"
+    "query": "SELECT DISTINCT t2.paperid FROM writes AS t2 JOIN author AS t1 ON t2.authorid = t1.authorid WHERE t1.authorname = 'sharon goldwater'"
 }

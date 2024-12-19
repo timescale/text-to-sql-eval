@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what states border the ohio river",
-    "query": "SELECT traverse FROM river WHERE river_name  =  \"ohio\";"
+    "query": "SELECT traverse FROM river WHERE river_name = 'ohio'"
 }

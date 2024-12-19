@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what are the names of the major cities in kansas",
-    "query": "SELECT city_name FROM city WHERE population  >  150000 AND state_name  =  \"kansas\";"
+    "query": "SELECT city_name FROM city WHERE population > 150000 AND state_name = 'kansas'"
 }

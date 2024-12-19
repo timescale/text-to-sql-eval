@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "how many rivers run through the states bordering colorado",
-    "query": "SELECT COUNT ( river_name ) FROM river WHERE traverse IN ( SELECT border FROM border_info WHERE state_name  =  \"colorado\" );"
+    "query": "SELECT COUNT(river_name) FROM river WHERE traverse IN (SELECT border FROM border_info WHERE state_name = 'colorado')"
 }

@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "how high is the highest point in the largest state",
-    "query": "SELECT t2.highest_elevation FROM highlow AS t2 JOIN state AS t1 ON t1.state_name  =  t2.state_name WHERE t1.area  =  ( SELECT MAX ( area ) FROM state );"
+    "query": "SELECT t2.highest_elevation FROM highlow AS t2 JOIN state AS t1 ON t1.state_name = t2.state_name WHERE t1.area = (SELECT MAX(area) FROM state)"
 }

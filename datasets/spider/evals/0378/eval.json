@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "how many people live in the state with the largest population density",
-    "query": "SELECT population FROM state WHERE density  =  ( SELECT MAX ( density ) FROM state );"
+    "query": "SELECT population FROM state WHERE density = (SELECT MAX(density) FROM state)"
 }

@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what is the maximum elevation of guadalupe peak",
-    "query": "SELECT highest_elevation FROM highlow WHERE highest_point  =  \"guadalupe peak\";"
+    "query": "SELECT highest_elevation FROM highlow WHERE highest_point = 'guadalupe peak'"
 }

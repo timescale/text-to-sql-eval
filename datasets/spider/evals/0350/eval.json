@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what is the longest river in the state with the most major cities",
-    "query": "SELECT river_name FROM river WHERE traverse  =  ( SELECT state_name FROM city WHERE population  >  150000 GROUP BY state_name ORDER BY COUNT ( city_name ) DESC LIMIT 1 ) ORDER BY LENGTH DESC LIMIT 1;"
+    "query": "SELECT river_name FROM river WHERE traverse = (SELECT state_name FROM city WHERE population > 150000 GROUP BY state_name ORDER BY COUNT(city_name) DESC NULLS LAST LIMIT 1) ORDER BY LENGTH DESC NULLS LAST LIMIT 1"
 }

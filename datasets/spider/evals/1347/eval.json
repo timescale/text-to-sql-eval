@@ -1,5 +1,5 @@
 {
     "database": "academic",
     "question": "return me the number of the organizations in \" North America \" .",
-    "query": "SELECT COUNT ( DISTINCT name ) FROM organization WHERE continent  =  \"North America\";"
+    "query": "SELECT COUNT(DISTINCT name) FROM organization WHERE continent = 'North America'"
 }

@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "how many rivers are in the state with the highest point.",
-    "query": "SELECT COUNT ( t1.river_name ) FROM highlow AS t2 JOIN river AS t1 ON t1.traverse  =  t2.state_name WHERE t2.highest_elevation  =  ( SELECT MAX ( highest_elevation ) FROM highlow );"
+    "query": "SELECT COUNT(t1.river_name) FROM highlow AS t2 JOIN river AS t1 ON t1.traverse = t2.state_name WHERE t2.highest_elevation = (SELECT MAX(highest_elevation) FROM highlow)"
 }

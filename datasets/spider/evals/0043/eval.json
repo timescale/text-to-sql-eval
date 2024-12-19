@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what are the states",
-    "query": "SELECT state_name FROM state;"
+    "query": "SELECT state_name FROM state"
 }

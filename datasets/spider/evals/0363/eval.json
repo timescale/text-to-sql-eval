@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what is the most dense state in the usa",
-    "query": "SELECT state_name FROM state WHERE density  =  ( SELECT MAX ( density ) FROM state );"
+    "query": "SELECT state_name FROM state WHERE density = (SELECT MAX(density) FROM state)"
 }

@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "how much population does california have",
-    "query": "SELECT population FROM state WHERE state_name  =  \"california\";"
+    "query": "SELECT population FROM state WHERE state_name = 'california'"
 }

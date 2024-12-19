@@ -1,5 +1,5 @@
 {
     "database": "yelp",
     "question": "List all user ids with name Michelle",
-    "query": "SELECT user_id FROM USER WHERE name  =  \"Michelle\";"
+    "query": "SELECT user_id FROM USER WHERE name = 'Michelle'"
 }

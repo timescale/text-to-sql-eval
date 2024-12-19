@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "how many states are next to major rivers",
-    "query": "SELECT COUNT ( DISTINCT traverse ) FROM river WHERE LENGTH  >  750;"
+    "query": "SELECT COUNT(DISTINCT traverse) FROM river WHERE LENGTH > 750"
 }

@@ -1,5 +1,5 @@
 {
     "database": "yelp",
     "question": "What is the total likes on tips about \" Cafe Zinho \"",
-    "query": "SELECT SUM ( t2.likes ) FROM tip AS t2 JOIN business AS t1 ON t2.business_id  =  t1.business_id WHERE t1.name  =  \"Cafe Zinho\";"
+    "query": "SELECT SUM(t2.likes) FROM tip AS t2 JOIN business AS t1 ON t2.business_id = t1.business_id WHERE t1.name = 'Cafe Zinho'"
 }

@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what is the lowest elevation in pennsylvania",
-    "query": "SELECT lowest_elevation FROM highlow WHERE state_name  =  \"pennsylvania\";"
+    "query": "SELECT lowest_elevation FROM highlow WHERE state_name = 'pennsylvania'"
 }

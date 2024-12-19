@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what is the capital of the state with the largest population density",
-    "query": "SELECT DISTINCT capital FROM state WHERE density  =  ( SELECT MAX ( density ) FROM state );"
+    "query": "SELECT DISTINCT capital FROM state WHERE density = (SELECT MAX(density) FROM state)"
 }

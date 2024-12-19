@@ -1,5 +1,5 @@
 {
     "database": "yelp",
     "question": "How many neighbourhoods have a business with rating 5 in Madison ?",
-    "query": "SELECT COUNT ( DISTINCT t1.neighbourhood_name ) FROM neighbourhood AS t1 JOIN business AS t2 ON t1.business_id  =  t2.business_id WHERE t2.city  =  \"Madison\" AND t2.rating  =  5;"
+    "query": "SELECT COUNT(DISTINCT t1.neighbourhood_name) FROM neighbourhood AS t1 JOIN business AS t2 ON t1.business_id = t2.business_id WHERE t2.city = 'Madison' AND t2.rating = 5"
 }

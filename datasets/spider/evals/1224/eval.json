@@ -1,5 +1,5 @@
 {
     "database": "yelp",
     "question": "Find the number of reviews on businesses located in \" South Summerlin \" neighbourhood",
-    "query": "SELECT COUNT ( DISTINCT t3.text ) FROM neighbourhood AS t1 JOIN business AS t2 ON t1.business_id  =  t2.business_id JOIN review AS t3 ON t3.business_id  =  t2.business_id WHERE t1.neighbourhood_name  =  \"South Summerlin\";"
+    "query": "SELECT COUNT(DISTINCT t3.text) FROM neighbourhood AS t1 JOIN business AS t2 ON t1.business_id = t2.business_id JOIN review AS t3 ON t3.business_id = t2.business_id WHERE t1.neighbourhood_name = 'South Summerlin'"
 }

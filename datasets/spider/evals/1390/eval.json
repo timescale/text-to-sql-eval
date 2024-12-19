@@ -1,5 +1,5 @@
 {
     "database": "academic",
     "question": "return me the author who has the most number of papers containing keyword \" Relational Database \" .",
-    "query": "SELECT t2.name FROM publication_keyword AS t5 JOIN keyword AS t1 ON t5.kid  =  t1.kid JOIN publication AS t3 ON t3.pid  =  t5.pid JOIN writes AS t4 ON t4.pid  =  t3.pid JOIN author AS t2 ON t4.aid  =  t2.aid WHERE t1.keyword  =  \"Relational Database\" GROUP BY t2.name ORDER BY COUNT ( DISTINCT t3.title ) DESC LIMIT 1;"
+    "query": "SELECT t2.name FROM publication_keyword AS t5 JOIN keyword AS t1 ON t5.kid = t1.kid JOIN publication AS t3 ON t3.pid = t5.pid JOIN writes AS t4 ON t4.pid = t3.pid JOIN author AS t2 ON t4.aid = t2.aid WHERE t1.keyword = 'Relational Database' GROUP BY t2.name ORDER BY COUNT(DISTINCT t3.title) DESC NULLS LAST LIMIT 1"
 }

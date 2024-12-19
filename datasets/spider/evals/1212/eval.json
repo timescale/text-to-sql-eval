@@ -1,5 +1,5 @@
 {
     "database": "yelp",
     "question": "How many Starbucks are there in Dallas Texas ?",
-    "query": "SELECT COUNT ( DISTINCT business_id ) FROM business WHERE city  =  \"Dallas\" AND name  =  \"Starbucks\" AND state  =  \"Texas\";"
+    "query": "SELECT COUNT(DISTINCT business_id) FROM business WHERE city = 'Dallas' AND name = 'Starbucks' AND state = 'Texas'"
 }

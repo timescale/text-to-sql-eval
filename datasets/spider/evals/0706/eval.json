@@ -1,5 +1,5 @@
 {
     "database": "scholar",
     "question": "What papers were published in acl in 2012 about Parsing ?",
-    "query": "SELECT DISTINCT t3.paperid FROM paperkeyphrase AS t2 JOIN keyphrase AS t1 ON t2.keyphraseid  =  t1.keyphraseid JOIN paper AS t3 ON t3.paperid  =  t2.paperid JOIN venue AS t4 ON t4.venueid  =  t3.venueid WHERE t1.keyphrasename  =  \"Parsing\" AND t3.year  =  2012 AND t4.venuename  =  \"acl\";"
+    "query": "SELECT DISTINCT t3.paperid FROM paperkeyphrase AS t2 JOIN keyphrase AS t1 ON t2.keyphraseid = t1.keyphraseid JOIN paper AS t3 ON t3.paperid = t2.paperid JOIN venue AS t4 ON t4.venueid = t3.venueid WHERE t1.keyphrasename = 'Parsing' AND t3.year = 2012 AND t4.venuename = 'acl'"
 }

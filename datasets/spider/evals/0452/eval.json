@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "which states have a river",
-    "query": "SELECT traverse FROM river;"
+    "query": "SELECT traverse FROM river"
 }

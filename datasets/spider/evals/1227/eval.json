@@ -1,5 +1,5 @@
 {
     "database": "yelp",
     "question": "Return me the number of cities that has \" Panda Express \" .",
-    "query": "SELECT COUNT ( DISTINCT city ) FROM business WHERE name  =  \"Panda Express\";"
+    "query": "SELECT COUNT(DISTINCT city) FROM business WHERE name = 'Panda Express'"
 }

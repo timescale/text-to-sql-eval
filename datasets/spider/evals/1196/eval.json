@@ -1,5 +1,5 @@
 {
     "database": "yelp",
     "question": "What is the number of checkins for \" Cafe Zinho \" on Friday",
-    "query": "SELECT t2.count FROM checkin AS t2 JOIN business AS t1 ON t2.business_id  =  t1.business_id WHERE t1.name  =  \"Cafe Zinho\" AND t2.day  =  \"Friday\";"
+    "query": "SELECT t2.count FROM checkin AS t2 JOIN business AS t1 ON t2.business_id = t1.business_id WHERE t1.name = 'Cafe Zinho' AND t2.day = 'Friday'"
 }

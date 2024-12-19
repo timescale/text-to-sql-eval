@@ -1,5 +1,5 @@
 {
     "database": "scholar",
     "question": "what papers were published in Academic radiology in 1995 ?",
-    "query": "SELECT DISTINCT t2.paperid FROM paper AS t2 JOIN journal AS t1 ON t2.journalid  =  t1.journalid WHERE t1.journalname  =  \"Academic radiology\" AND t2.year  =  1995;"
+    "query": "SELECT DISTINCT t2.paperid FROM paper AS t2 JOIN journal AS t1 ON t2.journalid = t1.journalid WHERE t1.journalname = 'Academic radiology' AND t2.year = 1995"
 }

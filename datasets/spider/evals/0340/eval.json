@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what is the largest city in smallest state through which the mississippi runs",
-    "query": "SELECT city_name FROM city WHERE state_name IN ( SELECT state_name FROM state WHERE state_name IN ( SELECT traverse FROM river WHERE river_name  =  \"mississippi\" ) AND area  =  ( SELECT MIN ( area ) FROM state WHERE state_name IN ( SELECT traverse FROM river WHERE river_name  =  \"mississippi\" ) ) ) ORDER BY population DESC LIMIT 1;"
+    "query": "SELECT city_name FROM city WHERE state_name IN (SELECT state_name FROM state WHERE state_name IN (SELECT traverse FROM river WHERE river_name = 'mississippi') AND area = (SELECT MIN(area) FROM state WHERE state_name IN (SELECT traverse FROM river WHERE river_name = 'mississippi'))) ORDER BY population DESC NULLS LAST LIMIT 1"
 }

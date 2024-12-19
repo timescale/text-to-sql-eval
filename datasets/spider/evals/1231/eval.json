@@ -1,5 +1,5 @@
 {
     "database": "yelp",
     "question": "Find the number of tips written in each month",
-    "query": "SELECT COUNT ( DISTINCT text )  ,  MONTH FROM tip GROUP BY MONTH;"
+    "query": "SELECT COUNT(DISTINCT text), MONTH FROM tip GROUP BY MONTH"
 }

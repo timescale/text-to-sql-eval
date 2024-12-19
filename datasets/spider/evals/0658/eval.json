@@ -1,5 +1,5 @@
 {
     "database": "scholar",
     "question": "What papers were published at CVPR in 2016 about Class consistent multi-modal fusion with binary features applied to RGB-D Object Dataset ?",
-    "query": "SELECT DISTINCT t3.paperid FROM paperdataset AS t2 JOIN dataset AS t1 ON t2.datasetid  =  t1.datasetid JOIN paper AS t3 ON t3.paperid  =  t2.paperid JOIN venue AS t4 ON t4.venueid  =  t3.venueid WHERE t1.datasetname  =  \"RGB-D Object Dataset\" AND t3.title  =  \"Class consistent multi-modal fusion with binary features\" AND t3.year  =  2016 AND t4.venuename  =  \"CVPR\";"
+    "query": "SELECT DISTINCT t3.paperid FROM paperdataset AS t2 JOIN dataset AS t1 ON t2.datasetid = t1.datasetid JOIN paper AS t3 ON t3.paperid = t2.paperid JOIN venue AS t4 ON t4.venueid = t3.venueid WHERE t1.datasetname = 'RGB-D Object Dataset' AND t3.title = 'Class consistent multi-modal fusion with binary features' AND t3.year = 2016 AND t4.venuename = 'CVPR'"
 }

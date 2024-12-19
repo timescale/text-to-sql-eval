@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what is the lowest point in iowa in meters",
-    "query": "SELECT lowest_point FROM highlow WHERE state_name  =  \"iowa\";"
+    "query": "SELECT lowest_point FROM highlow WHERE state_name = 'iowa'"
 }

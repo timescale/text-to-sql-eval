@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what are the populations of states which border texas",
-    "query": "SELECT t2.population FROM state AS t2 JOIN border_info AS t1 ON t2.state_name  =  t1.border WHERE t1.state_name  =  \"texas\";"
+    "query": "SELECT t2.population FROM state AS t2 JOIN border_info AS t1 ON t2.state_name = t1.border WHERE t1.state_name = 'texas'"
 }

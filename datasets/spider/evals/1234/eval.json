@@ -1,5 +1,5 @@
 {
     "database": "yelp",
     "question": "which business has the most number of checkins",
-    "query": "SELECT t1.name FROM checkin AS t2 JOIN business AS t1 ON t2.business_id  =  t1.business_id GROUP BY t1.name ORDER BY SUM ( t2.count ) DESC LIMIT 1;"
+    "query": "SELECT t1.name FROM checkin AS t2 JOIN business AS t1 ON t2.business_id = t1.business_id GROUP BY t1.name ORDER BY SUM(t2.count) DESC NULLS LAST LIMIT 1"
 }

@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what states border states that border states that border states that border texas",
-    "query": "SELECT t1.border FROM border_info AS t2 JOIN border_info AS t1 ON t2.border  =  t1.state_name JOIN border_info AS t3 ON t3.border  =  t2.state_name JOIN border_info AS t4 ON t4.border  =  t3.state_name WHERE t4.state_name  =  \"texas\";"
+    "query": "SELECT t1.border FROM border_info AS t2 JOIN border_info AS t1 ON t2.border = t1.state_name JOIN border_info AS t3 ON t3.border = t2.state_name JOIN border_info AS t4 ON t4.border = t3.state_name WHERE t4.state_name = 'texas'"
 }

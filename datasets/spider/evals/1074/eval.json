@@ -1,5 +1,5 @@
 {
     "database": "scholar",
     "question": "conferences that mention ImageNet",
-    "query": "SELECT DISTINCT t3.venueid FROM paperdataset AS t2 JOIN dataset AS t1 ON t2.datasetid  =  t1.datasetid JOIN paper AS t3 ON t3.paperid  =  t2.paperid WHERE t1.datasetname  =  \"ImageNet\";"
+    "query": "SELECT DISTINCT t3.venueid FROM paperdataset AS t2 JOIN dataset AS t1 ON t2.datasetid = t1.datasetid JOIN paper AS t3 ON t3.paperid = t2.paperid WHERE t1.datasetname = 'ImageNet'"
 }

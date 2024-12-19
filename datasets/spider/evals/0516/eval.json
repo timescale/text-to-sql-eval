@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what is the capital of the largest state",
-    "query": "SELECT capital FROM state WHERE area  =  ( SELECT MAX ( area ) FROM state );"
+    "query": "SELECT capital FROM state WHERE area = (SELECT MAX(area) FROM state)"
 }

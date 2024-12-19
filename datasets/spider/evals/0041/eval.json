@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "give me the lakes in california",
-    "query": "SELECT lake_name FROM lake WHERE state_name  =  \"california\";"
+    "query": "SELECT lake_name FROM lake WHERE state_name = 'california'"
 }

@@ -1,5 +1,5 @@
 {
     "database": "scholar",
     "question": "What is the paper with the most citation about Artificial Intelligence ?",
-    "query": "SELECT DISTINCT t4.citedpaperid  ,  COUNT ( t4.citingpaperid ) FROM paperkeyphrase AS t2 JOIN keyphrase AS t1 ON t2.keyphraseid  =  t1.keyphraseid JOIN paper AS t3 ON t3.paperid  =  t2.paperid JOIN cite AS t4 ON t3.paperid  =  t4.citedpaperid WHERE t1.keyphrasename  =  \"Artificial Intelligence\" GROUP BY t4.citedpaperid ORDER BY COUNT ( t4.citingpaperid ) DESC;"
+    "query": "SELECT DISTINCT t4.citedpaperid, COUNT(t4.citingpaperid) FROM paperkeyphrase AS t2 JOIN keyphrase AS t1 ON t2.keyphraseid = t1.keyphraseid JOIN paper AS t3 ON t3.paperid = t2.paperid JOIN cite AS t4 ON t3.paperid = t4.citedpaperid WHERE t1.keyphrasename = 'Artificial Intelligence' GROUP BY t4.citedpaperid ORDER BY COUNT(t4.citingpaperid) DESC NULLS LAST"
 }

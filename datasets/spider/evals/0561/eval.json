@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what is the highest point in the smallest state",
-    "query": "SELECT t2.highest_point FROM highlow AS t2 JOIN state AS t1 ON t1.state_name  =  t2.state_name WHERE t1.area  =  ( SELECT MIN ( area ) FROM state );"
+    "query": "SELECT t2.highest_point FROM highlow AS t2 JOIN state AS t1 ON t1.state_name = t2.state_name WHERE t1.area = (SELECT MIN(area) FROM state)"
 }

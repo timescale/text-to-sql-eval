@@ -1,5 +1,5 @@
 {
     "database": "academic",
     "question": "return me the papers of \" H. V. Jagadish \" containing keyword \" User Study \" .",
-    "query": "SELECT t5.title FROM publication_keyword AS t3 JOIN keyword AS t1 ON t3.kid  =  t1.kid JOIN publication AS t5 ON t5.pid  =  t3.pid JOIN writes AS t4 ON t4.pid  =  t5.pid JOIN author AS t2 ON t4.aid  =  t2.aid WHERE t2.name  =  \"H. V. Jagadish\" AND t1.keyword  =  \"User Study\";"
+    "query": "SELECT t5.title FROM publication_keyword AS t3 JOIN keyword AS t1 ON t3.kid = t1.kid JOIN publication AS t5 ON t5.pid = t3.pid JOIN writes AS t4 ON t4.pid = t5.pid JOIN author AS t2 ON t4.aid = t2.aid WHERE t2.name = 'H. V. Jagadish' AND t1.keyword = 'User Study'"
 }

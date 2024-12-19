@@ -1,5 +1,5 @@
 {
     "database": "yelp",
     "question": "list all the reviews by Niloofar",
-    "query": "SELECT t1.text FROM USER AS t2 JOIN review AS t1 ON t2.user_id  =  t1.user_id WHERE t2.name  =  \"Niloofar\";"
+    "query": "SELECT t1.text FROM USER AS t2 JOIN review AS t1 ON t2.user_id = t1.user_id WHERE t2.name = 'Niloofar'"
 }

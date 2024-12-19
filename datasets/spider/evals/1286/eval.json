@@ -1,5 +1,5 @@
 {
     "database": "academic",
     "question": "return me all the keywords in Databases area .",
-    "query": "SELECT t1.keyword FROM DOMAIN AS t3 JOIN domain_keyword AS t2 ON t3.did  =  t2.did JOIN keyword AS t1 ON t1.kid  =  t2.kid WHERE t3.name  =  \"Databases\";"
+    "query": "SELECT t1.keyword FROM DOMAIN AS t3 JOIN domain_keyword AS t2 ON t3.did = t2.did JOIN keyword AS t1 ON t1.kid = t2.kid WHERE t3.name = 'Databases'"
 }

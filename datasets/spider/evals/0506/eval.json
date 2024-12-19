@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what is the highest point in the state with the smallest population",
-    "query": "SELECT t2.highest_point FROM state AS t1 JOIN highlow AS t2 ON t1.state_name  =  t2.state_name WHERE t1.state_name IN ( SELECT state_name FROM state WHERE population  =  ( SELECT MIN ( population ) FROM state ) );"
+    "query": "SELECT t2.highest_point FROM state AS t1 JOIN highlow AS t2 ON t1.state_name = t2.state_name WHERE t1.state_name IN (SELECT state_name FROM state WHERE population = (SELECT MIN(population) FROM state))"
 }

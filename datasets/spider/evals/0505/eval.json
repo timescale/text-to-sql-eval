@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what states does the shortest river run through",
-    "query": "SELECT traverse FROM river WHERE LENGTH  =  ( SELECT MIN ( LENGTH ) FROM river );"
+    "query": "SELECT traverse FROM river WHERE LENGTH = (SELECT MIN(LENGTH) FROM river)"
 }

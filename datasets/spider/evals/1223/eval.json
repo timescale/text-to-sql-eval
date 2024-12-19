@@ -1,5 +1,5 @@
 {
     "database": "yelp",
     "question": "How many people reviewed restaurant \" Vintner Grill \" in 2010 ?",
-    "query": "SELECT COUNT ( DISTINCT t4.name ) FROM category AS t2 JOIN business AS t1 ON t2.business_id  =  t1.business_id JOIN review AS t3 ON t3.business_id  =  t1.business_id JOIN USER AS t4 ON t4.user_id  =  t3.user_id WHERE t1.name  =  \"Vintner Grill\" AND t2.category_name  =  \"category_category_name0\" AND t3.year  =  2010;"
+    "query": "SELECT COUNT(DISTINCT t4.name) FROM category AS t2 JOIN business AS t1 ON t2.business_id = t1.business_id JOIN review AS t3 ON t3.business_id = t1.business_id JOIN USER AS t4 ON t4.user_id = t3.user_id WHERE t1.name = 'Vintner Grill' AND t2.category_name = 'category_category_name0' AND t3.year = 2010"
 }

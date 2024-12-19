@@ -1,5 +1,5 @@
 {
     "database": "yelp",
     "question": "How many reviews has Niloofar written in 2015",
-    "query": "SELECT COUNT ( DISTINCT t1.text ) FROM USER AS t2 JOIN review AS t1 ON t2.user_id  =  t1.user_id WHERE t1.year  =  2015 AND t2.name  =  \"Niloofar\";"
+    "query": "SELECT COUNT(DISTINCT t1.text) FROM USER AS t2 JOIN review AS t1 ON t2.user_id = t1.user_id WHERE t1.year = 2015 AND t2.name = 'Niloofar'"
 }

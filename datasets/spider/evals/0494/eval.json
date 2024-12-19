@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what is the height of the highest mountain in texas",
-    "query": "SELECT MAX ( DISTINCT highest_elevation ) FROM highlow WHERE state_name  =  \"texas\";"
+    "query": "SELECT MAX(DISTINCT highest_elevation) FROM highlow WHERE state_name = 'texas'"
 }

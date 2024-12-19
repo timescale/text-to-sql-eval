@@ -1,5 +1,5 @@
 {
     "database": "academic",
     "question": "return me all the organizations in \" North America \" .",
-    "query": "SELECT name FROM organization WHERE continent  =  \"North America\";"
+    "query": "SELECT name FROM organization WHERE continent = 'North America'"
 }

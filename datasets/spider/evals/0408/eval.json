@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what state contains the highest point of those the colorado river traverses",
-    "query": "SELECT state_name FROM highlow WHERE highest_elevation  =  ( SELECT MAX ( highest_elevation ) FROM highlow WHERE state_name IN ( SELECT traverse FROM river WHERE river_name  =  \"colorado\" ) );"
+    "query": "SELECT state_name FROM highlow WHERE highest_elevation = (SELECT MAX(highest_elevation) FROM highlow WHERE state_name IN (SELECT traverse FROM river WHERE river_name = 'colorado'))"
 }

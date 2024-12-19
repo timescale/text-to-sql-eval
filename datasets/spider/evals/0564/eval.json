@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what is the longest river in the state with the highest point",
-    "query": "SELECT t1.river_name FROM highlow AS t2 JOIN river AS t1 ON t1.traverse  =  t2.state_name WHERE t2.highest_elevation  =  ( SELECT MAX ( highest_elevation ) FROM highlow ) ORDER BY t1.length DESC LIMIT 1;"
+    "query": "SELECT t1.river_name FROM highlow AS t2 JOIN river AS t1 ON t1.traverse = t2.state_name WHERE t2.highest_elevation = (SELECT MAX(highest_elevation) FROM highlow) ORDER BY t1.length DESC NULLS LAST LIMIT 1"
 }

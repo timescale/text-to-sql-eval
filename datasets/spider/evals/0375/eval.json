@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what is the population of the largest city in the state with the largest area",
-    "query": "SELECT population FROM city WHERE population  =  ( SELECT MAX ( population ) FROM city WHERE state_name IN ( SELECT state_name FROM state WHERE area  =  ( SELECT MAX ( area ) FROM state ) ) ) AND state_name IN ( SELECT state_name FROM state WHERE area  =  ( SELECT MAX ( area ) FROM state ) );"
+    "query": "SELECT population FROM city WHERE population = (SELECT MAX(population) FROM city WHERE state_name IN (SELECT state_name FROM state WHERE area = (SELECT MAX(area) FROM state))) AND state_name IN (SELECT state_name FROM state WHERE area = (SELECT MAX(area) FROM state))"
 }

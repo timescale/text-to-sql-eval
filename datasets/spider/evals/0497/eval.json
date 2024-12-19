@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what is the total population of the states that border texas",
-    "query": "SELECT SUM ( t2.population ) FROM state AS t2 JOIN border_info AS t1 ON t2.state_name  =  t1.border WHERE t1.state_name  =  \"texas\";"
+    "query": "SELECT SUM(t2.population) FROM state AS t2 JOIN border_info AS t1 ON t2.state_name = t1.border WHERE t1.state_name = 'texas'"
 }

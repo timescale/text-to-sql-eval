@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "which states adjoin kentucky",
-    "query": "SELECT border FROM border_info WHERE state_name  =  \"kentucky\";"
+    "query": "SELECT border FROM border_info WHERE state_name = 'kentucky'"
 }

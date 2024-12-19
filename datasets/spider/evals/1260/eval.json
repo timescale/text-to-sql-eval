@@ -1,5 +1,5 @@
 {
     "database": "academic",
     "question": "return me the paper with more than 200 citations .",
-    "query": "SELECT title FROM publication WHERE citation_num  >  200;"
+    "query": "SELECT title FROM publication WHERE citation_num > 200"
 }

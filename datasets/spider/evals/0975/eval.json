@@ -1,5 +1,5 @@
 {
     "database": "scholar",
     "question": "topics popular at NIPS 2015",
-    "query": "SELECT DISTINCT COUNT ( t3.paperid )  ,  t1.keyphraseid FROM paperkeyphrase AS t2 JOIN keyphrase AS t1 ON t2.keyphraseid  =  t1.keyphraseid JOIN paper AS t3 ON t3.paperid  =  t2.paperid JOIN venue AS t4 ON t4.venueid  =  t3.venueid WHERE t3.year  =  2015 AND t4.venuename  =  \"NIPS\" GROUP BY t1.keyphraseid ORDER BY COUNT ( t3.paperid ) DESC;"
+    "query": "SELECT DISTINCT COUNT(t3.paperid), t1.keyphraseid FROM paperkeyphrase AS t2 JOIN keyphrase AS t1 ON t2.keyphraseid = t1.keyphraseid JOIN paper AS t3 ON t3.paperid = t2.paperid JOIN venue AS t4 ON t4.venueid = t3.venueid WHERE t3.year = 2015 AND t4.venuename = 'NIPS' GROUP BY t1.keyphraseid ORDER BY COUNT(t3.paperid) DESC NULLS LAST"
 }

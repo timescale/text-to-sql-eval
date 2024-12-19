@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what city has the largest population",
-    "query": "SELECT city_name FROM city WHERE population  =  ( SELECT MAX ( population ) FROM city );"
+    "query": "SELECT city_name FROM city WHERE population = (SELECT MAX(population) FROM city)"
 }

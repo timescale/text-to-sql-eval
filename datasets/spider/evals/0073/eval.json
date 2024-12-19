@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what is the highest point in each state whose lowest point is sea level",
-    "query": "SELECT highest_point  ,  state_name FROM highlow WHERE lowest_elevation  =  0;"
+    "query": "SELECT highest_point, state_name FROM highlow WHERE lowest_elevation = 0"
 }

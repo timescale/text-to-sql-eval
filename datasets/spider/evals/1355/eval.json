@@ -1,5 +1,5 @@
 {
     "database": "academic",
     "question": "return me the number of papers in PVLDB after 2000 in \" University of Michigan \" .",
-    "query": "SELECT COUNT ( DISTINCT t5.title ) FROM organization AS t2 JOIN author AS t1 ON t2.oid  =  t1.oid JOIN writes AS t4 ON t4.aid  =  t1.aid JOIN publication AS t5 ON t4.pid  =  t5.pid JOIN journal AS t3 ON t5.jid  =  t3.jid WHERE t3.name  =  \"PVLDB\" AND t2.name  =  \"University of Michigan\" AND t5.year  >  2000;"
+    "query": "SELECT COUNT(DISTINCT t5.title) FROM organization AS t2 JOIN author AS t1 ON t2.oid = t1.oid JOIN writes AS t4 ON t4.aid = t1.aid JOIN publication AS t5 ON t4.pid = t5.pid JOIN journal AS t3 ON t5.jid = t3.jid WHERE t3.name = 'PVLDB' AND t2.name = 'University of Michigan' AND t5.year > 2000"
 }

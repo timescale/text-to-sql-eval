@@ -1,5 +1,5 @@
 {
     "database": "yelp",
     "question": "Find the number of users called Michelle",
-    "query": "SELECT COUNT ( DISTINCT name ) FROM USER WHERE name  =  \"Michelle\";"
+    "query": "SELECT COUNT(DISTINCT name) FROM USER WHERE name = 'Michelle'"
 }

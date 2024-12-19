@@ -12,6 +12,7 @@ dependencies = [
     "python-dotenv>=1.0.1",
     "simplejson>=3.19.3",
     "sql-metadata>=2.15.0",
+    "sqlglot>=26.0.1",
 ]
 
 [dependency-groups]

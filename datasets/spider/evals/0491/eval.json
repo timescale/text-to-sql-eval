@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "what is the average population per square km in pennsylvania",
-    "query": "SELECT population / area FROM state WHERE state_name  =  \"pennsylvania\";"
+    "query": "SELECT population / NULLIF(area, 0) FROM state WHERE state_name = 'pennsylvania'"
 }

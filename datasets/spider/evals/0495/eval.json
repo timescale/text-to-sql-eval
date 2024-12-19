@@ -1,5 +1,5 @@
 {
     "database": "geo",
     "question": "how many states border colorado and border new mexico",
-    "query": "SELECT COUNT ( border ) FROM border_info WHERE border IN ( SELECT border FROM border_info WHERE state_name  =  \"new mexico\" ) AND state_name  =  \"colorado\";"
+    "query": "SELECT COUNT(border) FROM border_info WHERE border IN (SELECT border FROM border_info WHERE state_name = 'new mexico') AND state_name = 'colorado'"
 }

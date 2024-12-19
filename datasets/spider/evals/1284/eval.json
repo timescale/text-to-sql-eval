@@ -1,5 +1,5 @@
 {
     "database": "academic",
     "question": "return me the area of the VLDB conference .",
-    "query": "SELECT t2.name FROM domain_conference AS t3 JOIN conference AS t1 ON t3.cid  =  t1.cid JOIN DOMAIN AS t2 ON t2.did  =  t3.did WHERE t1.name  =  \"VLDB\";"
+    "query": "SELECT t2.name FROM domain_conference AS t3 JOIN conference AS t1 ON t3.cid = t1.cid JOIN DOMAIN AS t2 ON t2.did = t3.did WHERE t1.name = 'VLDB'"
 }
