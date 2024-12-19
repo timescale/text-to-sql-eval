@@ -1,4 +1,5 @@
 import os
+
 import psycopg
 import simplejson as json
 
@@ -31,7 +32,7 @@ def run(
         result = agent_fn(conn, inp)
         query = result["query"]
     except Exception as e:
-        raise AgentFnError(e)
+        raise AgentFnError(e) from e
     with open(f"{path}/actual_query.sql", "w") as fp:
         fp.write(query)
     with open(f"{path}/actual_messages.txt", "w") as fp:
@@ -50,5 +51,5 @@ def run(
             result = cur.fetchall()
             actual = {"columns": [desc[0] for desc in cur.description], "data": result}
     except psycopg.DatabaseError as e:
-        raise QueryExecutionError(e)
+        raise QueryExecutionError(e) from e
     return compare(actual, expected)

@@ -2,15 +2,14 @@ import json
 import os
 from pathlib import Path
 
-from dotenv import load_dotenv
 import click
 import psycopg
+from dotenv import load_dotenv
 
 from .agents import get_agent_fn
 from .tasks.get_tables import run as get_tables
 from .tasks.text_to_sql import run as text_to_sql
 from .utils import get_psycopg_str
-
 
 root_directory = Path(__file__).resolve().parent.parent
 load_dotenv()
@@ -54,16 +53,16 @@ def load(dataset, model, comment):
             print(f"    {db_name}")
             with psycopg.connect(get_psycopg_str()) as root_db:
                 root_db.autocommit = True
-                print(f"      DROP DATABASE")
+                print("      DROP DATABASE")
                 root_db.execute(f"DROP DATABASE IF EXISTS {db_name}")
-                print(f"      CREATE DATABASE")
+                print("      CREATE DATABASE")
                 root_db.execute(f"CREATE DATABASE {db_name}")
             with psycopg.connect(get_psycopg_str(db_name)) as db:
-                print(f"      Restoring dump")
+                print("      Restoring dump")
                 with entry.open() as fp:
                     db.execute(fp.read())
                 if pgai:
-                    print(f"      Initializing pgai")
+                    print("      Initializing pgai")
                     with db.cursor() as cur:
                         cur.execute(
                             "select set_config('ai.enable_feature_flag_text_to_sql', 'true', false)"

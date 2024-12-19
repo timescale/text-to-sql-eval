@@ -1,5 +1,6 @@
 import json
 import os
+
 import psycopg
 from sql_metadata import Parser
 
@@ -22,7 +23,7 @@ def run(
     try:
         parser = Parser(query)
     except Exception as e:
-        raise AgentFnError(e)
+        raise AgentFnError(e) from e
     # normalize table names as query uses mix of uppercase/lowercase to reference them
     expected = list(set([table.lower() for table in parser.tables]))
     actual = agent_fn(conn, inp)

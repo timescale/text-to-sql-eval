@@ -1,8 +1,8 @@
 import os
 
+import psycopg
 from dotenv import load_dotenv
 from openai import OpenAI
-import psycopg
 from pydantic import BaseModel
 
 from .types import TextToSql

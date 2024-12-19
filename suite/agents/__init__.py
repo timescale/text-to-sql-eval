@@ -1,8 +1,11 @@
 from .baseline import (
     get_tables as baseline_get_tables,
+)
+from .baseline import (
     text_to_sql as baseline_text_to_sql,
 )
-from .pgai import get_tables as pgai_get_tables, text_to_sql as pgai_text_to_sql
+from .pgai import get_tables as pgai_get_tables
+from .pgai import text_to_sql as pgai_text_to_sql
 
 
 def get_agent_fn(agent: str, task: str) -> callable:

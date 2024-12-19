@@ -5,9 +5,10 @@
 
 import json
 import os
-from pathlib import Path
-import psycopg
 import subprocess
+from pathlib import Path
+
+import psycopg
 
 os.environ["PGPASSWORD"] = "postgres"
 root_directory = Path(__file__).resolve().parent.parent

@@ -4,8 +4,9 @@
 # a JSON file that contains the database, question, and query.
 
 import json
-from pathlib import Path
 import shutil
+from pathlib import Path
+
 import sqlglot
 
 root_directory = Path(__file__).resolve().parent.parent

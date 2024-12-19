@@ -1,7 +1,7 @@
 import os
 
-from dotenv import load_dotenv
 import psycopg
+from dotenv import load_dotenv
 
 from .types import TextToSql
 
