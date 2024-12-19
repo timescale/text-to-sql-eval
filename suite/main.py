@@ -187,12 +187,12 @@ def eval(task, agent, dataset, database, strict):
         evals_path = root_directory / "datasets" / dataset / "evals"
         eval_paths = sorted(list(evals_path.iterdir()))
         for eval_path in eval_paths:
-            total += 1
-            print(f"  {eval_path.name}:")
             with (eval_path / "eval.json").open() as fp:
                 inp = json.load(fp)
             if database and inp["database"] != database:
                 continue
+            total += 1
+            print(f"  {eval_path.name}:")
             with psycopg.connect(get_psycopg_str(f"{dataset}_{inp['database']}")) as db:
                 error_path = eval_path / "error.txt"
                 if error_path.exists():
@@ -216,6 +216,6 @@ def eval(task, agent, dataset, database, strict):
                     passing += 1
                 else:
                     failed_evals[dataset].append(eval_path.name)
-        print(f"  {round(passing/total, 2)}")
+        print(f"  {round(passing/total, 2)} ({passing}/{total})")
         if len(failed_evals[dataset]) > 0:
             print(f"Failed evals:\n{failed_evals[dataset]}")
