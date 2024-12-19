@@ -29,7 +29,10 @@ def cli():
 @click.option(
     "--model", default="smollm:135m", help="Model to use for Ollama embeddings"
 )
-def load(dataset, model):
+@click.option(
+    "--comment", is_flag=True, default=False, help="Use object comments for embeddings"
+)
+def load(dataset, model, comment):
     """
     Load the datasets into the database.
     """
@@ -48,18 +51,19 @@ def load(dataset, model):
         print(f"  {dataset}")
         for entry in (root_directory / "datasets" / dataset / "databases").iterdir():
             db_name = f"{dataset}_{entry.stem}"
+            print(f"    {db_name}")
             with psycopg.connect(get_psycopg_str()) as root_db:
                 root_db.autocommit = True
-                print(f"    DROP DATABASE {db_name}")
+                print(f"      DROP DATABASE")
                 root_db.execute(f"DROP DATABASE IF EXISTS {db_name}")
-                print(f"    CREATE DATABASE {db_name}")
+                print(f"      CREATE DATABASE")
                 root_db.execute(f"CREATE DATABASE {db_name}")
             with psycopg.connect(get_psycopg_str(db_name)) as db:
-                print(f"    Restoring dump to {db_name}")
+                print(f"      Restoring dump")
                 with entry.open() as fp:
                     db.execute(fp.read())
                 if pgai:
-                    print(f"    Initializing pgai for {db_name}")
+                    print(f"      Initializing pgai")
                     with db.cursor() as cur:
                         cur.execute(
                             "select set_config('ai.enable_feature_flag_text_to_sql', 'true', false)"
@@ -122,7 +126,14 @@ def load(dataset, model):
                             )
                         for column in columns:
                             cur.execute(
-                                f"select ai.set_column_description('{column[1]}', '{column[2]}', '{column[1]}.{column[2]}');"
+                                "select ai.set_column_description(%s, %s, %s);",
+                                (
+                                    column[1],
+                                    column[2],
+                                    column[3]
+                                    if comment and column[3]
+                                    else f"{column[1]}.{column[2]}",
+                                ),
                             )
                         db.commit()
                         cur.execute(
