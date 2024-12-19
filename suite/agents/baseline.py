@@ -58,29 +58,35 @@ def text_to_sql(conn: psycopg.Connection, inp: str) -> TextToSql:
 SELECT
 'CREATE TABLE ' || relname || E'\n(\n' ||
 array_to_string(
-array_agg(
-    '    ' || column_name || ' ' ||  type || ' '|| not_null
-)
-, E',\n'
+    array_agg(
+        '    ' || column_name || ' ' ||  type || ' '|| not_null ||
+        CASE
+            WHEN comment IS NOT NULL THEN ' -- ' || comment
+            ELSE ''
+        END
+    ),
+    E',\n'
 ) || E'\n);\n'
 from
 (
-SELECT
-c.relname, a.attname AS column_name,
-pg_catalog.format_type(a.atttypid, a.atttypmod) as type,
-case
-    when a.attnotnull
-then 'NOT NULL'
-else 'NULL'
-END as not_null
-FROM pg_class c,
-pg_attribute a,
-pg_type t
-WHERE c.relname = %s
-AND a.attnum > 0
-AND a.attrelid = c.oid
-AND a.atttypid = t.oid
-ORDER BY a.attnum
+    SELECT
+        c.relname,
+        a.attname AS column_name,
+        pg_catalog.format_type(a.atttypid, a.atttypmod) as type,
+        CASE
+            WHEN a.attnotnull
+            THEN 'NOT NULL'
+            ELSE 'NULL'
+        END AS not_null,
+        d.description AS comment
+    FROM pg_class c
+    JOIN pg_attribute a ON a.attrelid = c.oid
+    LEFT JOIN pg_description d ON d.objoid = c.oid AND d.objsubid = a.attnum
+    JOIN pg_type t ON a.atttypid = t.oid
+    WHERE
+        c.relname = %s
+        AND a.attnum > 0
+    ORDER BY a.attnum
 ) as tabledefinition
 group by relname;
 """,
