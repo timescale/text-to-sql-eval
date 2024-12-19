@@ -1,22 +1,28 @@
 import os
 
+import polars as pl
 import psycopg
 import simplejson as json
+from polars.testing import assert_frame_equal
 
 from ..exceptions import AgentFnError, QueryExecutionError
 
 
-def compare(actual, expected) -> bool:
-    if "columns" not in actual or "data" not in actual:
+def compare(actual: pl.DataFrame, expected: pl.DataFrame, strict: bool) -> bool:
+    actual_columns = set(actual.columns)
+    expected_columns = set(expected.columns)
+    if strict and actual_columns != expected_columns:
         return False
-    if actual["columns"] != expected["columns"]:
+    elif not expected_columns.issubset(actual_columns):
         return False
-    if len(actual["data"]) != len(expected["data"]):
+    actual_new = actual.select(expected.columns)
+    try:
+        assert_frame_equal(
+            actual_new, expected, check_column_order=False, check_row_order=False
+        )
+        return True
+    except AssertionError:
         return False
-    for i in range(len(actual["data"])):
-        if list(actual["data"][i]) != list(expected["data"][i]):
-            return False
-    return True
 
 
 def run(
@@ -41,15 +47,9 @@ def run(
                 fp.write("\n")
             message = result["messages"][i]
             fp.write(f"{message['role']}:\n{message['content']}")
-    with conn.cursor() as cur:
-        cur.execute(gold_query)
-        result = cur.fetchall()
-        expected = {"columns": [desc[0] for desc in cur.description], "data": result}
+    expected = pl.read_database(gold_query, conn)
     try:
-        with conn.cursor() as cur:
-            cur.execute(query)
-            result = cur.fetchall()
-            actual = {"columns": [desc[0] for desc in cur.description], "data": result}
+        actual = pl.read_database(query, conn)
     except psycopg.DatabaseError as e:
         raise QueryExecutionError(e) from e
-    return compare(actual, expected)
+    return compare(actual, expected, strict)
