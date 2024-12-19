@@ -23,6 +23,8 @@ def run(
 ) -> bool:
     if os.path.exists(f"{path}/actual_query.sql"):
         os.unlink(f"{path}/actual_query.sql")
+    if os.path.exists(f"{path}/actual_messages.txt"):
+        os.unlink(f"{path}/actual_messages.txt")
     with open(f"{path}/eval.json", "r") as fp:
         gold_query = json.load(fp).get("query")
     try:
@@ -32,6 +34,12 @@ def run(
         raise AgentFnError(e)
     with open(f"{path}/actual_query.sql", "w") as fp:
         fp.write(query)
+    with open(f"{path}/actual_messages.txt", "w") as fp:
+        for i in range(len(result["messages"])):
+            if i > 0:
+                fp.write("\n")
+            message = result["messages"][i]
+            fp.write(f"{message['role']}:\n{message['content']}")
     with conn.cursor() as cur:
         cur.execute(gold_query)
         result = cur.fetchall()
