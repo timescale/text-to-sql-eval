@@ -5,6 +5,7 @@ import psycopg
 from sql_metadata import Parser
 
 from ..exceptions import AgentFnError
+from ..types import Provider
 
 
 def compare(actual, expected, strict: bool) -> bool:
@@ -14,7 +15,13 @@ def compare(actual, expected, strict: bool) -> bool:
 
 
 def run(
-    conn: psycopg.Connection, path: str, inp: str, agent_fn: callable, strict: bool
+    conn: psycopg.Connection,
+    path: str,
+    inp: str,
+    agent_fn: callable,
+    provider: Provider,
+    model: str,
+    strict: bool,
 ) -> bool:
     if os.path.exists(f"{path}/actual_get_tables.json"):
         os.unlink(f"{path}/actual_get_tables.json")
@@ -26,7 +33,7 @@ def run(
         raise AgentFnError(e) from e
     # normalize table names as query uses mix of uppercase/lowercase to reference them
     expected = list(set([table.lower() for table in parser.tables]))
-    actual = agent_fn(conn, inp)
+    actual = agent_fn(conn, inp, provider, model)
     with open(f"{path}/actual_get_tables.json", "w") as fp:
         json.dump(actual, fp)
     return compare(actual, expected, strict)

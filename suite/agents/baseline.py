@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 from pydantic import BaseModel
 
-from .types import TextToSql
+from ..types import Provider, TextToSql
 
 load_dotenv()
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
@@ -19,7 +19,9 @@ class Tables(BaseModel):
     tables: list[str]
 
 
-def get_tables(conn: psycopg.Connection, inp: str) -> list[str]:
+def get_tables(
+    conn: psycopg.Connection, inp: str, provider: Provider, model: str
+) -> list[str]:
     with conn.cursor() as cur:
         cur.execute(
             "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'"
@@ -48,8 +50,10 @@ def get_tables(conn: psycopg.Connection, inp: str) -> list[str]:
     return chat.choices[0].message.parsed.tables
 
 
-def text_to_sql(conn: psycopg.Connection, inp: str) -> TextToSql:
-    tables = get_tables(conn, inp)
+def text_to_sql(
+    conn: psycopg.Connection, inp: str, provider: Provider, model: str
+) -> TextToSql:
+    tables = get_tables(conn, inp, provider, model)
     table_ddl = []
     for table in tables:
         with conn.cursor() as cur:

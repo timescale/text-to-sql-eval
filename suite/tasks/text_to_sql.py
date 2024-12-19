@@ -6,6 +6,7 @@ import simplejson as json
 from polars.testing import assert_frame_equal
 
 from ..exceptions import AgentFnError, QueryExecutionError
+from ..types import Provider
 
 
 def compare(actual: pl.DataFrame, expected: pl.DataFrame, strict: bool) -> bool:
@@ -26,7 +27,13 @@ def compare(actual: pl.DataFrame, expected: pl.DataFrame, strict: bool) -> bool:
 
 
 def run(
-    conn: psycopg.Connection, path: str, inp: str, agent_fn: callable, strict: bool
+    conn: psycopg.Connection,
+    path: str,
+    inp: str,
+    agent_fn: callable,
+    provider: Provider,
+    model: str,
+    strict: bool,
 ) -> bool:
     if os.path.exists(f"{path}/actual_query.sql"):
         os.unlink(f"{path}/actual_query.sql")
@@ -35,7 +42,7 @@ def run(
     with open(f"{path}/eval.json", "r") as fp:
         gold_query = json.load(fp).get("query")
     try:
-        result = agent_fn(conn, inp)
+        result = agent_fn(conn, inp, provider, model)
         query = result["query"]
     except Exception as e:
         raise AgentFnError(e) from e
