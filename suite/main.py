@@ -161,8 +161,9 @@ def load(dataset, model, comment):
 @click.argument("agent")
 @click.argument("task")
 @click.option("--dataset", default="all", help="Dataset to evaluate")
+@click.option("--database", default=None, help="Database to evaluate")
 @click.option("--strict", is_flag=True, default=False, help="Use strict evaluation")
-def eval(task, agent, dataset, strict):
+def eval(task, agent, dataset, database, strict):
     """
     Runs the eval suite for a given agent and task.
 
@@ -190,6 +191,8 @@ def eval(task, agent, dataset, strict):
             print(f"  {eval_path.name}:")
             with (eval_path / "eval.json").open() as fp:
                 inp = json.load(fp)
+            if database and inp["database"] != database:
+                continue
             with psycopg.connect(get_psycopg_str(f"{dataset}_{inp['database']}")) as db:
                 error_path = eval_path / "error.txt"
                 if error_path.exists():
