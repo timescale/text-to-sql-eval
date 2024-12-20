@@ -32,10 +32,8 @@ def cli():
 @click.option("--dataset", default="all", help="Dataset to evaluate")
 @click.option("--provider", default="ollama", help="Provider to use for embeddings")
 @click.option("--model", default=None, help="Model to use for embeddings")
-@click.option(
-    "--comment", is_flag=True, default=False, help="Use object comments for embeddings"
-)
-def load(dataset: str, provider: str, model: Optional[str], comment: bool):
+@click.option("--no-comments", is_flag=True, default=False, help="Do not use obj comments for embeddings")
+def load(dataset: str, provider: str, model: Optional[str], no_comments: bool) -> None:
     """
     Load the datasets into the database.
     """
@@ -130,7 +128,7 @@ def load(dataset: str, provider: str, model: Optional[str], comment: bool):
                                     column[1],
                                     column[2],
                                     column[3]
-                                    if comment and column[3]
+                                    if column[3] and not no_comments
                                     else f"{column[1]}.{column[2]}",
                                 ),
                             )
@@ -169,7 +167,7 @@ def eval(
     dataset: str,
     database: Optional[str],
     strict: bool,
-):
+) -> None:
     """
     Runs the eval suite for a given agent and task.
 
