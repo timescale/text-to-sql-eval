@@ -25,7 +25,7 @@ def text_to_sql(
     conn: psycopg.Connection, inp: str, provider: Provider, model: str
 ) -> TextToSql:
     with conn.cursor() as cur:
-        setup_pgai_config(cur, provider)
+        setup_pgai_config(cur)
         cur.execute(
             """
             select ai._text_to_sql_prompt(%s)

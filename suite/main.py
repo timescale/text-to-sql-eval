@@ -70,7 +70,7 @@ def load(dataset: str, provider: str, model: Optional[str], comment: bool):
                 if pgai:
                     print("      Initializing pgai")
                     with db.cursor() as cur:
-                        setup_pgai_config(cur, provider)
+                        setup_pgai_config(cur)
                         cur.execute(
                             "select set_config('ai.enable_feature_flag_text_to_sql', 'true', false)"
                         )

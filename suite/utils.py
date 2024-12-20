@@ -3,8 +3,6 @@ import os
 from dotenv import load_dotenv
 from psycopg import Cursor
 
-from .types import Provider
-
 load_dotenv()
 
 
@@ -43,22 +41,25 @@ def get_default_model(provider: str) -> str:
     return models[provider]
 
 
-def setup_pgai_config(cur: Cursor, provider: Provider) -> None:
+def setup_pgai_config(cur: Cursor) -> None:
     cur.execute(
         "select set_config('ai.enable_feature_flag_text_to_sql', 'true', false)"
     )
-    if provider == "anthropic":
+    value = os.environ.get("ANTHROPIC_API_KEY", None)
+    if value is not None:
         cur.execute(
             "select set_config('ai.anthropic_api_key', %s, false) is not null",
-            (os.environ["ANTHROPIC_API_KEY"],),
+            (value,),
         )
-    elif provider == "ollama":
+    value = os.environ.get("OLLAMA_HOST", None)
+    if value is not None:
         cur.execute(
             "select set_config('ai.ollama_host', %s, false) is not null",
-            (os.environ["OLLAMA_HOST"],),
+            (value,),
         )
-    elif provider == "openai":
+    value = os.environ.get("OLLAMA_API_KEY", None)
+    if value is not None:
         cur.execute(
             "select set_config('ai.openai_api_key', %s, false) is not null",
-            (os.environ["OPENAI_API_KEY"],),
+            (value,),
         )
