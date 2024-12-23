@@ -29,11 +29,11 @@ def cli():
 
 
 @cli.command()
-@click.option("--dataset", default="all", help="Dataset to evaluate")
-@click.option("--provider", default="ollama", help="Provider to use for embeddings")
+@click.option("--provider", default="openai", help="Provider to use for embeddings [default openai]")
 @click.option("--model", default=None, help="Model to use for embeddings")
+@click.option("--dataset", default="all", help="Dataset to load [defaults to all datasets]")
 @click.option("--no-comments", is_flag=True, default=False, help="Do not use obj comments for embeddings")
-def load(dataset: str, provider: str, model: Optional[str], no_comments: bool) -> None:
+def load(provider: str, model: Optional[str], dataset: str, no_comments: bool) -> None:
     """
     Load the datasets into the database.
     """
@@ -154,9 +154,9 @@ def load(dataset: str, provider: str, model: Optional[str], no_comments: bool) -
 @cli.command()
 @click.argument("agent")
 @click.argument("task")
-@click.option("--provider", default="ollama", help="Provider to use for the task")
+@click.option("--provider", default="openai", help="Provider to use for the task [default openai]")
 @click.option("--model", default=None, help="Model to use for task")
-@click.option("--dataset", default="all", help="Dataset to evaluate")
+@click.option("--dataset", default="all", help="Dataset to evaluate [default eval all datasets]")
 @click.option("--database", default=None, help="Database to evaluate")
 @click.option("--strict", is_flag=True, default=False, help="Use strict evaluation")
 def eval(
