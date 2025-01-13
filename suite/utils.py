@@ -57,7 +57,7 @@ def setup_pgai_config(cur: Cursor) -> None:
             "select set_config('ai.ollama_host', %s, false) is not null",
             (value,),
         )
-    value = os.environ.get("OLLAMA_API_KEY", None)
+    value = os.environ.get("OPENAI_API_KEY", None)
     if value is not None:
         cur.execute(
             "select set_config('ai.openai_api_key', %s, false) is not null",
