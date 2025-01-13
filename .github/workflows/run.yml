@@ -1,0 +1,51 @@
+name: Run Eval Suite
+
+on:
+  workflow_dispatch:
+    inputs:
+      task:
+        description: What task to evaluate
+        required: true
+        default: 'text_to_sql'
+        type: choice
+        options:
+          - get_tables
+          - text_to_sql
+      agent:
+        description: What agent to use
+        required: true
+        default: 'pgai'
+        type: choice
+        options:
+          - baseline
+          - pgai
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-pgai
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          python-version: 3.12
+
+      - run: uv sync
+
+      - run: |
+          echo -e "
+          ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }}
+          OLLAMA_HOST=http://localhost:11434
+          OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+          POSTGRES_USER=postgres
+          POSTGRES_PASSWORD=postgres
+          POSTGRES_HOST=localhost
+          POSTGRES_PORT=5432
+          " > .env
+
+      - run: uv run python3 -m suite load --provider ollama --model smollm:135m
+      - run: uv run python3 -m suite eval ${{ inputs.agent }} ${{ inputs.task }}

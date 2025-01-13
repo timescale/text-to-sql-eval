@@ -1,0 +1,25 @@
+name: Setup PGAI
+description: Sets up PGAI
+runs:
+  using: 'composite'
+  steps:
+    - run: sudo pipx install rust-just
+      shell: bash
+    - run: git clone https://github.com/timescale/pgai/
+      shell: bash
+    - name: Setup pgai container
+      run: |
+        just ext docker-build
+        just ext docker-run
+        docker exec pgai-ext just build
+        docker exec pgai-ext just install
+      shell: bash
+      working-directory: pgai
+    - name: Run ollama container
+      run: docker run -d --network host --name ollama ollama/ollama:0.5.4
+      shell: bash
+    - name: Pull ollama models
+      run: |
+        docker exec ollama ollama pull smollm:135m
+      #  docker exec ollama ollama pull llama3
+      shell: bash
