@@ -1,5 +1,10 @@
 name: Setup PGAI
 description: Sets up PGAI
+inputs:
+  branch:
+    description: 'Branch of pgai to use'
+    required: true
+    default: 'main'
 runs:
   using: 'composite'
   steps:
@@ -7,6 +12,9 @@ runs:
       shell: bash
     - run: git clone https://github.com/timescale/pgai/
       shell: bash
+    - run: git checkout ${{ inputs.branch }}
+      shell: bash
+      working-directory: pgai
     - name: Setup pgai container
       run: |
         just ext docker-build
