@@ -8,6 +8,7 @@ import psycopg
 from dotenv import load_dotenv
 
 from .agents import get_agent_fn
+from .exceptions import GetExpectedError
 from .tasks.get_tables import run as get_tables
 from .tasks.text_to_sql import run as text_to_sql
 from .utils import (
@@ -182,11 +183,13 @@ def eval(
     datasets = sorted(os.listdir("datasets") if dataset == "all" else [dataset])
     task_fn = get_tables if task == "get_tables" else text_to_sql
     agent_fn = get_agent_fn(agent, task)
+    errored_evals = {}
     failed_evals = {}
     for i in range(len(datasets)):
         if i > 0:
             print()
         dataset = datasets[i]
+        errored_evals[dataset] = []
         failed_evals[dataset] = []
         passing = 0
         total = 0
@@ -215,20 +218,35 @@ def eval(
                         model,
                         strict,
                     )
+                except GetExpectedError as e:
+                    result = None
+                    exc = e
                 except Exception as e:
                     result = False
                     exc = e
-                print(f"    {'PASS' if result else 'FAIL'}", end="")
+                to_print = "    "
+                if result is True:
+                    to_print += "PASS"
+                elif result is False:
+                    to_print += "FAIL"
+                else:
+                    to_print += "EXPECTED ERROR"
+                    total -= 1
+                print(to_print, end="")
                 if exc:
                     print(f" ({type(exc).__name__})", end="")
                     with error_path.open("w") as fp:
                         fp.write(type(exc).__name__ + "\n\n")
                         fp.write(str(exc))
                 print()
-                if result:
+                if result is True:
                     passing += 1
-                else:
+                elif result is False:
                     failed_evals[dataset].append(eval_path.name)
-        print(f"  {round(passing/total, 2)} ({passing}/{total})")
+                else:
+                    errored_evals[dataset].append(eval_path.name)
+        print(f"  {1 if total == 0 else round(passing/total, 2)} ({passing}/{total})")
         if len(failed_evals[dataset]) > 0:
             print(f"Failed evals:\n{failed_evals[dataset]}")
+        if len(errored_evals[dataset]) > 0:
+            print(f"Errored evals:\n{errored_evals[dataset]}")

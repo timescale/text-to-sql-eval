@@ -5,7 +5,7 @@ import psycopg
 import simplejson as json
 from polars.testing import assert_frame_equal
 
-from ..exceptions import AgentFnError, QueryExecutionError
+from ..exceptions import AgentFnError, GetExpectedError, QueryExecutionError
 from ..types import Provider
 
 
@@ -54,7 +54,10 @@ def run(
                 fp.write("\n")
             message = result["messages"][i]
             fp.write(f"{message['role']}:\n{message['content']}")
-    expected = pl.read_database(gold_query, conn)
+    try:
+        expected = pl.read_database(gold_query, conn)
+    except psycopg.DatabaseError as e:
+        raise GetExpectedError(e) from e
     try:
         actual = pl.read_database(query, conn)
     except psycopg.DatabaseError as e:
