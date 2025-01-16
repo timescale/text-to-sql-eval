@@ -33,8 +33,9 @@ def cli():
 @click.option("--provider", default="openai", help="Provider to use for embeddings [default openai]")
 @click.option("--model", default=None, help="Model to use for embeddings")
 @click.option("--dataset", default="all", help="Dataset to load [defaults to all datasets]")
+@click.option("--database", default="all", help="Database to load [defaults to all databases]")
 @click.option("--no-comments", is_flag=True, default=False, help="Do not use obj comments for embeddings")
-def load(provider: str, model: Optional[str], dataset: str, no_comments: bool) -> None:
+def load(provider: str, model: Optional[str], dataset: str, database: str, no_comments: bool) -> None:
     """
     Load the datasets into the database.
     """
@@ -54,6 +55,8 @@ def load(provider: str, model: Optional[str], dataset: str, no_comments: bool) -
         dataset = datasets[i]
         print(f"  {dataset}")
         for entry in (root_directory / "datasets" / dataset / "databases").iterdir():
+            if database != "all" and entry.stem != database:
+                continue
             db_name = f"{dataset}_{entry.stem}"
             print(f"    {db_name}")
             with psycopg.connect(get_psycopg_str()) as root_db:
