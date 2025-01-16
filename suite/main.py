@@ -162,6 +162,7 @@ def load(provider: str, model: Optional[str], dataset: str, database: str, no_co
 @click.option("--model", default=None, help="Model to use for task")
 @click.option("--dataset", default="all", help="Dataset to evaluate [default eval all datasets]")
 @click.option("--database", default=None, help="Database to evaluate")
+@click.option("--eval", default=None, help="Eval case to run")
 @click.option("--strict", is_flag=True, default=False, help="Use strict evaluation")
 def eval(
     task: str,
@@ -170,6 +171,7 @@ def eval(
     model: Optional[str],
     dataset: str,
     database: Optional[str],
+    eval: Optional[str],
     strict: bool,
 ) -> None:
     """
@@ -200,6 +202,8 @@ def eval(
         evals_path = root_directory / "datasets" / dataset / "evals"
         eval_paths = sorted(list(evals_path.iterdir()))
         for eval_path in eval_paths:
+            if eval is not None and eval_path.name != eval:
+                continue
             with (eval_path / "eval.json").open() as fp:
                 inp = json.load(fp)
             if database and inp["database"] != database:
