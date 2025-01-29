@@ -1,0 +1,5 @@
+{
+  "database": "superhero",
+  "question": "Which superhero has the same eyes, hair and skin colour? Indicate the publisher of the superhero.\nwhich superhero refers to superhero_name; the same eyes, hair and skin colour refers to hair_colour_id = skin_colour_id AND hair_colour_id = eye_colour_id; publisher refers to publisher_name;",
+  "query": "SELECT T1.superhero_name, T2.publisher_name FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id WHERE T1.eye_colour_id = T1.hair_colour_id AND T1.eye_colour_id = T1.skin_colour_id"
+}

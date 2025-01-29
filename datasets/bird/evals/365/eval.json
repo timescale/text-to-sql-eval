@@ -1,0 +1,5 @@
+{
+  "database": "card_games",
+  "question": "What is the percentage of Story Spotlight cards that do not have a text box? List them by their ID.\nStory Spotlight cards that do not have a text box refers to isStorylight = 1 and isTextless = 0; Percentage = DIVIDE(SUM(count(id) where isStorySpotlight = 1 AND isTextless = 0 ), SUM(count(id))) * 100",
+  "query": "SELECT CAST(SUM(CASE WHEN isTextless = 0 AND isStorySpotlight = 1 THEN 1 ELSE 0 END) AS REAL) * 100 / NULLIF(COUNT(id), 0) FROM cards"
+}

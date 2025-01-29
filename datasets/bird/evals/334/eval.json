@@ -1,0 +1,5 @@
+{
+  "database": "codebase_community",
+  "question": "Among the users located in United Kingdom, how many users whose post have a total favorite amount of 4 or more?\nfavorite amount of 4 or more refers to FavoriteCount > = 4; Location = 'United Kingdom';",
+  "query": "SELECT COUNT(T1.Id) FROM users AS T1 INNER JOIN posts AS T2 ON T1.Id = T2.OwnerUserId WHERE T1.Location = 'United Kingdom' AND T2.FavoriteCount >= 4"
+}

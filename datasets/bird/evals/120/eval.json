@@ -1,0 +1,5 @@
+{
+  "database": "thrombosis_prediction",
+  "question": "For the patients with an abnormal Ig M level, what is the most common disease they are diagnosed with?\nabnormal Ig M level refers to IGM <=40 OR IGM >= 400; most common disease refers to MAX(COUNT(Diagnosis));",
+  "query": "SELECT T1.Diagnosis FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID WHERE NOT T2.IGM BETWEEN 40 AND 400 GROUP BY T1.Diagnosis ORDER BY COUNT(T1.Diagnosis) DESC NULLS LAST LIMIT 1"
+}

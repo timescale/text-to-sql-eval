@@ -1,0 +1,5 @@
+{
+  "database": "debit_card_specializing",
+  "question": "What is the amount spent by customer \"38508\" at the gas stations? How much had the customer spent in January 2012?\nJanuary 2012 refers to the Date value = '201201'",
+  "query": "SELECT SUM(T1.Price ), SUM(CASE WHEN T3.Date = '201201' THEN T1.Price ELSE 0 END) FROM transactions_1k AS T1 INNER JOIN gasstations AS T2 ON T1.GasStationID = T2.GasStationID INNER JOIN yearmonth AS T3 ON T1.CustomerID = T3.CustomerID WHERE T1.CustomerID = '38508'"
+}

@@ -1,0 +1,5 @@
+{
+  "database": "student_club",
+  "question": "What is the highest amount of budget spend for an event?\nhighest amount of budget spend refers to MAX(spent)",
+  "query": "SELECT MAX(spent) FROM budget"
+}

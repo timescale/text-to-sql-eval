@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "List the names of all races that occurred in the earliest recorded year and month.\nearliest recorded year and month refers to year = year(min(date)) and month = month(min(date));",
+  "query": "SELECT name FROM races WHERE TO_CHAR(CAST(date AS TIMESTAMP), 'YYYY') = (SELECT TO_CHAR(CAST(date AS TIMESTAMP), 'YYYY') FROM races ORDER BY date ASC NULLS FIRST LIMIT 1) AND TO_CHAR(CAST(date AS TIMESTAMP), 'MM') = (SELECT TO_CHAR(CAST(date AS TIMESTAMP), 'MM') FROM races ORDER BY date ASC NULLS FIRST LIMIT 1)"
+}

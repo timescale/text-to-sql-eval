@@ -1,0 +1,5 @@
+{
+  "database": "codebase_community",
+  "question": "What is the display name of the user who acquired the first Autobiographer badge?\nAutobiographer is the name of the badge; acquired the first refers to MIN(Date);",
+  "query": "SELECT T1.DisplayName FROM users AS T1 INNER JOIN badges AS T2 ON T1.Id = T2.UserId WHERE T2.name = 'Autobiographer' ORDER BY T2.Date LIMIT 1"
+}

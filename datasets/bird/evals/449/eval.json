@@ -1,0 +1,5 @@
+{
+  "database": "california_schools",
+  "question": "What is the eligible free rate of the 10th and 11th schools with the highest enrolment for students in grades 1 through 12?\nK-12 refers to students in grades 1 through 12; Eligible free rate for K-12 = `Free Meal Count (K-12)` / `Enrollment (K-12)`",
+  "query": "SELECT CAST(\"Free Meal Count (K-12)\" AS REAL) / NULLIF(\"Enrollment (K-12)\", 0) FROM frpm ORDER BY \"Enrollment (K-12)\" DESC NULLS LAST LIMIT 2 OFFSET 9"
+}

@@ -1,0 +1,5 @@
+{
+  "database": "california_schools",
+  "question": "What is the complete address of the school with the lowest excellence rate? Indicate the Street, City, Zip and State.\nExecellence Rate = NumGE1500 / NumTstTakr; complete address has Street, City, State, Zip code",
+  "query": "SELECT T2.Street, T2.City, T2.State, T2.Zip FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode ORDER BY CAST(T1.NumGE1500 AS REAL) / NULLIF(T1.NumTstTakr, 0) ASC NULLS FIRST LIMIT 1"
+}

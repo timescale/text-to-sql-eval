@@ -1,0 +1,5 @@
+{
+  "database": "financial",
+  "question": "What percentage of clients who opened their accounts in the district with an average salary of over 10000 are women?\nFemale refers to gender = 'F'; Woman and female are closed; Average salary can be found in A11",
+  "query": "SELECT CAST(SUM(CASE WHEN T2.gender = 'F' THEN 1 ELSE 0 END) AS REAL) * 100 / NULLIF(COUNT(T2.client_id), 0) FROM district AS T1 INNER JOIN client AS T2 ON T1.district_id = T2.district_id WHERE T1.A11 > 10000"
+}

@@ -1,0 +1,5 @@
+{
+  "database": "debit_card_specializing",
+  "question": "Among the customers who paid in euro, how many of them have a monthly consumption of over 1000?\nPays in euro = Currency = 'EUR'.",
+  "query": "SELECT COUNT(*) FROM yearmonth AS T1 INNER JOIN customers AS T2 ON T1.CustomerID = T2.CustomerID WHERE T2.Currency = 'EUR' AND T1.Consumption > 1000.00"
+}

@@ -1,0 +1,5 @@
+{
+  "database": "card_games",
+  "question": "What is the Simplified Chinese translation of the name of the set \"Eighth Edition\"?\nEighth Edition is the name of card set which refers to name = 'Eighth Edition'; Simplified Chinese refers to language = 'Chinese Simplified'; translation of the name refers to translation",
+  "query": "SELECT T2.translation FROM sets AS T1 INNER JOIN set_translations AS T2 ON T2.setCode = T1.code WHERE T1.name = 'Eighth Edition' AND T2.language = 'Chinese Simplified'"
+}

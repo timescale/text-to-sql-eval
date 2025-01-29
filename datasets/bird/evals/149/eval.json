@@ -1,0 +1,5 @@
+{
+  "database": "european_football_2",
+  "question": "Among the players whose preferred foot was the left foot when attacking, how many of them would remain in his position when the team attacked?\npreferred foot when attacking was the left refers to preferred_foot = 'left'; players who would remain in his position when the team attacked refers to attacking_work_rate = 'low';",
+  "query": "SELECT COUNT(player_api_id) FROM Player_Attributes WHERE preferred_foot = 'left' AND attacking_work_rate = 'low'"
+}

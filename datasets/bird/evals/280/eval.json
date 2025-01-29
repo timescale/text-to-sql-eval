@@ -1,0 +1,5 @@
+{
+  "database": "superhero",
+  "question": "Describe the names of neutral alignment superheroes.\nnames of superheroes refers to superhero_name; neutral alignment refers to alignment = 'Neutral';",
+  "query": "SELECT T1.superhero_name FROM superhero AS T1 INNER JOIN alignment AS T2 ON T1.alignment_id = T2.id WHERE T2.alignment = 'Neutral'"
+}

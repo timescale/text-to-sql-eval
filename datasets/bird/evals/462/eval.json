@@ -1,0 +1,5 @@
+{
+  "database": "california_schools",
+  "question": "How many students from the ages of 5 to 17 are enrolled at the State Special School school in Fremont for the 2014-2015 academic year?\nState Special School means EdOpsCode = 'SSS'",
+  "query": "SELECT T1.\"Enrollment (Ages 5-17)\" FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.EdOpsCode = 'SSS' AND T2.City = 'Fremont' AND T1.\"Academic Year\" = '2014-2015'"
+}

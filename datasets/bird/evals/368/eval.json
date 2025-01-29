@@ -1,0 +1,5 @@
+{
+  "database": "card_games",
+  "question": "How many unknown power cards contain info about the triggered ability\nunknown power cards refers to power is null or power = '*';contain info about the triggered ability refers to text contains 'triggered ability'",
+  "query": "SELECT Count(DISTINCT T1.id) FROM cards AS T1 INNER JOIN rulings AS T2 ON T1.uuid = T2.uuid WHERE (T1.power IS NULL OR T1.power = '*') AND T2.text LIKE '%triggered ability%'"
+}

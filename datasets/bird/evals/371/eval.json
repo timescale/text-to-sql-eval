@@ -1,0 +1,5 @@
+{
+  "database": "card_games",
+  "question": "What language is the set of 180 cards that belongs to the Ravnica block translated into?\nset of 180 cards refers to baseSetSize = 180",
+  "query": "SELECT T2.language FROM sets AS T1 INNER JOIN set_translations AS T2 ON T1.code = T2.setCode WHERE T1.block = 'Ravnica' AND T1.baseSetSize = 180"
+}

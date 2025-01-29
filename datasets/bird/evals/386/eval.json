@@ -1,0 +1,5 @@
+{
+  "database": "card_games",
+  "question": "Among the sets of cards that have an Italian translation, how many of them have a base set number of under 100?\nItalian translation refers to language = 'Italian'; have a translation means translation is not null; base set number of under 100 refers to baseSetSize < 10",
+  "query": "SELECT COUNT(T1.id) FROM sets AS T1 INNER JOIN set_translations AS T2 ON T2.setCode = T1.code WHERE NOT T2.translation IS NULL AND T1.baseSetSize < 100 AND T2.language = 'Italian'"
+}

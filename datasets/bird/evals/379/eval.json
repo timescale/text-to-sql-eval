@@ -1,0 +1,5 @@
+{
+  "database": "card_games",
+  "question": "What's the Italian name of the set of cards with \"Ancestor's Chosen\" is in?\nItalian is a language which refers to language = 'Italian'; with \"Ancestor's Chosen\" in the card set refers to name = 'Ancestor''s Chosen'",
+  "query": "SELECT translation FROM set_translations WHERE setCode IN (SELECT setCode FROM cards WHERE name = 'Ancestor''s Chosen') AND language = 'Italian'"
+}

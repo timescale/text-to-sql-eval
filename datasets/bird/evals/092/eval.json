@@ -1,0 +1,5 @@
+{
+  "database": "thrombosis_prediction",
+  "question": "How old was the patient who had the highest hemoglobin count at the time of the examination, and what is the doctor's diagnosis?\nHow old the patient refers to SUBTRACT(year(`Examination Date`), year(Birthday)); the highest hemoglobin count refers to MAX(HGB); HGB is not NULL;",
+  "query": "SELECT EXTRACT(YEAR FROM T2.Date) - EXTRACT(YEAR FROM T1.Birthday) AS age_difference, T1.Diagnosis FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID WHERE T2.HGB IS NOT NULL ORDER BY T2.HGB DESC LIMIT 1"
+}

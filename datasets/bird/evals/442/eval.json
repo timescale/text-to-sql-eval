@@ -1,0 +1,5 @@
+{
+  "database": "california_schools",
+  "question": "Rank schools by their average score in Writing where the score is greater than 499, showing their charter numbers.\nValid charter number means the number is not null",
+  "query": "SELECT CharterNum, AvgScrWrite, RANK() OVER (ORDER BY AvgScrWrite DESC NULLS LAST) AS WritingScoreRank FROM schools AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds WHERE T2.AvgScrWrite > 499 AND NOT CharterNum IS NULL"
+}

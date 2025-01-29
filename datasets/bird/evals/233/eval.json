@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "Which drivers who were born in 1971 and has the fastest lap time on the race? Give id and code of these drivers.\nborn in 1971 refers to year(dob) = 1971; has the fastest lap time refers to fastestLapTime has values",
+  "query": "SELECT T2.driverId, T2.code FROM results AS T1 INNER JOIN drivers AS T2 ON T1.driverId = T2.driverId WHERE TO_CHAR(CAST(T2.dob AS TIMESTAMP), 'YYYY') = '1971' AND NOT T1.fastestLapTime IS NULL"
+}

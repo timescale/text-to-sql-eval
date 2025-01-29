@@ -1,0 +1,5 @@
+{
+  "database": "european_football_2",
+  "question": "How was Francesco Migliore's attacking work rate on 2015/5/1?\nFrancesco Migliore refers to player_name = 'Francesco Migliore'; on 2015/5/1 refers to date LIKE '2015-05-01%';",
+  "query": "SELECT t2.attacking_work_rate FROM Player AS t1 INNER JOIN Player_Attributes AS t2 ON t1.player_api_id = t2.player_api_id WHERE t2.\"date\" LIKE '2015-05-01%' AND t1.player_name = 'Francesco Migliore'"
+}

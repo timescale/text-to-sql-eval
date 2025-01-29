@@ -1,0 +1,5 @@
+{
+  "database": "thrombosis_prediction",
+  "question": "How many patients with a abnormal C-reactive protein don't have their data recorded?\nabnormal C-reactive protein refers to CRP ='+'; don't have data recorded refers to Description IS NULL;",
+  "query": "SELECT COUNT(T1.ID) FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID WHERE (T2.CRP = '+') AND T1.Description IS NULL"
+}

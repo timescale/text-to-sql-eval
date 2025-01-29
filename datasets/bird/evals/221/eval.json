@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "What are the maximum points of British constructors?\nmaximum points = MAX(points); British is a nationality",
+  "query": "SELECT MAX(T1.points) FROM constructorStandings AS T1 INNER JOIN constructors AS T2 ON T1.constructorId = T2.constructorId WHERE T2.nationality = 'British'"
+}

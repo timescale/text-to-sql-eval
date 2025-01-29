@@ -1,0 +1,5 @@
+{
+  "database": "european_football_2",
+  "question": "How many football players born after the 1990s have the first name \"Aaron\"?\nfirst name \"Aaron\" refers to player_name LIKE 'Aaron%'; born after the 1990s refers to birthday > '1990'",
+  "query": "SELECT COUNT(id) FROM Player WHERE birthday > '1990' AND player_name LIKE 'Aaron%'"
+}

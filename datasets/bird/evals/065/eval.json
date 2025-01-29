@@ -1,0 +1,5 @@
+{
+  "database": "student_club",
+  "question": "Indicate the name of the closed event whose cost has exceeded the budget the most.\nclosed events refers to event_name where status = 'Closed'; exceed the budget the most refers to MIN(remaining) where remaining < 0",
+  "query": "SELECT T2.event_name FROM budget AS T1 INNER JOIN event AS T2 ON T2.event_id = T1.link_to_event WHERE T1.event_status = 'Closed' AND T1.remaining < 0 ORDER BY T1.remaining NULLS FIRST LIMIT 1"
+}

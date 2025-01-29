@@ -1,0 +1,5 @@
+{
+  "database": "european_football_2",
+  "question": "Tell the build Up play passing class for \"FC Lorient\" on 2010/2/22.\n\"FC Lorient\" refers to team_long_name = 'FC Lorient'; on 2010/2/22 refers to date LIKE '2010-02-22%';",
+  "query": "SELECT t2.buildUpPlayPassingClass FROM Team AS t1 INNER JOIN Team_Attributes AS t2 ON t1.team_api_id = t2.team_api_id WHERE t1.team_long_name = 'FC Lorient' AND t2.\"date\" LIKE '2010-02-22%'"
+}

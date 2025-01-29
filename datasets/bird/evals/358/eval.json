@@ -1,0 +1,5 @@
+{
+  "database": "card_games",
+  "question": "What is the percentage of borderless cards?\nborderless card refers to borderColor = 'borderless'; percentage = Divide(Count (id) where borderColor = 'borderless', Count(id)) *100",
+  "query": "SELECT CAST(SUM(CASE WHEN borderColor = 'borderless' THEN 1 ELSE 0 END) AS REAL) * 100 / NULLIF(COUNT(id), 0) FROM cards"
+}

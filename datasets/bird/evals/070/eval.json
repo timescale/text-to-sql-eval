@@ -1,0 +1,5 @@
+{
+  "database": "student_club",
+  "question": "State what kind of expenses that Sacha Harrison incurred?\nkind of expenses refers to expense_description; Sacha Harrison is the full name; full name refers to first_name, last_name;",
+  "query": "SELECT T2.expense_description FROM member AS T1 INNER JOIN expense AS T2 ON T1.member_id = T2.link_to_member WHERE T1.first_name = 'Sacha' AND T1.last_name = 'Harrison'"
+}

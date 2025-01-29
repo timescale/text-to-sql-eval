@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "State the race and year of race in which Michael Schumacher had his fastest lap.\nfastest lap refers to min(milliseconds); Alex Yoong refers to the full name of the driver; Full name of the driver refers to drivers.forename and drivers.surname;",
+  "query": "SELECT T1.name, T1.year FROM races AS T1 INNER JOIN lapTimes AS T2 ON T2.raceId = T1.raceId INNER JOIN drivers AS T3 ON T3.driverId = T2.driverId WHERE T3.forename = 'Michael' AND T3.surname = 'Schumacher' ORDER BY T2.milliseconds ASC NULLS FIRST LIMIT 1"
+}

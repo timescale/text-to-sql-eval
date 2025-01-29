@@ -1,0 +1,5 @@
+{
+  "database": "codebase_community",
+  "question": "Please list the display names of all the users whose accounts were created in the year 2011.\naccount created in the year 2011 refers to year(CreationDate) = 2011",
+  "query": "SELECT DisplayName FROM users WHERE TO_CHAR(CAST(CreationDate AS TIMESTAMP), 'YYYY') = '2011'"
+}

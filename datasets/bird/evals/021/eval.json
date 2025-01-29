@@ -1,0 +1,5 @@
+{
+  "database": "debit_card_specializing",
+  "question": "What kind of currency did the customer paid at 16:25:00 in 2012/8/24?\n'2012/8/24' can be represented by '2012-08-24'; ",
+  "query": "SELECT DISTINCT T3.Currency FROM transactions_1k AS T1 INNER JOIN gasstations AS T2 ON T1.GasStationID = T2.GasStationID INNER JOIN customers AS T3 ON T1.CustomerID = T3.CustomerID WHERE T1.Date = '2012-08-24' AND T1.Time = '16:25:00'"
+}

@@ -1,0 +1,5 @@
+{
+  "database": "codebase_community",
+  "question": "For the user No.24, how many times is the number of his/her posts compared to his/her votes?\nuser no. 24 refers to UserId = OwnerUserId = '24'; times of his/her post than votes = Divide (Count(post.Id), Count(votes.Id))",
+  "query": "SELECT CAST(COUNT(DISTINCT T2.Id) AS REAL) / NULLIF(COUNT(DISTINCT T1.Id), 0) FROM votes AS T1 INNER JOIN posts AS T2 ON T1.UserId = T2.OwnerUserId WHERE T1.UserId = 24"
+}

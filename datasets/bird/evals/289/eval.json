@@ -1,0 +1,5 @@
+{
+  "database": "superhero",
+  "question": "What is the publisher for Hawkman, Karate Kid and Speedy?\npublisher refers to publisher_name; Hawkman refers to superhero_name = 'Hawkman'; Karate Kid refers to superhero_name = 'Karate Kid'; Speedy refers to superhero_name = 'Speedy';",
+  "query": "SELECT T2.publisher_name FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id WHERE T1.superhero_name IN ('Hawkman', 'Karate Kid', 'Speedy')"
+}

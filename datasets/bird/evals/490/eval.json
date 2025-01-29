@@ -1,0 +1,5 @@
+{
+  "database": "financial",
+  "question": "Who are the account holder identification numbers whose who have transactions on the credit card with the amount is less than the average, in 1998?\nOperation = 'VYBER KARTOU' refers to credit card withdrawal",
+  "query": "SELECT T1.account_id FROM trans AS T1 INNER JOIN account AS T2 ON T1.account_id = T2.account_id WHERE TO_CHAR(CAST(T1.date AS TIMESTAMP), 'YYYY') = '1998' AND T1.operation = 'VYBER KARTOU' AND T1.amount < (SELECT AVG(amount) FROM trans WHERE TO_CHAR(CAST(date AS TIMESTAMP), 'YYYY') = '1998')"
+}

@@ -1,0 +1,5 @@
+{
+  "database": "card_games",
+  "question": "Among the sets in the block \"Ice Age\", how many of them have an Italian translation?\nsets in the block \"Ice Age\" refers to block = 'Ice Age'; Italian translation refers to language = 'Italian' and translation is not null",
+  "query": "SELECT COUNT(DISTINCT T1.id) FROM sets AS T1 INNER JOIN set_translations AS T2 ON T2.setCode = T1.code WHERE T1.block = 'Ice Age' AND T2.language = 'Italian' AND NOT T2.translation IS NULL"
+}

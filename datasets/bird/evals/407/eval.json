@@ -1,0 +1,5 @@
+{
+  "database": "toxicology",
+  "question": "Which element is the least numerous in non-carcinogenic molecules?\nlabel = '-' means molecules are non-carcinogenic; least numerous refers to MIN(COUNT(element));",
+  "query": "SELECT T.element FROM (SELECT T1.element, COUNT(DISTINCT T1.molecule_id) FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.label = '-' GROUP BY T1.element ORDER BY COUNT(DISTINCT T1.molecule_id) ASC NULLS FIRST LIMIT 1) AS t"
+}

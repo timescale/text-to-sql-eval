@@ -1,0 +1,5 @@
+{
+  "database": "debit_card_specializing",
+  "question": "What is the highest monthly consumption in the year 2012?\ncast the consumption into float when perform calculation; The first 4 strings of the Date values in the yearmonth table can represent year; The 5th and 6th string of the date can refer to month.",
+  "query": "SELECT SUM(CAST(Consumption AS float)) FROM yearmonth WHERE SUBSTR(Date, 1, 4) = '2012' GROUP BY SUBSTR(Date, 5, 2) ORDER BY SUM(Consumption) DESC NULLS LAST LIMIT 1"
+}

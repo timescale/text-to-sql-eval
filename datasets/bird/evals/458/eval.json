@@ -1,0 +1,5 @@
+{
+  "database": "california_schools",
+  "question": "What is the monthly average number of schools that opened in Alameda County under the jurisdiction of the Elementary School District in 1980?\nElementary School District refers to DOC = 52; Monthly average number of schools that opened in 1980 = count(schools that opened in 1980) / 12",
+  "query": "SELECT CAST(COUNT(School) AS REAL) / NULLIF(12, 0) FROM schools WHERE DOC = '52' AND County = 'Alameda' AND EXTRACT(YEAR FROM OpenDate) = 1980"
+}

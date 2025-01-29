@@ -1,0 +1,5 @@
+{
+  "database": "student_club",
+  "question": "How many cities are there in Orange County, Virginia?\nOrange County is the county name, Virginia is the state name",
+  "query": "SELECT COUNT(city) FROM zip_code WHERE county = 'Orange County' AND state = 'Virginia'"
+}

@@ -1,0 +1,5 @@
+{
+  "database": "card_games",
+  "question": "How many cards with original type of \"Summon - Angel\" have subtype other than \"Angel\"?\nsubtype other than Angel refers to subtypes is not 'Angel';",
+  "query": "SELECT COUNT(id) FROM cards WHERE originalType = 'Summon - Angel' AND subtypes <> 'Angel'"
+}

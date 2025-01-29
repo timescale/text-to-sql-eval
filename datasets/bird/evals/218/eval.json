@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "Among the drivers that finished the race in the 2008 Chinese Grand Prix, how many of them have participated in Formula_1 races?\nCOUNT(raceID) > 0 reveals that this driver participated in races; drivers who finished the race refers to time has value.",
+  "query": "SELECT COUNT(*) FROM (SELECT T1.driverId FROM results AS T1 INNER JOIN races AS T2 ON T1.raceId = T2.raceId WHERE T2.name = 'Chinese Grand Prix' AND T2.year = 2008 AND T1.time IS NOT NULL GROUP BY T1.driverId HAVING COUNT(T2.raceId) > 0) AS subquery"
+}

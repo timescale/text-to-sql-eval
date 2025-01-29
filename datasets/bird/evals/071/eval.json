@@ -1,0 +1,5 @@
+{
+  "database": "student_club",
+  "question": "State the category of events were held at MU 215.\n'MU 215' is the location of event; ",
+  "query": "SELECT DISTINCT T2.category FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event WHERE T1.location = 'MU 215'"
+}

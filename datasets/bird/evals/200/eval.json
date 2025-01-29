@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "What is the best lap time recorded? List the driver and race with such recorded lap time.\nthe best lap time refers to min(milliseconds); List the driver refers to drivers.forename and drivers.surname; List the race refers to races.name",
+  "query": "SELECT T2.milliseconds, T1.forename, T1.surname, T3.name FROM drivers AS T1 INNER JOIN lapTimes AS T2 ON T1.driverId = T2.driverId INNER JOIN races AS T3 ON T2.raceId = T3.raceId ORDER BY T2.milliseconds ASC NULLS FIRST LIMIT 1"
+}

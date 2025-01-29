@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "Please state the reference name of the oldest German driver.\noldest refers to MIN(year(dob)); reference names appear in drverRef.",
+  "query": "SELECT driverRef FROM drivers WHERE nationality = 'German' ORDER BY dob ASC LIMIT 1"
+}

@@ -1,0 +1,5 @@
+{
+  "database": "student_club",
+  "question": "Which department was the President of the club in?\n'President' is a position of Student Club",
+  "query": "SELECT T2.department FROM member AS T1 INNER JOIN major AS T2 ON T1.link_to_major = T2.major_id WHERE T1.position = 'President'"
+}

@@ -1,0 +1,5 @@
+{
+  "database": "thrombosis_prediction",
+  "question": "How many patients have a normal level of anti-ribonuclear protein and have been admitted to the hospital?\nnormal level of anti-ribonuclear protein refers to RNP = '-', '+-'; And'-' means 'negative'; '+-' refers to '0'; admitted to the hospital refers to Admission = '+'; Should consider DISTINCT in the final result;",
+  "query": "SELECT COUNT(DISTINCT T1.ID) FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID WHERE T2.RNP = 'negative' OR T2.RNP = '0' AND T1.Admission = '+'"
+}

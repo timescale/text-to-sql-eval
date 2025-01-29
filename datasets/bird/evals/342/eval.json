@@ -1,0 +1,5 @@
+{
+  "database": "codebase_community",
+  "question": "What is the excerpt post ID and wiki post ID of the tag named sample?\ntag named sample refers to TagName = 'sample';",
+  "query": "SELECT ExcerptPostId, WikiPostId FROM tags WHERE TagName = 'sample'"
+}

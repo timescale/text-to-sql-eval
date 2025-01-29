@@ -1,0 +1,5 @@
+{
+  "database": "european_football_2",
+  "question": "Among the players born before the year 1986, how many of them would remain in his position and defense while the team attacked?\nplayers born before the year 1986 refers to strftime('%Y', birthday)<'1986'; players who would remain in his position and defense while the team attacked refers to defensive_work_rate = 'high'; Should consider DISTINCT in the final result;",
+  "query": "SELECT COUNT(DISTINCT t1.player_name) FROM Player AS t1 INNER JOIN Player_Attributes AS t2 ON t1.player_api_id = t2.player_api_id WHERE TO_CHAR(CAST(t1.birthday AS TIMESTAMP), 'YYYY') < '1986' AND t2.defensive_work_rate = 'high'"
+}

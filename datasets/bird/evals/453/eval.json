@@ -1,0 +1,5 @@
+{
+  "database": "california_schools",
+  "question": "What is the average number of test takers from Fresno schools that opened between 1/1/1980 and 12/31/1980?\nbetween 1/1/1980 and 12/31/1980 means the year = 1980",
+  "query": "SELECT AVG(T1.NumTstTakr) FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE TO_CHAR(CAST(T2.OpenDate AS TIMESTAMP), 'YYYY') = '1980' AND T2.County = 'Fresno'"
+}

@@ -1,0 +1,5 @@
+{
+  "database": "superhero",
+  "question": "Calculate the average height for all superhero.\naverage = DIVIDE(SUM(height_cm), COUNT(all heros));",
+  "query": "SELECT CAST(SUM(height_cm) AS REAL) / NULLIF(COUNT(id), 0) FROM superhero"
+}

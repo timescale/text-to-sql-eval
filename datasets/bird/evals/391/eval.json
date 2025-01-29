@@ -1,0 +1,5 @@
+{
+  "database": "card_games",
+  "question": "Please list the Italian names of the cards in the set Coldsnap with the highest converted mana cost.\ncard set Coldsnap refers to name = 'Coldsnap'; Italian refers to language = 'Italian'; highest converted mana cost refers to MAX(convertedManaCost)",
+  "query": "SELECT T2.name FROM foreign_data AS T1 INNER JOIN cards AS T2 ON T2.uuid = T1.uuid INNER JOIN sets AS T3 ON T3.code = T2.setCode WHERE T3.name = 'Coldsnap' AND T1.language = 'Italian' ORDER BY T2.convertedManaCost DESC NULLS LAST"
+}

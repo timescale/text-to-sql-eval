@@ -1,0 +1,5 @@
+{
+  "database": "toxicology",
+  "question": "What are the bond type and the atoms of the bond ID of TR001_6_9?\natoms refer to atom_id or atom_id2",
+  "query": "SELECT T1.bond_type, T2.atom_id, T2.atom_id2 FROM bond AS T1 INNER JOIN connected AS T2 ON T1.bond_id = T2.bond_id WHERE T2.bond_id = 'TR001_6_9'"
+}

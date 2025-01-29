@@ -1,0 +1,5 @@
+{
+  "database": "toxicology",
+  "question": "How many connections does the atom 19 have?\nconnections refers to bond_id; atom 19 refers to atom_id like 'TR%_19';",
+  "query": "SELECT COUNT(T.bond_id) FROM connected AS T WHERE RIGHT(T.atom_id, 2) = '19'"
+}

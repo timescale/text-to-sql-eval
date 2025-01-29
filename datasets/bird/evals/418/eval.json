@@ -1,0 +1,5 @@
+{
+  "database": "toxicology",
+  "question": "Please list top three molecules that have single bonds between two atoms and are not carcinogenic in alphabetical order.\nlabel = '-' means molecules are not carcinogenic; single type bond refers to bond_type = '-'; list top three molecules refers to return molecule_id and order by molecule_id;",
+  "query": "SELECT DISTINCT T2.molecule_id FROM bond AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T1.bond_type = '-' AND T2.label = '-' ORDER BY T2.molecule_id NULLS FIRST LIMIT 3"
+}

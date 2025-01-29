@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "State the driver with the most points scored. Find his full name with that points.\nthe most points scored refers to max(points); Full name of the driver refers to drivers.forename and drivers.surname;",
+  "query": "SELECT T3.forename, T3.surname, T2.points FROM races AS T1 INNER JOIN driverStandings AS T2 ON T2.raceId = T1.raceId INNER JOIN drivers AS T3 ON T3.driverId = T2.driverId ORDER BY T2.points DESC NULLS LAST LIMIT 1"
+}

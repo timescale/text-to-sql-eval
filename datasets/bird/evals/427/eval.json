@@ -1,0 +1,5 @@
+{
+  "database": "toxicology",
+  "question": "List all the elements of atoms that can not bond with any other atoms.\n atoms cannot bond with other atoms means atom_id NOT in connected table;",
+  "query": "SELECT DISTINCT T.element FROM atom AS T WHERE NOT T.element IN (SELECT DISTINCT T1.element FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id)"
+}

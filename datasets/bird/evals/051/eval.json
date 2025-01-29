@@ -1,0 +1,5 @@
+{
+  "database": "student_club",
+  "question": "How many members attended the \"Women's Soccer\" event?\n'Women's Soccer' is the event name;",
+  "query": "SELECT COUNT(T2.link_to_member) FROM event AS T1 INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event WHERE T1.event_name = 'Women''s Soccer'"
+}

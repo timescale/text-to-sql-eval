@@ -1,0 +1,5 @@
+{
+  "database": "card_games",
+  "question": "Which foreign language used by \"A Pedra Fellwar\"?\n\"A Pedra Fellwar\" refers to name = 'A Pedra Fellwar'",
+  "query": "SELECT DISTINCT language FROM foreign_data WHERE name = 'A Pedra Fellwar'"
+}

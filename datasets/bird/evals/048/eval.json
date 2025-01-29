@@ -1,0 +1,5 @@
+{
+  "database": "student_club",
+  "question": "What is the total cost of the pizzas for all the events?\ntotal cost of the pizzas refers to SUM(cost) where expense_description = 'Pizza'",
+  "query": "SELECT SUM(cost) FROM expense WHERE expense_description = 'Pizza'"
+}

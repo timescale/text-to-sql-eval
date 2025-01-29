@@ -1,0 +1,5 @@
+{
+  "database": "superhero",
+  "question": "What is the total number of superheroes without full name?\nsuperheroes without full name refers to full_name IS NULL",
+  "query": "SELECT COUNT(id) FROM superhero WHERE full_name IS NULL"
+}

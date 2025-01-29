@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "From race no. 50 to 100, how many finishers have been disqualified?\ndisqualified refers to statusID = 2, finisher refers to time! = null; race no. refers to raceId; raceId > 50 and raceId < 100;",
+  "query": "SELECT SUM(CASE WHEN NOT time IS NULL THEN 1 ELSE 0 END) FROM results WHERE statusId = 2 AND raceID < 100 AND raceId > 50"
+}

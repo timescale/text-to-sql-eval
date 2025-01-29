@@ -1,0 +1,5 @@
+{
+  "database": "student_club",
+  "question": "What does the person with the phone number \"809-555-3360\" major in?\nmajor in refers to major_name",
+  "query": "SELECT T2.major_name FROM member AS T1 INNER JOIN major AS T2 ON T1.link_to_major = T2.major_id WHERE T1.phone = '809-555-3360'"
+}

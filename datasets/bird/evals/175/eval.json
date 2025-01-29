@@ -1,0 +1,5 @@
+{
+  "database": "european_football_2",
+  "question": "Please state the finishing rate and curve score of the player who has the heaviest weight.\nfinishing rate refer to finishing; curve score refer to curve; heaviest weight refers to MAX(weight)",
+  "query": "SELECT id, finishing, curve FROM Player_Attributes WHERE player_api_id = (SELECT player_api_id FROM Player ORDER BY weight DESC NULLS LAST LIMIT 1) LIMIT 1"
+}

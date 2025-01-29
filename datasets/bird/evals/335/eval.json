@@ -1,0 +1,5 @@
+{
+  "database": "codebase_community",
+  "question": "Which post by Harvey Motulsky has the most views? Please give the id and title of this post.\nDisplayName = 'Harvey Motulsky'; the most views refer to MAX(ViewCount);",
+  "query": "SELECT T2.Id, T2.Title FROM users AS T1 INNER JOIN posts AS T2 ON T1.Id = T2.OwnerUserId WHERE T1.DisplayName = 'Harvey Motulsky' ORDER BY T2.ViewCount DESC NULLS LAST LIMIT 1"
+}

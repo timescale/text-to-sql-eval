@@ -1,0 +1,5 @@
+{
+  "database": "codebase_community",
+  "question": "Write the contents of comments with a score of 17.\nscore of 17 refers to Score = 17; contents of comments refers to Text",
+  "query": "SELECT Text FROM comments WHERE Score = 17"
+}

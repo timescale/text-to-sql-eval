@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "How many circuits are there in Adelaide, Australia?\nAustralia is the country; Melbourne is the location of circuit;",
+  "query": "SELECT COUNT(circuitId) FROM circuits WHERE location = 'Adelaide' AND country = 'Australia'"
+}

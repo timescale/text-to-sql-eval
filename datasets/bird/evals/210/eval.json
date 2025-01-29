@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "What's the location coordinates of Silverstone Circuit?\nlocation coordinates refers to (lat, lng); Silverstone Circuit refers to circuits.name = 'Silverstone Circuit'",
+  "query": "SELECT lat, lng FROM circuits WHERE name = 'Silverstone Circuit'"
+}

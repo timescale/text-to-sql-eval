@@ -1,0 +1,5 @@
+{
+  "database": "student_club",
+  "question": "Name the event with the highest amount spent on advertisement.\nName of event refers to event_name; highest amount spent on advertisement refers to MAX(spent) where category = 'Advertisement'",
+  "query": "SELECT T2.event_name FROM budget AS T1 INNER JOIN event AS T2 ON T1.link_to_event = T2.event_id WHERE T1.category = 'Advertisement' ORDER BY T1.spent DESC NULLS LAST LIMIT 1"
+}

@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "What is the surname of the driver with the best lap time in race number 19 in the second qualifying period?\nrace number refers to raceId; second qualifying period refers to q2; best lap time refers to MIN(q2);",
+  "query": "SELECT T2.surname FROM qualifying AS T1 INNER JOIN drivers AS T2 ON T2.driverId = T1.driverId WHERE T1.raceId = 19 ORDER BY T1.q2 ASC NULLS FIRST LIMIT 1"
+}

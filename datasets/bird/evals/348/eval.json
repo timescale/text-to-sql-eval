@@ -1,0 +1,5 @@
+{
+  "database": "card_games",
+  "question": "What are the borderless cards available without powerful foils?\nborderless' refers to borderColor; poweful foils refers to cardKingdomFoilId paired with cardKingdomId AND cardKingdomId is not null",
+  "query": "SELECT id FROM cards WHERE borderColor = 'borderless' AND (cardKingdomId IS NULL OR cardKingdomId IS NULL)"
+}

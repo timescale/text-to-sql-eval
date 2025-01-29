@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "How many times the circuits were held in Austria? Please give their location and coordinates.\nlocation coordinates refers to (lat,lng); Austria refers to country = 'Austria';",
+  "query": "SELECT DISTINCT location, lat, lng FROM circuits WHERE country = 'Austria'"
+}

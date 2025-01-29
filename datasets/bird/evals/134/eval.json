@@ -1,0 +1,5 @@
+{
+  "database": "european_football_2",
+  "question": "Give the name of the league with the highest matches of all time and how many matches were played in the said league.\n league with highest matches of all time refers to MAX(COUNT(league_id));",
+  "query": "SELECT t2.name, t1.max_count FROM League AS t2 JOIN (SELECT league_id, MAX(cnt) AS max_count FROM (SELECT league_id, COUNT(id) AS cnt FROM Match GROUP BY league_id) AS subquery GROUP BY league_id ORDER BY MAX(cnt) DESC LIMIT 1) AS t1 ON t1.league_id = t2.id"
+}

@@ -1,0 +1,5 @@
+{
+  "database": "codebase_community",
+  "question": "What is the average score of the posts owned by the user csgillespie?\n\"csgillespie\" is the DisplayName of user; average score refers to AVG(Score)",
+  "query": "SELECT AVG(T1.Score) FROM posts AS T1 INNER JOIN users AS T2 ON T1.OwnerUserId = T2.Id WHERE T2.DisplayName = 'csgillespie'"
+}

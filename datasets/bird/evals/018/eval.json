@@ -1,0 +1,5 @@
+{
+  "database": "debit_card_specializing",
+  "question": "Please list the product descriptions of the transactions taken place in the gas stations in the Czech Republic.\nCzech Republic can be represented as the Country value in the gasstations table is 'CZE'; ",
+  "query": "SELECT DISTINCT T3.Description FROM transactions_1k AS T1 INNER JOIN gasstations AS T2 ON T1.GasStationID = T2.GasStationID INNER JOIN products AS T3 ON T1.ProductID = T3.ProductID WHERE T2.Country = 'CZE'"
+}

@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "Please list the constructor names with 0 points at race 291.\nrace at 291 refers to raceID = 291;",
+  "query": "SELECT T2.name FROM constructorStandings AS T1 INNER JOIN constructors AS T2 ON T1.constructorId = T2.constructorId WHERE T1.points = 0 AND T1.raceId = 291"
+}

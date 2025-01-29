@@ -1,0 +1,5 @@
+{
+  "database": "toxicology",
+  "question": "What elements are in the TR004_8_9 bond atoms?\nTR004_8_9 bond atoms refers to bond_id = 'TR004_8_9';",
+  "query": "SELECT DISTINCT T1.element FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id WHERE T2.bond_id = 'TR004_8_9'"
+}

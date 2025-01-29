@@ -1,0 +1,5 @@
+{
+  "database": "card_games",
+  "question": "Which of the play format has the highest number of banned status? Indicate the play format and the names of all the card meet the condition.\nplay format refers to format; banned status refers to status = 'Banned'; the highest number of banned status refers to MAX(COUNT(status = 'Banned'))",
+  "query": "WITH MaxBanned AS (SELECT format FROM legalities WHERE status = 'Banned' GROUP BY format ORDER BY COUNT(*) DESC LIMIT 1)SELECT T2.format, T1.name FROM cards AS T1 INNER JOIN legalities AS T2 ON T2.uuid = T1.uuid INNER JOIN MaxBanned MB ON MB.format = T2.format WHERE T2.status = 'Banned'"
+}

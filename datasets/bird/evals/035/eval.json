@@ -1,0 +1,5 @@
+{
+  "database": "student_club",
+  "question": "What is the amount of the funds that the Vice President received?\n'Vice President' is a position of Student Club; funds received refers to amount.",
+  "query": "SELECT T2.amount FROM member AS T1 INNER JOIN income AS T2 ON T1.member_id = T2.link_to_member WHERE T1.position = 'Vice President'"
+}

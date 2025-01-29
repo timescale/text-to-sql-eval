@@ -1,0 +1,5 @@
+{
+  "database": "student_club",
+  "question": "Mention the total expense used on 8/20/2019.\ntotal expense refers SUM(cost) where expense_date = '2019-08-20'",
+  "query": "SELECT SUM(cost) FROM expense WHERE expense_date = '2019-08-20'"
+}

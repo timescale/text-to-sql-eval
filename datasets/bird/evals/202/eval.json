@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "Calculate the percentage whereby Hamilton was not at the 1st track of the the f1 circuit since 2010.\npercentage = DIVIDE(COUNT(raceId) where surname = 'Hamilton' and position>1), (COUNT(raceId) where surname = 'Hamilton'); since 2010 refers to year >= 2010",
+  "query": "SELECT CAST(COUNT(CASE WHEN T2.position <> 1 THEN T2.position END) AS REAL) * 100 / NULLIF(COUNT(T2.driverStandingsId), 0) FROM races AS T1 INNER JOIN driverStandings AS T2 ON T2.raceId = T1.raceId INNER JOIN drivers AS T3 ON T3.driverId = T2.driverId WHERE T3.surname = 'Hamilton' AND T1.year >= 2010"
+}

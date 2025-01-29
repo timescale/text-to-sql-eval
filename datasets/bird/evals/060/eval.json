@@ -1,0 +1,5 @@
+{
+  "database": "student_club",
+  "question": "Indicate the top source of funds received in September 2019 based on their amount.\ntop source funds refers to MAX(source); September 2019 means date_received BETWEEN '2019-09-01' and '2019-09-30'",
+  "query": "SELECT source FROM income WHERE date_received BETWEEN '2019-09-01' AND '2019-09-30' ORDER BY source DESC NULLS LAST LIMIT 1"
+}

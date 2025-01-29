@@ -1,0 +1,5 @@
+{
+  "database": "student_club",
+  "question": "Among all the closed events, which event has the highest spend-to-budget ratio?\nclosed events refers to event_name where status = 'Closed'; highest spend-to budget ratio refers to MAX(DIVIDE(spent, amount))",
+  "query": "SELECT T2.event_name FROM budget AS T1 INNER JOIN event AS T2 ON T1.link_to_event = T2.event_id WHERE T2.status = 'Closed' ORDER BY T1.spent / NULLIF(T1.amount, 0) DESC NULLS LAST LIMIT 1"
+}

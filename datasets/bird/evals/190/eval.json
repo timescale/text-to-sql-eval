@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "Where is Malaysian Grand Prix held? Give the location coordinates.\nlocation coordinates refers to (lat, lng); Malaysian Grand Prix refers to races.name = 'Malaysian Grand Prix'",
+  "query": "SELECT DISTINCT T1.lat, T1.lng FROM circuits AS T1 INNER JOIN races AS T2 ON T2.circuitID = T1.circuitId WHERE T2.name = 'Malaysian Grand Prix'"
+}

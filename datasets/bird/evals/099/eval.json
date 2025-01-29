@@ -1,0 +1,5 @@
+{
+  "database": "thrombosis_prediction",
+  "question": "How many female patients were given an APS diagnosis?\nfemale refers to SEX = 'F'; APS diagnosis refers to Diagnosis='APS'",
+  "query": "SELECT COUNT(ID) FROM Patient WHERE SEX = 'F' AND Diagnosis = 'APS'"
+}

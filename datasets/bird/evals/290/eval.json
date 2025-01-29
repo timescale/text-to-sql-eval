@@ -1,0 +1,5 @@
+{
+  "database": "superhero",
+  "question": "Calculate the percentage of superheroes with blue eyes.\npercentage = MULTIPLY(DIVIDE(SUM(superhero_name WHERE color = 'Blue'), COUNT(superhero_name)), 100.0); blue eyes refers to color = 'Blue' and color.id =  eye_colour_id = 7;",
+  "query": "SELECT CAST(COUNT(CASE WHEN T2.colour = 'Blue' THEN 1 ELSE NULL END) AS REAL) * 100 / NULLIF(COUNT(T1.id), 0) FROM superhero AS T1 INNER JOIN colour AS T2 ON T1.eye_colour_id = T2.id"
+}

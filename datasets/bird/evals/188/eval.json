@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "For all the drivers who finished the game in race No. 592, who is the oldest?\ndrivers who finished the race refers to time is not empty (i.e. time IS NOT NULL); race number refers to raceId; date of birth refers to drivers.dob; The larger the birthday value, the younger the person is, and vice versa;",
+  "query": "SELECT T1.forename, T1.surname FROM drivers AS T1 INNER JOIN results AS T2 ON T2.driverId = T1.driverId WHERE T2.raceId = 592 AND NOT T2.time IS NULL AND NOT T1.dob IS NULL ORDER BY T1.dob ASC NULLS FIRST LIMIT 1"
+}

@@ -1,0 +1,5 @@
+{
+  "database": "european_football_2",
+  "question": "Please list the names of the players whose volley score and dribbling score are over 70.\nvolley score are over 70 refers to volleys > 70; dribbling score refers to dribbling are over 70 refers to dribbling > 70;",
+  "query": "SELECT DISTINCT t1.player_name FROM Player AS t1 INNER JOIN Player_Attributes AS t2 ON t1.player_api_id = t2.player_api_id WHERE t2.volleys > 70 AND t2.dribbling > 70"
+}

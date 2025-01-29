@@ -1,0 +1,5 @@
+{
+  "database": "codebase_community",
+  "question": "How many users last accessed the website after 2014/9/1?\nlast accessed after 2014/9/1 refers to LastAccessDate > '2014-09-01'",
+  "query": "SELECT COUNT(Id) FROM users WHERE DATE(LastAccessDate) > '2014-09-01'"
+}

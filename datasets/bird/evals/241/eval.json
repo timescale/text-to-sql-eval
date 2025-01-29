@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "Which constructor scored most points from Monaco Grand Prix between 1980 and 2010? List the score, name and nationality of this team.\nMonaco Grand Priz refers to the race; race in year between 1980 and 2010",
+  "query": "SELECT SUM(T1.points), T2.name, T2.nationality FROM constructorResults AS T1 INNER JOIN constructors AS T2 ON T1.constructorId = T2.constructorId INNER JOIN races AS T3 ON T3.raceid = T1.raceid WHERE T3.name = 'Monaco Grand Prix' AND T3.year BETWEEN 1980 AND 2010 GROUP BY T2.name, T2.nationality ORDER BY SUM(T1.points) DESC LIMIT 1"
+}

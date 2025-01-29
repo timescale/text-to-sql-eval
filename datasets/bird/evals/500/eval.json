@@ -1,0 +1,5 @@
+{
+  "database": "financial",
+  "question": "Provide the IDs and age of the client with high level credit card, which is eligible for loans.\nthe credit card is high-level refers to card.type = 'gold'; eligible for loans refers to disp.type = 'OWNER'",
+  "query": "SELECT T1.client_id, EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM T3.birth_date) AS age FROM disp AS T1 INNER JOIN card AS T2 ON T2.disp_id = T1.disp_id INNER JOIN client AS T3 ON T1.client_id = T3.client_id WHERE T2.type = 'gold' AND T1.type = 'OWNER'"
+}

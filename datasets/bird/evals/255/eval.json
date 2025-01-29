@@ -1,0 +1,5 @@
+{
+  "database": "superhero",
+  "question": "Who is the dumbest superhero?\nthe dumbest superhero refers to MIN(attribute_value) where attribute_name = 'Intelligence'",
+  "query": "SELECT T1.superhero_name FROM superhero AS T1 INNER JOIN hero_attribute AS T2 ON T1.id = T2.hero_id INNER JOIN attribute AS T3 ON T2.attribute_id = T3.id WHERE T3.attribute_name = 'Intelligence' ORDER BY T2.attribute_value NULLS FIRST LIMIT 1"
+}

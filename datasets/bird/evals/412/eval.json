@@ -1,0 +1,5 @@
+{
+  "database": "toxicology",
+  "question": "Please list top three elements of the toxicology of the molecule TR000 in alphabetical order.\nTR000 is the molecule id;",
+  "query": "SELECT DISTINCT T.element FROM atom AS T WHERE T.molecule_id = 'TR000' ORDER BY T.element NULLS FIRST LIMIT 3"
+}

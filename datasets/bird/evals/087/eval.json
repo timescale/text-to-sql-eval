@@ -1,0 +1,5 @@
+{
+  "database": "thrombosis_prediction",
+  "question": "How many of the patients with the most serious thrombosis cases examined in 1997 are women?\nthe most serious thrombosis refers to Thrombosis = '1' (the most severe one); women refers to sex = 'F'",
+  "query": "SELECT COUNT(*) FROM Patient AS T1 INNER JOIN Examination AS T2 ON T1.ID = T2.ID WHERE T1.SEX = 'F' AND TO_CHAR(CAST(T2.\"Examination Date\" AS TIMESTAMP), 'YYYY') = '1997' AND T2.Thrombosis = 1"
+}

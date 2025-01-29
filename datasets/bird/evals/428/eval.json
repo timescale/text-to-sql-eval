@@ -1,0 +1,5 @@
+{
+  "database": "toxicology",
+  "question": "What are the atoms of the triple bond with the molecule \"TR041\"?\nTR041 is the molecule id; triple bond refers to bond_type = '#';",
+  "query": "SELECT T2.atom_id, T2.atom_id2 FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id INNER JOIN bond AS T3 ON T2.bond_id = T3.bond_id WHERE T3.bond_type = '#' AND T3.molecule_id = 'TR041'"
+}

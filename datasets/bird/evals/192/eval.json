@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "In the race No. 45, for the driver who had the Q3 time as 0:01:33, what is his abbreviated code?\nrace number refers to raceId; had the Q3 time as 0:0M:SS refers to q3 LIKE 'M:SS%'",
+  "query": "SELECT T2.code FROM qualifying AS T1 INNER JOIN drivers AS T2 ON T2.driverId = T1.driverId WHERE T1.raceId = 45 AND T1.q3 LIKE '1:33%'"
+}

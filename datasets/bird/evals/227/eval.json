@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "What is the average of fastest lap speed in the 2009 Spanish Grand Prix race?\nSpanish Grand Prix is the name of race refers to name = 'Spanish Grand Prix'; average fastest lap speed refers to avg(fastestLapSpeed);",
+  "query": "SELECT AVG(CAST(T1.fastestLapSpeed AS NUMERIC)) FROM results AS T1 INNER JOIN races AS T2 ON T1.raceId = T2.raceId WHERE T2.year = 2009 AND T2.name = 'Spanish Grand Prix'"
+}

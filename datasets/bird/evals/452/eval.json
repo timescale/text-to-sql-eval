@@ -1,0 +1,5 @@
+{
+  "database": "california_schools",
+  "question": "Under whose administration is the school with the highest number of students scoring 1500 or more on the SAT? Indicate their full names.\nfull name means first name, last name; There are at most 3 administrators for each school; SAT Scores are greater or equal to 1500 refers to NumGE1500",
+  "query": "SELECT T2.AdmFName1, T2.AdmLName1, T2.AdmFName2, T2.AdmLName2, T2.AdmFName3, T2.AdmLName3 FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode ORDER BY T1.NumGE1500 DESC NULLS LAST LIMIT 1"
+}

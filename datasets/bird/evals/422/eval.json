@@ -1,0 +1,5 @@
+{
+  "database": "toxicology",
+  "question": "List all the elements of the toxicology of the molecule \"TR004\".\nTR004 is the molecule id;",
+  "query": "SELECT DISTINCT T.element FROM atom AS T WHERE T.molecule_id = 'TR004'"
+}

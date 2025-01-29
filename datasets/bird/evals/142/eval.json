@@ -1,0 +1,5 @@
+{
+  "database": "european_football_2",
+  "question": "What is the overall rating of the football player Gabriel Tamas in year 2011?\nin year 2011 refers to strftime('%Y', date) = '2011';",
+  "query": "SELECT t2.overall_rating FROM Player AS t1 INNER JOIN Player_Attributes AS t2 ON t1.player_api_id = t2.player_api_id WHERE t1.player_name = 'Gabriel Tamas' AND TO_CHAR(CAST(t2.date AS TIMESTAMP), 'YYYY') = '2011'"
+}

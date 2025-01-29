@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "What is the coordinates location of the circuits for Australian grand prix?\ncoordinate position/location refers to lat, lng; circuits for Australian grand prix refers to races.name = 'Australian Grand Prix'",
+  "query": "SELECT DISTINCT T1.lat, T1.lng FROM circuits AS T1 INNER JOIN races AS T2 ON T2.circuitID = T1.circuitId WHERE T2.name = 'Australian Grand Prix'"
+}

@@ -1,0 +1,5 @@
+{
+  "database": "financial",
+  "question": "In the branch where the second-highest number of crimes were committed in 1995 occurred, how many male clients are there?\nMale refers to gender = 'M'; A15 stands for no. of commited crimes 1995",
+  "query": "SELECT COUNT(T1.client_id) FROM client AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id WHERE T1.gender = 'M' AND T2.A15 = (SELECT T3.A15 FROM district AS T3 ORDER BY T3.A15 DESC NULLS LAST LIMIT 1 OFFSET 1)"
+}

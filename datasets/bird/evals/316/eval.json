@@ -1,0 +1,5 @@
+{
+  "database": "codebase_community",
+  "question": "Which user made a post titled 'Understanding what Dassault iSight is doing?' and how much is the reputation of the user?\n\"Understanding what Dassault iSight is doing?\" is the Title of post; user refers to DisplayName;",
+  "query": "SELECT T1.DisplayName, T1.Reputation FROM users AS T1 INNER JOIN posts AS T2 ON T1.Id = T2.OwnerUserId WHERE T2.Title = 'Understanding what Dassault iSight is doing?'"
+}

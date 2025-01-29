@@ -1,0 +1,5 @@
+{
+  "database": "european_football_2",
+  "question": "Which player is the tallest?\ntallest player refers to MAX(height);",
+  "query": "SELECT player_name FROM Player ORDER BY height DESC NULLS LAST LIMIT 1"
+}

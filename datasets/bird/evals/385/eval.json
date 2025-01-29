@@ -1,0 +1,5 @@
+{
+  "database": "card_games",
+  "question": "Is the set of cards with Adarkar Valkyrie only available outside the United States?\ncard set Adarkar Valkyrie refers to name = 'Adarkar Valkyrie'; isForeignOnly = 1 means only available outside the United States;",
+  "query": "SELECT CASE WHEN isForeignOnly = 1 THEN 'YES' ELSE 'NO' END FROM cards AS T1 INNER JOIN sets AS T2 ON T2.code = T1.setCode WHERE T1.name = 'Adarkar Valkyrie'"
+}

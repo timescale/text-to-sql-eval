@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "In which Formula_1 race did Lewis Hamilton rank the highest?\nrank the highest refers to min(rank); Lewis Hamilton refers to the full name of the driver; Full name of the driver refers to drivers.forename and drivers.surname;",
+  "query": "SELECT name FROM races WHERE raceId IN (SELECT raceId FROM results WHERE rank = 1 AND driverId = (SELECT driverId FROM drivers WHERE forename = 'Lewis' AND surname = 'Hamilton'))"
+}

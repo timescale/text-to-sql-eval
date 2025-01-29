@@ -1,0 +1,5 @@
+{
+  "database": "toxicology",
+  "question": "What is the most common bond type?\nmost common bond type refers MAX(COUNT(bond_type))",
+  "query": "SELECT T.bond_type FROM (SELECT bond_type, COUNT(bond_id) FROM bond GROUP BY bond_type ORDER BY COUNT(bond_id) DESC NULLS LAST LIMIT 1) AS T"
+}

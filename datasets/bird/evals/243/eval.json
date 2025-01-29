@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "As of the present, what is the full name of the youngest racer? Indicate her nationality and the name of the race to which he/she first joined.\nfull name refers to forename+surname; Youngest racer = MAX(dob)",
+  "query": "SELECT T1.forename, T1.surname, T1.nationality, T3.name FROM drivers AS T1 INNER JOIN driverStandings AS T2 ON T1.driverId = T2.driverId INNER JOIN races AS T3 ON T2.raceId = T3.raceId WHERE T1.dob notnull ORDER BY T1.dob DESC LIMIT 1"
+}

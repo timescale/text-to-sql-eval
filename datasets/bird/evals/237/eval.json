@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "List down top 3 German drivers who has the shortest average pit stop duration and were born between 1980-1985.\nFull name of the driver refers to drivers.forename and drivers.surname; born between 1980-1985 refers to 1980< year(dob)>1985; Average pitstop duration refers to Divide(SUM(duration),COUNT(duration)); shortest average refers to Min(avg(duration));",
+  "query": "SELECT T2.forename, T2.surname FROM pitStops AS T1 INNER JOIN drivers AS T2 ON T1.driverId = T2.driverId WHERE T2.nationality = 'German' AND EXTRACT(YEAR FROM T2.dob) BETWEEN 1980 AND 1985 GROUP BY T2.forename, T2.surname ORDER BY AVG(CAST(T1.duration AS INTERVAL))  LIMIT 3"
+}

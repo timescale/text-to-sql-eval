@@ -1,0 +1,5 @@
+{
+  "database": "european_football_2",
+  "question": "What was the final score for the match on September 24, 2008, in the Belgian Jupiler League between the home team and the away team?\nSeptember 24, 2008 refers to date like '2008-09-24%'; in the Belgian Jupiler League refers to League.name = 'Belgium Jupiler League'; final score for home team refers to home_team_goal; final score for away team refers to away_team_goal",
+  "query": "SELECT t2.home_team_goal, t2.away_team_goal FROM League AS t1 INNER JOIN Match AS t2 ON t1.id = t2.league_id WHERE t1.name = 'Belgium Jupiler League' AND t2.\"date\" LIKE '2008-09-24%'"
+}

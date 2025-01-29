@@ -1,0 +1,5 @@
+{
+  "database": "superhero",
+  "question": "What is the average weight of all female superheroes?\nfemale refers to gender = 'Female'; average weight refers to AVG(weight_kg)",
+  "query": "SELECT AVG(T1.weight_kg) FROM superhero AS T1 INNER JOIN gender AS T2 ON T1.gender_id = T2.id WHERE T2.gender = 'Female'"
+}

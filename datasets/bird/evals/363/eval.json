@@ -1,0 +1,5 @@
+{
+  "database": "card_games",
+  "question": "Among the Artifact cards, which are black color and comes with foreign languague translation?\nArtifact card refers to originalType = 'Artifact'; black color refers to colors = 'B'; foreign language refers to language in foreign_data",
+  "query": "SELECT DISTINCT T1.name FROM cards AS T1 INNER JOIN foreign_data AS T2 ON T1.uuid = T2.uuid WHERE T1.originalType = 'Artifact' AND T1.colors = 'B'"
+}

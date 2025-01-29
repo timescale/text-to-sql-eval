@@ -1,0 +1,5 @@
+{
+  "database": "toxicology",
+  "question": "What is the percentage of double bonds in the molecule TR008? Please provide your answer as a percentage with five decimal places.\ndouble bond refers to bond_type = '='; TR008 is the molecule id; percentage = DIVIDE(SUM(bond_type = '='), COUNT(bond_id)) as percent where molecule_id = 'TR008'",
+  "query": "SELECT ROUND(CAST(COUNT(CASE WHEN T.bond_type = '=' THEN T.bond_id ELSE NULL END) AS NUMERIC) * 100 / CAST(COUNT(T.bond_id) AS NUMERIC), 5) AS percentage FROM bond AS T WHERE T.molecule_id = 'TR008'"
+}

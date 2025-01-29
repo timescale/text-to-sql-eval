@@ -1,0 +1,5 @@
+{
+  "database": "superhero",
+  "question": "What is the hero's full name with the highest attribute in strength?\nhighest attribute in strength refers to MAX(attribute_value) WHERE attribute_name = 'strength';",
+  "query": "SELECT T1.full_name FROM superhero AS T1 INNER JOIN hero_attribute AS T2 ON T1.id = T2.hero_id INNER JOIN attribute AS T3 ON T2.attribute_id = T3.id WHERE T3.attribute_name = 'Strength' ORDER BY T2.attribute_value DESC NULLS LAST LIMIT 1"
+}

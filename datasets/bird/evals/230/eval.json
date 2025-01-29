@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "List out the code for drivers who have nationality in America.\nnationality = 'America'",
+  "query": "SELECT code FROM drivers WHERE Nationality = 'American'"
+}

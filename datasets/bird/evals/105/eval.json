@@ -1,0 +1,5 @@
+{
+  "database": "thrombosis_prediction",
+  "question": "List and group all patients by sex for total bilirubin (T-BIL) level not within the normal range.\nList refers to GROUP_CONCAT(DISTINCT ID); total bilirubin (T-BIL) not within normal range refers to T-BIL > = 2.0",
+  "query": "SELECT T1.ID, T1.SEX FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID WHERE T2.\"T-BIL\" >= 2.0 GROUP BY T1.SEX,T1.ID"
+}

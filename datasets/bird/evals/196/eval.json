@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "Paul di Resta was in the No. 853 race, what percent faster did he finish in the 853rd race than the next race for the fastest lap speed?\nPaul di Resta refers to the full name of the driver; Full name of the driver refers to drivers.forename ='Paul' and drivers.surname = 'di Resta'; race number refers to raceId; percentage = DIVIDE(SUBTRACT(fastestLapSpeed(raceId = 853), (fastestLapSpeed (raceId = 854)) * 100 , (fastestLapSpeed(raceId = 853))",
+  "query": "SELECT (SUM(CASE WHEN T2.raceId = 853 THEN T2.fastestLapSpeed::numeric ELSE 0 END) - SUM(CASE WHEN T2.raceId = 854 THEN T2.fastestLapSpeed::numeric ELSE 0 END)) * 100 / NULLIF(SUM(CASE WHEN T2.raceId = 853 THEN T2.fastestLapSpeed::numeric ELSE 0 END), 0) FROM drivers AS T1 INNER JOIN results AS T2 ON T2.driverId = T1.driverId WHERE T1.forename = 'Paul' AND T1.surname = 'di Resta'"
+}

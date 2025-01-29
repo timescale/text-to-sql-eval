@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "What's the finish time for the driver who ranked second in 2008's Chinese Grand Prix?\nfinish time refers to time; Chinese Grand Prix refers to races.name = 'Chinese Grand Prix';",
+  "query": "SELECT T1.time FROM results AS T1 INNER JOIN races AS T2 ON T1.raceId = T2.raceId WHERE T1.rank = 2 AND T2.name = 'Chinese Grand Prix' AND T2.year = 2008"
+}

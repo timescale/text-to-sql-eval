@@ -1,0 +1,5 @@
+{
+  "database": "student_club",
+  "question": "Which event has the lowest cost?\nevent refers to event_name; lowest cost means MIN(cost)",
+  "query": "SELECT T1.event_name FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event INNER JOIN expense AS T3 ON T2.budget_id = T3.link_to_budget ORDER BY T3.cost NULLS FIRST LIMIT 1"
+}

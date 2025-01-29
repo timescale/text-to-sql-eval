@@ -1,0 +1,5 @@
+{
+  "database": "european_football_2",
+  "question": "Please provide top four football players' IDs who are among the lowest potential players and prefer to use the right foot when attacking.\nlowest potential players refers to MIN(potential); prefer to use the right foot when attacking refers to preferred_foot = 'right'",
+  "query": "SELECT id FROM Player_Attributes WHERE preferred_foot = 'right' ORDER BY potential ASC NULLS LAST LIMIT 4"
+}

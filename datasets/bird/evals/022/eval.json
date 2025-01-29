@@ -1,0 +1,5 @@
+{
+  "database": "debit_card_specializing",
+  "question": "What segment did the customer have at 2012/8/23 21:20:00?\n'2012/8/23' can be represented by '2012-08-23'",
+  "query": "SELECT T2.Segment FROM transactions_1k AS T1 INNER JOIN customers AS T2 ON T1.CustomerID = T2.CustomerID WHERE T1.date = '2012-08-23' AND T1.time = '21:20:00'"
+}

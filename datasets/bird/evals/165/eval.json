@@ -1,0 +1,5 @@
+{
+  "database": "european_football_2",
+  "question": "List down most tallest players' name.\ntallest refers to rank based on the height in descending order; Most tallest players refers to rank = 1 ",
+  "query": "SELECT player_name FROM (SELECT player_name, height, DENSE_RANK() OVER (ORDER BY height DESC) AS rank FROM Player) AS subquery WHERE rank = 1"
+}

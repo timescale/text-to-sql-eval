@@ -1,0 +1,5 @@
+{
+  "database": "financial",
+  "question": "What is the percentage of loan amount that has been fully paid with no issue.\nLoan paid with no issue means contract finished, no problems; status = 'A' means contract finished, no problems; Percentage of accounts by condition = [(total(amount) & condition) / (total amount)] * 100%",
+  "query": "SELECT (CAST(SUM(CASE WHEN status = 'A' THEN amount ELSE 0 END) AS REAL) * 100) / NULLIF(SUM(amount), 0) FROM loan"
+}

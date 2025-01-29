@@ -1,0 +1,5 @@
+{
+  "database": "european_football_2",
+  "question": "How many players had the highest potential score for crossing that preferred to use their left foots while attacking?\nhighest potential score for crossing refers to MAX(crossing); preferred to use their left foots while attacking refers to preferred_foot = 'left'",
+  "query": "SELECT COUNT(t1.id) FROM Player_Attributes AS t1 WHERE t1.preferred_foot = 'left' AND t1.crossing = (SELECT MAX(crossing) FROM Player_Attributes)"
+}

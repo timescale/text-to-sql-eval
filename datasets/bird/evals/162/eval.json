@@ -1,0 +1,5 @@
+{
+  "database": "european_football_2",
+  "question": "For the team \"Hannover 96\", what was its defence aggression class on 2015/9/10?\n\"Hannover 96\" refers to team_long_name = 'Hannover 96'; on 2015/9/10 refers to date LIKE '2015-09-10%';",
+  "query": "SELECT t2.defenceAggressionClass FROM Team AS t1 INNER JOIN Team_Attributes AS t2 ON t1.team_api_id = t2.team_api_id WHERE t1.team_long_name = 'Hannover 96' AND t2.\"date\" LIKE '2015-09-10%'"
+}

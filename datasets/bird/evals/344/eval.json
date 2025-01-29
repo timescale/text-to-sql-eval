@@ -1,0 +1,5 @@
+{
+  "database": "codebase_community",
+  "question": "Among the posts with views ranging from 100 to 150, what is the comment with the highest score?\nviews ranging from 100 to 150 refers to ViewCount BETWEEN 100 and 150; comment with the highest score refers to Text where MAX(Score);",
+  "query": "SELECT Text FROM comments WHERE PostId IN (SELECT Id FROM posts WHERE ViewCount BETWEEN 100 AND 150) ORDER BY Score DESC NULLS LAST LIMIT 1"
+}

@@ -1,0 +1,5 @@
+{
+  "database": "codebase_community",
+  "question": "Identify the total views on the post 'Computer Game Datasets'. Name the user who posted it last time.\ntotal views refer to ViewCount; Name the user refers to DisplayName; post 'Computer Game Datasets' refers to Text = 'Computer Game Datasets';",
+  "query": "SELECT T2.ViewCount, T3.DisplayName FROM postHistory AS T1 INNER JOIN posts AS T2 ON T1.PostId = T2.Id INNER JOIN users AS T3 ON T2.LastEditorUserId = T3.Id WHERE T1.Text = 'Computer Game Datasets'"
+}

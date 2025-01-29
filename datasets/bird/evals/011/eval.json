@@ -1,0 +1,5 @@
+{
+  "database": "debit_card_specializing",
+  "question": "Is it true that more SMEs pay in Czech koruna than in euros? If so, how many more?\nAmount of more SMEs = Total of SMEs pay using Currency CZK - Total of SMEs pay using Currency EUR",
+  "query": "SELECT SUM(CASE WHEN Currency = 'CZK' THEN 1 ELSE 0 END) - SUM(CASE WHEN Currency = 'EUR' THEN 1 ELSE 0 END) FROM customers WHERE Segment = 'SME'"
+}

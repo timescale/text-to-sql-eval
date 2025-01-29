@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "Name the driver with the most winning. Mention his nationality and what is his maximum point scores.\nFull name of the driver refers to drivers.forename and drivers.surname; the most winning refers to MAX(COUNT(wins)); average point scores refers to MAX(points);",
+  "query": "SELECT T1.forename, T1.surname, T1.nationality, MAX(T2.points) FROM drivers AS T1 INNER JOIN driverStandings AS T2 ON T2.driverId = T1.driverId WHERE T2.wins >= 1 GROUP BY T1.forename, T1.surname, T1.nationality ORDER BY COUNT(T2.wins) DESC NULLS LAST LIMIT 1"
+}

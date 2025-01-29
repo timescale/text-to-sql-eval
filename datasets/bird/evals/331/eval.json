@@ -1,0 +1,5 @@
+{
+  "database": "codebase_community",
+  "question": "What is the average monthly number of links created in 2010 for posts that have no more than 2 answers?\ncalculation = DIVIDE(COUNT(Id where YEAR(CreationDate) = 2010 and AnswerCount < = 2), 12)",
+  "query": "SELECT CAST(COUNT(T1.Id) AS REAL) / NULLIF(12, 0) FROM postLinks AS T1 INNER JOIN posts AS T2 ON T1.PostId = T2.Id WHERE T2.AnswerCount <= 2 AND TO_CHAR(CAST(T1.CreationDate AS TIMESTAMP), 'YYYY') = '2010'"
+}

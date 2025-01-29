@@ -1,0 +1,5 @@
+{
+  "database": "financial",
+  "question": "What is the average number of crimes committed in 1995 in regions where the number exceeds 4000 and the region has accounts that are opened starting from the year 1997?\nA3 refers to region names; A15 stands for the average number of crimes commited in 1995.",
+  "query": "SELECT AVG(T1.A15) FROM district AS T1 INNER JOIN account AS T2 ON T1.district_id = T2.district_id WHERE TO_CHAR(CAST(T2.date AS TIMESTAMP), 'YYYY') >= '1997' AND T1.A15 > 4000"
+}

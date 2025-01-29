@@ -1,0 +1,5 @@
+{
+  "database": "debit_card_specializing",
+  "question": "In February 2012, what percentage of customers consumed more than 528.3?\nFebruary 2012 refers to '201202' in yearmonth.date; The first 4 strings of the Date values in the yearmonth table can represent year; The 5th and 6th string of the date can refer to month.",
+  "query": "SELECT CAST(SUM(CASE WHEN Consumption > 528.3 THEN 1 ELSE 0 END) AS REAL) * 100 / NULLIF(COUNT(CustomerID), 0) FROM yearmonth WHERE Date = '201202'"
+}

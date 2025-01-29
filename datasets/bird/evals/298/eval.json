@@ -1,0 +1,5 @@
+{
+  "database": "codebase_community",
+  "question": "Which user has a higher reputation, Harlan or Jarrod Dixon?\n\"Harlan\" and \"Jarrod Dixon\" are both DisplayName; highest reputation refers to Max(Reputation)",
+  "query": "SELECT DisplayName FROM users WHERE DisplayName IN ('Harlan', 'Jarrod Dixon') AND Reputation = (SELECT MAX(Reputation) FROM users WHERE DisplayName IN ('Harlan', 'Jarrod Dixon'))"
+}

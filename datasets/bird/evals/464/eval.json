@@ -1,0 +1,5 @@
+{
+  "database": "california_schools",
+  "question": "Between San Diego and Santa Barbara, which county offers the most number of schools that does not offer physical building? Indicate the amount.\n'Does not offer physical building' means Virtual = F in the database.",
+  "query": "SELECT County, COUNT(Virtual) FROM schools WHERE (County = 'San Diego' OR County = 'Santa Barbara') AND Virtual = 'F' GROUP BY County ORDER BY COUNT(Virtual) DESC NULLS LAST LIMIT 1"
+}

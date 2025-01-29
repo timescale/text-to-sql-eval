@@ -1,0 +1,5 @@
+{
+  "database": "card_games",
+  "question": "What languages are available in the set known as Archenemy on the magic card market and having the code ARC?\nknown as Archenemy refers to mcmName = 'Archenemy'; having the code ARC refers to setCode = 'ARC'",
+  "query": "SELECT T2.language FROM sets AS T1 INNER JOIN set_translations AS T2 ON T1.code = T2.setCode WHERE T1.mcmName = 'Archenemy' AND T2.setCode = 'ARC'"
+}

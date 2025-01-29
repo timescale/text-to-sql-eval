@@ -1,0 +1,5 @@
+{
+  "database": "superhero",
+  "question": "State all of 3-D Man's attributes along with their values.\n3-D Man is the superhero_name. attributes refers to attribute_name; values refers to attribute_value;",
+  "query": "SELECT T3.attribute_name, T2.attribute_value FROM superhero AS T1 INNER JOIN hero_attribute AS T2 ON T1.id = T2.hero_id INNER JOIN attribute AS T3 ON T2.attribute_id = T3.id WHERE T1.superhero_name = '3-D Man'"
+}

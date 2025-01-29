@@ -1,0 +1,5 @@
+{
+  "database": "toxicology",
+  "question": "What are the elements of the atoms of TR144_8_19?\nTR144_8_19 is the bond id; ",
+  "query": "SELECT T2.element FROM connected AS T1 INNER JOIN atom AS T2 ON T1.atom_id = T2.atom_id WHERE T1.bond_id = 'TR144_8_19'"
+}

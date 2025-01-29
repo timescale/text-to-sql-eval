@@ -1,0 +1,5 @@
+{
+  "database": "student_club",
+  "question": "Which student has been entrusted to manage the budget for the Yearly Kickoff?\nname of students means the full name; full name refers to first_name, last_name;'Yearly Kickoff' is an event name;",
+  "query": "SELECT T4.first_name, T4.last_name FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event INNER JOIN expense AS T3 ON T2.budget_id = T3.link_to_budget INNER JOIN member AS T4 ON T3.link_to_member = T4.member_id WHERE T1.event_name = 'Yearly Kickoff'"
+}

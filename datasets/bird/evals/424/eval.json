@@ -1,0 +1,5 @@
+{
+  "database": "toxicology",
+  "question": "What are the bonds that have phosphorus and nitrogen as their atom elements?\nhave phosphorus as atom elements refers to element = 'p'; have nitrogen as atom elements refers to element = 'n'",
+  "query": "SELECT T2.bond_id FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id WHERE T2.bond_id IN (SELECT T3.bond_id FROM connected AS T3 INNER JOIN atom AS T4 ON T3.atom_id = T4.atom_id WHERE T4.element = 'p') AND T1.element = 'n'"
+}

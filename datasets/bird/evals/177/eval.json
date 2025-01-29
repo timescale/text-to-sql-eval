@@ -1,0 +1,5 @@
+{
+  "database": "european_football_2",
+  "question": "Please provide the full name of the away team that scored the most goals.\nfull name refers to team_long_name; away team refers to away_team_api_id; scored the most goals refers to MAX(away_team_goal)",
+  "query": "SELECT t2.team_long_name FROM Match AS t1 INNER JOIN Team AS t2 ON t1.away_team_api_id = t2.team_api_id ORDER BY t1.away_team_goal DESC NULLS LAST LIMIT 1"
+}

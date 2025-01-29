@@ -1,0 +1,5 @@
+{
+  "database": "financial",
+  "question": "List out the account numbers of clients who are youngest and have highest average salary?\nIf the person A's birthdate < B's birthdate, it means that person B is younger than person A; A11 refers to average salary",
+  "query": "SELECT T1.account_id FROM account AS T1 INNER JOIN disp AS T2 ON T1.account_id = T2.account_id INNER JOIN client AS T3 ON T2.client_id = T3.client_id INNER JOIN district AS T4 ON T4.district_id = T1.district_id WHERE T2.client_id = (SELECT client_id FROM client ORDER BY birth_date DESC NULLS LAST LIMIT 1) GROUP BY T4.A11, T1.account_id"
+}

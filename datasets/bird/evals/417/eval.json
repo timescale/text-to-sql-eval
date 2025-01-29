@@ -1,0 +1,5 @@
+{
+  "database": "toxicology",
+  "question": "Which bond type accounted for the majority of the bonds found in molecule TR010 and state whether or not this molecule is carcinogenic?\nTR010 is the molecule id; majority of the bond found refers to MAX(COUNT(bond_type)); ",
+  "query": "SELECT T.bond_type FROM (SELECT T1.bond_type, COUNT(T1.molecule_id) FROM bond AS T1 WHERE T1.molecule_id = 'TR010' GROUP BY T1.bond_type ORDER BY COUNT(T1.molecule_id) DESC NULLS LAST LIMIT 1) AS T"
+}

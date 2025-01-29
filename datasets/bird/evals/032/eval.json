@@ -1,0 +1,5 @@
+{
+  "database": "student_club",
+  "question": "Among the students from the Student_Club who attended the event \"Women's Soccer\", how many of them want a T-shirt that's in medium size?\nWomen's Soccer is an event name; T-shirt that is in medium size refers to t_shirt_size = 'Medium'",
+  "query": "SELECT COUNT(T1.event_id) FROM event AS T1 INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event INNER JOIN member AS T3 ON T2.link_to_member = T3.member_id WHERE T1.event_name = 'Women''s Soccer' AND T3.t_shirt_size = 'Medium'"
+}

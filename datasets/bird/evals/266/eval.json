@@ -1,0 +1,5 @@
+{
+  "database": "superhero",
+  "question": "Among the superheroes with height from 170 to 190, list the names of the superheroes with no eye color.\nheight from 170 to 190 refers to height_cm BETWEEN 170 AND 190; no eye color refers to colour = 'No Colour'",
+  "query": "SELECT DISTINCT T1.superhero_name FROM superhero AS T1 INNER JOIN colour AS T2 ON T1.eye_colour_id = T2.id WHERE T1.height_cm BETWEEN 170 AND 190 AND T2.colour = 'No Colour'"
+}

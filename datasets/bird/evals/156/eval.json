@@ -1,0 +1,5 @@
+{
+  "database": "european_football_2",
+  "question": "What is Ajax's highest chance creation passing score and what is it classified as?\nAjax's refers to team_long_name = 'Ajax'; chance creation passing score refers to MAX(chanceCreationPassing); classified refer to chanceCreationPassingClass",
+  "query": "SELECT t2.chanceCreationPassing, t2.chanceCreationPassingClass FROM Team AS t1 INNER JOIN Team_Attributes AS t2 ON t1.team_api_id = t2.team_api_id WHERE t1.team_long_name = 'Ajax' ORDER BY t2.chanceCreationPassing DESC NULLS LAST LIMIT 1"
+}

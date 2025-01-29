@@ -1,0 +1,5 @@
+{
+  "database": "student_club",
+  "question": "What was the notes of the fundraising on 2019/9/14?\nfundraising on 2019/9/14 refers to source = 'Fundraising' where date_received = '2019-09-14'",
+  "query": "SELECT notes FROM income WHERE source = 'Fundraising' AND date_received = '2019-09-14'"
+}

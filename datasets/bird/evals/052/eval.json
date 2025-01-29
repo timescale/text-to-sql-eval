@@ -1,0 +1,5 @@
+{
+  "database": "student_club",
+  "question": "List all the members of the \"School of Applied Sciences, Technology and Education\" department.\nlist all members means to list all the full name; full name refers to first_name, last_name;",
+  "query": "SELECT T1.first_name, T1.last_name FROM member AS T1 INNER JOIN major AS T2 ON T1.link_to_major = T2.major_id WHERE T2.department = 'School of Applied Sciences, Technology and Education'"
+}

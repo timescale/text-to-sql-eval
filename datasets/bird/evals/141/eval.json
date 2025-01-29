@@ -1,0 +1,5 @@
+{
+  "database": "european_football_2",
+  "question": "List the football players with a birthyear of 1970 and a birthmonth of October.\nplayers with a birthyear of 1970 and a birthmonth of October refers to substr(birthday,1,7) AS 'year-month',WHERE year = '1970' AND month = '10';",
+  "query": "SELECT player_name FROM Player WHERE SUBSTR(birthday, 1, 7) = '1970-10'"
+}

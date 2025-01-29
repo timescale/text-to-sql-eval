@@ -1,0 +1,5 @@
+{
+  "database": "european_football_2",
+  "question": "What was the average overall rating for Marko Arnautovic from 2007/2/22 to 2016/4/21?\naverage overall rating refers to avg(overall_rating); Marko Arnautovic refers to player_name = 'Marko Arnautovic'; from 2007/2/22 to 2016/4/21 refers to the first 10 characters of date BETWEEN '2007-02-22' and '2016-04-21'",
+  "query": "SELECT CAST(SUM(t2.overall_rating) AS REAL) / NULLIF(COUNT(t2.id), 0) FROM Player AS t1 INNER JOIN Player_Attributes AS t2 ON t1.player_fifa_api_id = t2.player_fifa_api_id WHERE t1.player_name = 'Marko Arnautovic' AND SUBSTR(t2.\"date\", 1, 10) BETWEEN '2007-02-22' AND '2016-04-21'"
+}

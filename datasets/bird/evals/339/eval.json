@@ -1,0 +1,5 @@
+{
+  "database": "codebase_community",
+  "question": "How many comments were added to the post with the highest score?\nthe highest score refers to MAX(Score);",
+  "query": "SELECT COUNT(T2.Id) FROM posts AS T1 INNER JOIN comments AS T2 ON T1.Id = T2.PostId GROUP BY T1.Id ORDER BY T1.Score DESC NULLS LAST LIMIT 1"
+}

@@ -1,0 +1,5 @@
+{
+  "database": "thrombosis_prediction",
+  "question": "List the patient ID, sex and birthday of patient with LDH beyond normal range.\nLDH beyond normal range refers to LDH > '500';",
+  "query": "SELECT DISTINCT T1.ID, T1.SEX, T1.Birthday FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID WHERE T2.LDH > 500"
+}

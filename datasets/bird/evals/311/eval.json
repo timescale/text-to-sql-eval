@@ -1,0 +1,5 @@
+{
+  "database": "codebase_community",
+  "question": "Provide the display name of the user who made the vote No.6347.\nvote no. 6347 refers to Id = '6347'",
+  "query": "SELECT T1.DisplayName FROM users AS T1 INNER JOIN votes AS T2 ON T1.Id = T2.UserId WHERE T2.Id = 6347"
+}

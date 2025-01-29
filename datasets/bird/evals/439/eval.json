@@ -1,0 +1,5 @@
+{
+  "database": "california_schools",
+  "question": "How many schools with an average score in Math greater than 400 in the SAT test are exclusively virtual?\nExclusively virtual refers to Virtual = 'F'",
+  "query": "SELECT COUNT(DISTINCT T2.School) FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T2.Virtual = 'F' AND T1.AvgScrMath > 400"
+}

@@ -1,0 +1,5 @@
+{
+  "database": "card_games",
+  "question": "List all the mythic rarity print cards banned in gladiator format.\nmythic rarity printing refers to rarity = 'mythic'; card banned refers to status = 'Banned'; in gladiator format refers to format = 'gladiator';",
+  "query": "SELECT DISTINCT T1.id FROM cards AS T1 INNER JOIN legalities AS T2 ON T1.uuid = T2.uuid WHERE T2.format = 'gladiator' AND T2.status = 'Banned' AND T1.rarity = 'mythic'"
+}

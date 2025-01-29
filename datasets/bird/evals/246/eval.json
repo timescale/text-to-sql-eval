@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "Please list the lap records for the circuits in Italy.\nlap record means the fastest time recorded which refers to time",
+  "query": "WITH fastest_lap_times AS (SELECT T1.raceId, T1.FastestLapTime, (CAST(SPLIT_PART(T1.FastestLapTime, ':', 1) AS REAL) * 60) + (CAST(SPLIT_PART(SPLIT_PART(T1.FastestLapTime, ':', 2), '.', 1) AS REAL)) + (CAST(SPLIT_PART(T1.FastestLapTime, '.', 2) AS REAL) / 1000) AS time_in_seconds FROM results AS T1 WHERE T1.FastestLapTime IS NOT NULL) SELECT T1.FastestLapTime AS lap_record FROM results AS T1 INNER JOIN races AS T2 ON T1.raceId = T2.raceId INNER JOIN circuits AS T3 ON T2.circuitId = T3.circuitId INNER JOIN (SELECT MIN(fastest_lap_times.time_in_seconds) AS min_time_in_seconds FROM fastest_lap_times INNER JOIN races AS T2 ON fastest_lap_times.raceId = T2.raceId INNER JOIN circuits AS T3 ON T2.circuitId = T3.circuitId WHERE T3.country = 'Italy') AS T4 ON (CAST(SPLIT_PART(T1.FastestLapTime, ':', 1) AS REAL) * 60) + (CAST(SPLIT_PART(SPLIT_PART(T1.FastestLapTime, ':', 2), '.', 1) AS REAL)) + (CAST(SPLIT_PART(T1.FastestLapTime, '.', 2) AS REAL) / 1000) = T4.min_time_in_seconds LIMIT 1"
+}

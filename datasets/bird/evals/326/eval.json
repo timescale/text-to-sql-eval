@@ -1,0 +1,5 @@
+{
+  "database": "codebase_community",
+  "question": "Which post by slashnick has the most answers count? State the post ID.\nmost answers count refers to MAX(AnswerCount); post by slashnick refers to DisplayName = 'slashnick';",
+  "query": "SELECT T2.PostId FROM users AS T1 INNER JOIN postHistory AS T2 ON T1.Id = T2.UserId INNER JOIN posts AS T3 ON T2.PostId = T3.Id WHERE T1.DisplayName = 'slashnick' ORDER BY T3.AnswerCount DESC NULLS LAST LIMIT 1"
+}

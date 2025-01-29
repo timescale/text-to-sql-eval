@@ -1,0 +1,5 @@
+{
+  "database": "card_games",
+  "question": "What is the border color of card \"Ancestor's Chosen\"?\nname of card  = 'Ancestor''s Chosen' ;",
+  "query": "SELECT DISTINCT borderColor FROM cards WHERE name = 'Ancestor''s Chosen'"
+}

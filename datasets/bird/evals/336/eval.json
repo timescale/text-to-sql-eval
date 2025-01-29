@@ -1,0 +1,5 @@
+{
+  "database": "codebase_community",
+  "question": "Which is the most valuable post in 2010? Please give its id and the owner's display name.\nthe most valuable post in 2015 refers to MAX(FavoriteCount) where year(CreationDate) = 2010;",
+  "query": "SELECT T2.OwnerUserId, T1.DisplayName FROM users AS T1 INNER JOIN posts AS T2 ON T1.Id = T2.OwnerUserId WHERE TO_CHAR(CAST(T1.CreationDate AS TIMESTAMP), 'YYYY') = '2010' ORDER BY T2.FavoriteCount DESC NULLS LAST LIMIT 1"
+}

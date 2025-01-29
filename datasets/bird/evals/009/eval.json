@@ -1,0 +1,5 @@
+{
+  "database": "debit_card_specializing",
+  "question": "How much did customer 6 consume in total between August and November 2013?\nBetween August And November 2013 refers to Between 201308 And 201311; The first 4 strings of the Date values in the yearmonth table can represent year; The 5th and 6th string of the date can refer to month.",
+  "query": "SELECT SUM(Consumption) FROM yearmonth WHERE CustomerID = 6 AND Date BETWEEN '201308' AND '201311'"
+}

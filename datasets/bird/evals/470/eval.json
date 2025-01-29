@@ -1,0 +1,5 @@
+{
+  "database": "financial",
+  "question": "List out the no. of districts that have female average salary is more than 6000 but less than 10000?\nA11 refers to average salary; Female mapps to gender = 'F'",
+  "query": "SELECT COUNT(DISTINCT T2.district_id) FROM client AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id WHERE T1.gender = 'F' AND T2.A11 BETWEEN 6000 AND 10000"
+}

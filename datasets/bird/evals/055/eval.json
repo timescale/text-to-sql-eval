@@ -1,0 +1,5 @@
+{
+  "database": "student_club",
+  "question": "What is the total amount of money spent for food?\ntotal amount of money spent refers to SUM(spent); spent for food refers to category = 'Food'",
+  "query": "SELECT SUM(spent) FROM budget WHERE category = 'Food'"
+}

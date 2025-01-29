@@ -1,0 +1,5 @@
+{
+  "database": "debit_card_specializing",
+  "question": "Among the transactions made in the gas stations in the Czech Republic, how many of them are taken place after 2012/1/1?\nCzech Republic can be represented as the Country value in the gasstations table is 'CZE'",
+  "query": "SELECT COUNT(T1.TransactionID) FROM transactions_1k AS T1 INNER JOIN gasstations AS T2 ON T1.GasStationID = T2.GasStationID WHERE T2.Country = 'CZE' AND TO_CHAR(CAST(T1.Date AS TIMESTAMP), 'YYYY') >= '2012'"
+}

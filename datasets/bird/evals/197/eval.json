@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "For the drivers who took part in the race in 1983/7/16, what's their race completion rate?\nDIVIDE(COUNT(driverid when time has value ), (COUNT(driverid )) as percentage; in 1983/7/16 refers to when date = '1983-07-16'",
+  "query": "SELECT CAST(COUNT(CASE WHEN NOT T2.time IS NULL THEN T2.driverId END) AS REAL) * 100 / NULLIF(COUNT(T2.driverId), 0) FROM races AS T1 INNER JOIN results AS T2 ON T2.raceId = T1.raceId WHERE T1.date = '1983-07-16'"
+}

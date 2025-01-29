@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "What's the reference name of Marina Bay Street Circuit?\nreference name refers to circuitRef; Marina Bay Street Circuit refers to circuits.name = 'Marina Bay Street Circuit'",
+  "query": "SELECT circuitRef FROM circuits WHERE name = 'Marina Bay Street Circuit'"
+}

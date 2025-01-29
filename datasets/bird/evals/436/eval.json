@@ -1,0 +1,5 @@
+{
+  "database": "toxicology",
+  "question": "Tally the toxicology element of the 4th atom of each molecule that was carcinogenic.\nlabel = '+' means molecules are carcinogenic; 4th atom of each molecule refers to substr(atom_id, 7, 1) = '4'; ",
+  "query": "SELECT DISTINCT T1.element FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.label = '+' AND RIGHT(T1.atom_id, 1) = '4' AND LENGTH(T1.atom_id) = 7"
+}

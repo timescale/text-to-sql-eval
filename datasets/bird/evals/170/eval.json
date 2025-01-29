@@ -1,0 +1,5 @@
+{
+  "database": "european_football_2",
+  "question": "What is the difference between players 6 and 23's jumping scores?\ndifference between players 6 and 23's jumping scores refers to SUBTRACT(jumping AND id = 6,jumping AND id = 23)",
+  "query": "SELECT SUM(CASE WHEN t1.id = 6 THEN t1.jumping ELSE 0 END) - SUM(CASE WHEN t1.id = 23 THEN t1.jumping ELSE 0 END) FROM Player_Attributes AS t1"
+}

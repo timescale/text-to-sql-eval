@@ -1,0 +1,5 @@
+{
+  "database": "california_schools",
+  "question": "State the names and full communication address of high schools in Monterey which has more than 800 free or reduced price meals for ages 15-17?\nFull communication address should include Street, City, State and zip code if any.",
+  "query": "SELECT T1.\"School Name\", T2.Street, T2.City, T2.State, T2.Zip FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.County = 'Monterey' AND T1.\"Free Meal Count (Ages 5-17)\" > 800 AND T1.\"School Type\" = 'High Schools (Public)'"
+}

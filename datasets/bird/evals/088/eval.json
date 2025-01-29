@@ -1,0 +1,5 @@
+{
+  "database": "thrombosis_prediction",
+  "question": "What are the symptoms observed by the youngest patient to ever did a medical examination? Identify their diagnosis.\nThe larger the birthday value, the younger the person is, and vice versa; symptoms observed refers to the symptoms is not NULL",
+  "query": "SELECT T2.Symptoms, T1.Diagnosis FROM Patient AS T1 INNER JOIN Examination AS T2 ON T1.ID = T2.ID WHERE NOT T2.Symptoms IS NULL ORDER BY T1.Birthday DESC NULLS LAST LIMIT 1"
+}

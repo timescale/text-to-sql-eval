@@ -1,0 +1,5 @@
+{
+  "database": "thrombosis_prediction",
+  "question": "Among the patients who have an abnormal level of glutamic oxaloacetic transaminase, when was the youngest of them born?\nabnormal level of glutamic oxaloacetic transaminase refers to GOT > = 60; The larger the birthday value, the younger the person is, and vice versa;",
+  "query": "SELECT T1.Birthday FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID WHERE T2.GOT >= 60 ORDER BY T1.Birthday DESC NULLS LAST LIMIT 1"
+}

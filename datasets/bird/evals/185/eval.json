@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "What's Bruno Senna's Q1 result in the qualifying race No. 354?\nrace number refers to raceId; Bruno Senna refers to the full name of the driver; Full name of the driver refers to drivers.forename and drivers.surname;",
+  "query": "SELECT T1.q1 FROM qualifying AS T1 INNER JOIN drivers AS T2 ON T2.driverId = T1.driverId WHERE T1.raceId = 354 AND T2.forename = 'Bruno' AND T2.surname = 'Senna'"
+}

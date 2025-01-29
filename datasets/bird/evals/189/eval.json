@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "Who was the player that got the lap time of 0:01:27 in the race No. 161? Show his introduction website.\nplayer and driver are synonyms; the lap time of 0:0M:SS refers to lapTime.time LIKE 'M:SS%';race number refers to raceId; introduction website of the drivers refers to url;",
+  "query": "SELECT DISTINCT T2.forename, T2.surname, T2.url FROM lapTimes AS T1 INNER JOIN drivers AS T2 ON T2.driverId = T1.driverId WHERE T1.raceId = 161 AND T1.time LIKE '1:27%'"
+}

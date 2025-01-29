@@ -1,0 +1,5 @@
+{
+  "database": "card_games",
+  "question": "What is the rule of playing card \"Benalish Knight\"?\nBenalish Knight' is the name of card; rule of playing card refers to format;",
+  "query": "SELECT T2.format FROM cards AS T1 INNER JOIN legalities AS T2 ON T1.uuid = T2.uuid WHERE T1.name = 'Benalish Knight'"
+}

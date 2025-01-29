@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "Which was Lewis Hamilton first race? What was his points recorded for his first race event?\nfirst race refers to min(Year); Lewis Hamiltonrefers to the full name of the driver; Full name of the driver refers to drivers.forename and drivers.surname;",
+  "query": "SELECT T1.name, T2.points FROM races AS T1 INNER JOIN driverStandings AS T2 ON T2.raceId = T1.raceId INNER JOIN drivers AS T3 ON T3.driverId = T2.driverId WHERE T3.forename = 'Lewis' AND T3.surname = 'Hamilton' ORDER BY T1.year ASC NULLS FIRST LIMIT 1"
+}

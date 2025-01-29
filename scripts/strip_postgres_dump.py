@@ -13,14 +13,18 @@ import click
 def main(file_path):
     with open(file_path, "r") as inp:
         to_write = []
+        lines = 0
+        last_line_empty = False
         for line in inp:
             if line.startswith("SELECT"):
                 continue
             if line.startswith("SET"):
                 continue
-            if line.startswith("--"):
+            if line.startswith("--") and (lines == 0 or last_line_empty):
                 continue
+            last_line_empty = line.strip() == ""
             to_write.append(line)
+            lines += 1
         while to_write and to_write[0].strip() == "":
             to_write.pop(0)
         while to_write and to_write[-1].strip() == "":

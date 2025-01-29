@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "How many accidents did the driver who had the highest number accidents in the Canadian Grand Prix have?\nnumber of accidents refers to the number where statusid = 3; Canadian Grand Prix refers to the race of name\n",
+  "query": "SELECT COUNT(T1.driverId) FROM results AS T1 INNER JOIN races AS T2 ON T1.raceId = T2.raceId INNER JOIN status AS T3 ON T1.statusId = T3.statusId WHERE T3.statusId = 3 AND T2.name = 'Canadian Grand Prix' GROUP BY T1.driverId ORDER BY COUNT(T1.driverId) DESC NULLS LAST LIMIT 1"
+}

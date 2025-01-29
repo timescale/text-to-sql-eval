@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "What is the fastest lap number of the champion in 2009?\nin 2009 refers to year = 2009; Only the time of the champion shows in the format of \"hour: minutes: seconds.millionsecond\"",
+  "query": "SELECT T1.fastestLap FROM results AS T1 INNER JOIN races AS T2 ON T1.raceId = T2.raceId WHERE T2.year = 2009 AND T1.time LIKE '_:%:__.___'"
+}

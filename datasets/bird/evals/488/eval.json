@@ -1,0 +1,5 @@
+{
+  "database": "financial",
+  "question": "How many accounts have running contracts in Branch location 1?\nStatus = 'C' stands for running contract, OK so far; Status = 'D' stands for running contract, client in debt",
+  "query": "SELECT COUNT(T1.account_id) FROM account AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id INNER JOIN loan AS T3 ON T1.account_id = T3.account_id WHERE T1.district_id = 1 AND (T3.status = 'C' OR T3.status = 'D')"
+}

@@ -1,0 +1,5 @@
+{
+  "database": "card_games",
+  "question": "How many cards have infinite power?\ninfinite power refers to power = '*';",
+  "query": "SELECT COUNT(*) FROM cards WHERE power = '*'"
+}

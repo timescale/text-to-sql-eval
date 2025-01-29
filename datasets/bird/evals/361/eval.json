@@ -1,0 +1,5 @@
+{
+  "database": "card_games",
+  "question": "What are the cards belong to duel deck a? List the ID.\nduel deck a refers to duelDeck = a;",
+  "query": "SELECT id FROM cards WHERE duelDeck = 'a'"
+}

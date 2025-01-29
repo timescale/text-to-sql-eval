@@ -1,0 +1,5 @@
+{
+  "database": "codebase_community",
+  "question": "Among the posts with a score of over 5, what is the percentage of them being owned by an elder user?\nscore of over 5 refers to Score > 5; elder user refers to Age > 65; percentage = Divide (Count(Id where Age>65), Count(Id)) * 100",
+  "query": "SELECT CAST(SUM(CASE WHEN T2.Age > 65 THEN 1 ELSE 0 END) AS REAL) * 100 / NULLIF(COUNT(T1.Id), 0) FROM posts AS T1 INNER JOIN users AS T2 ON T1.OwnerUserId = T2.Id WHERE T1.Score > 5"
+}

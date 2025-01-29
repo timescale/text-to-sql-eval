@@ -1,0 +1,5 @@
+{
+  "database": "superhero",
+  "question": "Provide the heights of the heroes whose eye colours are amber.\nheights of the heroes refers to height_cm; eye colours are amber refers to colour.colour = 'Amber' WHERE eye_colour_id = colour.id;",
+  "query": "SELECT T1.height_cm FROM superhero AS T1 INNER JOIN colour AS T2 ON T1.eye_colour_id = T2.id WHERE T2.colour = 'Amber'"
+}

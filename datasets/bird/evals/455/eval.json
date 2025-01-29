@@ -1,0 +1,5 @@
+{
+  "database": "california_schools",
+  "question": "List the names of virtual schools that are among the top 5 in their respective counties based on average reading scores.\nExclusively virtual refers to Virtual = 'F'; respective counties means PARTITION BY County",
+  "query": "SELECT School FROM (SELECT T2.School, T1.AvgScrRead, RANK() OVER (PARTITION BY T2.County ORDER BY T1.AvgScrRead DESC NULLS LAST) AS rnk FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T2.Virtual = 'F') AS ranked_schools WHERE rnk <= 5"
+}

@@ -1,0 +1,5 @@
+{
+  "database": "card_games",
+  "question": "How many of the banned cards are white border?\nbanned card refers to status = 'Banned'; white border refers to borderColor = 'white';",
+  "query": "SELECT COUNT(T1.id) FROM cards AS T1 INNER JOIN legalities AS T2 ON T1.uuid = T2.uuid WHERE T2.status = 'Banned' AND T1.borderColor = 'white'"
+}

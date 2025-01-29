@@ -1,0 +1,5 @@
+{
+  "database": "financial",
+  "question": "List the top nine districts, by descending order, from the highest to the lowest, the number of female account holders.\nA2 refers to districts; Female refers to gender = 'F'",
+  "query": "SELECT T2.A2, COUNT(T1.client_id) FROM client AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id WHERE T1.gender = 'F' GROUP BY T2.district_id, T2.A2 ORDER BY COUNT(T1.client_id) DESC NULLS LAST LIMIT 9"
+}

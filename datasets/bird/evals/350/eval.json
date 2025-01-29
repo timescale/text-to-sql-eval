@@ -1,0 +1,5 @@
+{
+  "database": "card_games",
+  "question": "For artifact type of cards that do not have multiple faces on the same card, state its legalities status for vintage play format.\nArtifact type of cards refers to types = 'Artifact'; card does not have multiple faces on the same card refers to side is NULL'; vintage play format refers to format = 'vintage';",
+  "query": "SELECT DISTINCT T2.status FROM cards AS T1 INNER JOIN legalities AS T2 ON T1.uuid = T2.uuid WHERE T1.type = 'Artifact' AND T2.format = 'vintage' AND T1.side IS NULL"
+}

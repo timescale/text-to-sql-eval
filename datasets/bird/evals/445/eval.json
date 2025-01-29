@@ -1,0 +1,5 @@
+{
+  "database": "california_schools",
+  "question": "Name schools in Riverside which the average of average math score for SAT is grater than 400, what is the funding type of these schools?\nAverage of average math = sum(average math scores) / count(schools).",
+  "query": "SELECT T1.sname, T2.\"Charter Funding Type\" FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T2.\"District Name\" LIKE 'Riverside%' GROUP BY T1.sname, T2.\"Charter Funding Type\" HAVING CAST(SUM(T1.AvgScrMath) AS REAL) / NULLIF(COUNT(T1.cds), 0) > 400"
+}

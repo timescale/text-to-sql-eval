@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "For the driver who set the fastest lap speed, what is his nationality?\nthe fastest lap speed refers to (MAX) fastestLapSpeed;",
+  "query": "SELECT T1.nationality FROM drivers AS T1 INNER JOIN results AS T2 ON T2.driverId = T1.driverId ORDER BY T2.fastestLapSpeed DESC NULLS LAST LIMIT 1"
+}

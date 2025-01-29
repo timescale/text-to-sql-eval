@@ -1,0 +1,5 @@
+{
+  "database": "financial",
+  "question": "For loan amount less than USD100,000, what is the percentage of accounts that is still running with no issue.\nStatus = 'C' stands for running contract, ok so far; Percentage of accounts by condition = [(total(amount) & condition) / (total amount)] * 100.",
+  "query": "SELECT CAST(SUM(CASE WHEN status = 'C' THEN 1 ELSE 0 END) AS REAL) * 100 / NULLIF(COUNT(account_id), 0) FROM loan WHERE amount < 100000"
+}

@@ -1,0 +1,5 @@
+{
+  "database": "superhero",
+  "question": "Give the publisher ID of Star Trek.\nStar Trek is the publisher_name;",
+  "query": "SELECT id FROM publisher WHERE publisher_name = 'Star Trek'"
+}

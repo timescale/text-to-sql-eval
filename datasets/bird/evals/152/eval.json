@@ -1,0 +1,5 @@
+{
+  "database": "european_football_2",
+  "question": "How many matches were held in the Belgium Jupiler League in April, 2009?\nBelgium Jupiler League refers to League.name = 'Belgium Jupiler League'; in April, 2009 refers to SUBSTR(`date`, 1, 7);",
+  "query": "SELECT COUNT(t2.id) FROM League AS t1 INNER JOIN Match AS t2 ON t1.id = t2.league_id WHERE t1.name = 'Belgium Jupiler League' AND SUBSTR(t2.\"date\", 1, 7) = '2009-04'"
+}

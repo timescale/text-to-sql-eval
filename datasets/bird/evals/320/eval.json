@@ -1,0 +1,5 @@
+{
+  "database": "codebase_community",
+  "question": "Calculate the average view count of each post tagged as 'humor' and list the title and the comment of each post.\ntagged as  'humor' refers to tag = '<humor>'; comment of the post refers to Text; average view count = AVG(ViewCount)",
+  "query": "SELECT AVG(T2.ViewCount) AS AverageViewCount, T2.Title, T1.Text FROM comments AS T1 INNER JOIN posts AS T2 ON T2.Id = T1.PostId WHERE T2.Tags = '<humor>' GROUP BY T2.Title, T1.Text"
+}

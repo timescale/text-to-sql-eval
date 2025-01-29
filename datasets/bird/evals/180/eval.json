@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "Please list the reference names of the drivers who are eliminated in the first period in race number 20.\ndriver reference name refers to driverRef; first qualifying period refers to q1; drivers who are eliminated in the first qualifying period refers to 5 drivers with MAX(q1); race number refers to raceId;",
+  "query": "SELECT T2.driverRef FROM qualifying AS T1 INNER JOIN drivers AS T2 ON T2.driverId = T1.driverId WHERE T1.raceId = 20 ORDER BY T1.q1 DESC NULLS LAST LIMIT 5"
+}

@@ -1,0 +1,5 @@
+{
+  "database": "financial",
+  "question": "How many male customers who are living in North Bohemia have average salary greater than 8000?\nMale means that gender = 'M'; A3 refers to region; A11 pertains to average salary.",
+  "query": "SELECT COUNT(T1.client_id) FROM client AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id WHERE T1.gender = 'M' AND T2.A3 = 'north Bohemia' AND T2.A11 > 8000"
+}

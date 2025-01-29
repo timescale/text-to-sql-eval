@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "State code numbers of top 3 yougest drivers. How many Netherlandic drivers among them?\nyoungest driver refers to Max (year(dob)); Netherlandic and Dutch refer to the same country",
+  "query": "SELECT COUNT(*) FROM (SELECT nationality FROM drivers ORDER BY dob DESC LIMIT 3) AS T3 WHERE nationality = 'Dutch'"
+}

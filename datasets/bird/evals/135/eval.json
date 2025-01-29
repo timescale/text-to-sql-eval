@@ -1,0 +1,5 @@
+{
+  "database": "european_football_2",
+  "question": "Give the team_fifa_api_id of teams with more than 50 but less than 60 build-up play speed.\nteams with more than 50 but less than 60 build-up play speed refers to buildUpPlaySpeed >50 AND buildUpPlaySpeed <60; ",
+  "query": "SELECT DISTINCT team_fifa_api_id FROM Team_Attributes WHERE buildUpPlaySpeed > 50 AND buildUpPlaySpeed < 60"
+}

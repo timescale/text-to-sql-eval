@@ -1,0 +1,5 @@
+{
+  "database": "student_club",
+  "question": "List the full name of the Student_Club members that grew up in Illinois state.\nfull name of member refers to first_name, last_name",
+  "query": "SELECT T1.first_name, T1.last_name FROM member AS T1 INNER JOIN zip_code AS T2 ON T1.zip = T2.zip_code WHERE T2.state = 'Illinois'"
+}

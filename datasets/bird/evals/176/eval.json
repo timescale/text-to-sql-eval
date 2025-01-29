@@ -1,0 +1,5 @@
+{
+  "database": "european_football_2",
+  "question": "Which top 4 leagues had the most games in the 2015-2016 season?\nin the 2015-2016 season refers to season = '2015/2016'; league with most games refers to League.name where MAX(COUNT(id))",
+  "query": "SELECT t1.name FROM League AS t1 INNER JOIN Match AS t2 ON t1.id = t2.league_id WHERE t2.season = '2015/2016' GROUP BY t1.name ORDER BY COUNT(t2.id) DESC NULLS LAST LIMIT 4"
+}

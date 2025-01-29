@@ -1,0 +1,5 @@
+{
+  "database": "card_games",
+  "question": "Among the cards in the set \"Hauptset Zehnte Edition\", how many of them are designed by Adam Rex?\ncard set \"Hauptset Zehnte Edition\" refers to translation = 'Hauptset Zehnte Edition'; designed by Adam refers to artist = 'Adam Rex'",
+  "query": "SELECT COUNT(T1.id) FROM cards AS T1 INNER JOIN set_translations AS T2 ON T2.setCode = T1.setCode WHERE T2.translation = 'Hauptset Zehnte Edition' AND T1.artist = 'Adam Rex'"
+}

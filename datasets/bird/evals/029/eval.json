@@ -1,0 +1,5 @@
+{
+  "database": "debit_card_specializing",
+  "question": "Who is the top spending customer and how much is the average price per single item purchased by this customer? What currency was being used?\naverage price per single item = Total(price) / Total(amount)",
+  "query": "SELECT T2.CustomerID, SUM(T2.Price / NULLIF(T2.Amount, 0)), T1.Currency FROM customers AS T1 INNER JOIN transactions_1k AS T2 ON T1.CustomerID = T2.CustomerID WHERE T2.CustomerID = (SELECT CustomerID FROM yearmonth ORDER BY Consumption DESC NULLS LAST LIMIT 1) GROUP BY T2.CustomerID, T1.Currency"
+}

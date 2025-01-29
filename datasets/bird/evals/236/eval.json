@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "On what year did the youngest driver had his first qualifying race? Also state the name, date and time of the race.\ndate of birth refers to drivers.dob; The larger the birthday value, the younger the person is, and vice versa; first qualifying race refers to MIN(races.date);",
+  "query": "SELECT T3.year, T3.name, T3.date, T3.time FROM qualifying AS T1 INNER JOIN drivers AS T2 ON T1.driverId = T2.driverId INNER JOIN races AS T3 ON T1.raceId = T3.raceId WHERE T1.driverId = (SELECT driverId FROM drivers ORDER BY dob DESC NULLS LAST LIMIT 1) ORDER BY T3.date ASC NULLS FIRST LIMIT 1"
+}

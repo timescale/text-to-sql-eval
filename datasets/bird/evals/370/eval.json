@@ -1,0 +1,5 @@
+{
+  "database": "card_games",
+  "question": "What is the foreign name of the card in French of type Creature, normal layout and black border color, by artist Matthew D. Wilson?\nin French refers to language = 'French'; black border color refers to borderColor = 'black'",
+  "query": "SELECT name FROM foreign_data WHERE uuid IN (SELECT uuid FROM cards WHERE types = 'Creature' AND layout = 'normal' AND borderColor = 'black' AND artist = 'Matthew D. Wilson') AND language = 'French'"
+}

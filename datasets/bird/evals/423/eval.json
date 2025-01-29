@@ -1,0 +1,5 @@
+{
+  "database": "toxicology",
+  "question": "Among all the atoms from 21 to 25, list all the molecules that are carcinogenic.\natoms from 21 to 25 refers to SUBSTR(atom_id, 7, 2) between '21' and '25'; label = '+' mean molecules are carcinogenic",
+  "query": "SELECT DISTINCT T2.molecule_id FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE RIGHT(T1.atom_id, 2) BETWEEN '21' AND '25' AND T2.label = '+'"
+}

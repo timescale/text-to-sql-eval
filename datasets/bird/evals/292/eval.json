@@ -1,0 +1,5 @@
+{
+  "database": "superhero",
+  "question": "Provide the eye colour of the superhero who has Karen Beecher-Duncan as their full name.\neye colour refers to colour.colour where eye_colour_id = colour.id; Karen Beecher-Duncan is the full name of superhero;",
+  "query": "SELECT T2.colour FROM superhero AS T1 INNER JOIN colour AS T2 ON T1.eye_colour_id = T2.id WHERE T1.full_name = 'Karen Beecher-Duncan'"
+}

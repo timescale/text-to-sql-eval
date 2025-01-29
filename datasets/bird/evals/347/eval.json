@@ -1,0 +1,5 @@
+{
+  "database": "card_games",
+  "question": "Which are the cards that have incredibly powerful foils.\nincredibly poweful foils refers to cardKingdomFoilId is not null AND cardKingdomId is not null",
+  "query": "SELECT id FROM cards WHERE NOT cardKingdomFoilId IS NULL AND NOT cardKingdomId IS NULL"
+}

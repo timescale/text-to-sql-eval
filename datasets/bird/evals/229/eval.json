@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "How many French drivers who obtain the laptime less than 02:00.00?\nlap time less than 02:00.00 refers to seconds < 120;",
+  "query": "SELECT COUNT(T1.driverId) FROM drivers AS T1 INNER JOIN lapTimes AS T2 ON T1.driverId = T2.driverId WHERE T1.nationality = 'French' AND (EXTRACT(MINUTE FROM T2.time::INTERVAL) * 60 + EXTRACT(SECOND FROM T2.time::INTERVAL)) < 120"
+}

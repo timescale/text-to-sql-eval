@@ -1,0 +1,5 @@
+{
+  "database": "california_schools",
+  "question": "What is the grade span offered in the school with the highest longitude?\nthe highest longitude refers to the school with the maximum absolute longitude value.",
+  "query": "SELECT GSoffered FROM schools ORDER BY ABS(longitude) DESC NULLS LAST LIMIT 1"
+}

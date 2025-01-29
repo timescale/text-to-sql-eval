@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "What is his number of the driver who finished 0:01:54 in the Q3 of qualifying race No.903?\nrace number refers to raceId; finished 0:0M:SS in the Q3 refers to q3 LIKE 'M:SS%'",
+  "query": "SELECT T2.number FROM qualifying AS T1 INNER JOIN drivers AS T2 ON T2.driverId = T1.driverId WHERE T1.raceId = 903 AND T1.q3 LIKE '1:54%'"
+}

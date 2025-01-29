@@ -1,0 +1,5 @@
+{
+  "database": "student_club",
+  "question": "List all the names of events that had an attendance of over 20 students but were not fundraisers.\nname of events refers to event_name; attendance of over 20 students COUNT(event_id) > 20.",
+  "query": "SELECT T1.event_name FROM event AS T1 INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event GROUP BY T1.event_id HAVING COUNT(T2.link_to_event) > 20 EXCEPT SELECT T1.event_name FROM event AS T1 WHERE T1.type = 'Fundraiser'"
+}

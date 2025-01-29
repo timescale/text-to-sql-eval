@@ -1,0 +1,5 @@
+{
+  "database": "card_games",
+  "question": "Which cards are ranked 1st on EDHRec? List all of the cards name and its banned play format.\nranked 1st on EDHRec refers to edhrecRank = 1; banned refers to status = 'Banned'; play format refers to format; cards name refers to name",
+  "query": "SELECT T1.name, T2.format FROM cards AS T1 INNER JOIN legalities AS T2 ON T2.uuid = T1.uuid WHERE T1.edhrecRank = 1 AND T2.status = 'Banned' GROUP BY T1.name, T2.format"
+}

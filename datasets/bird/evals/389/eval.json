@@ -1,0 +1,5 @@
+{
+  "database": "card_games",
+  "question": "What is the Italian flavor text of the card \"Ancestor's Chosen\"?\nItalian refers to language = 'Italian'; flavor text refers to flavorText; \"Ancestor''s Chosen\" refers to name = 'Ancestor''s Chosen'",
+  "query": "SELECT T2.flavorText FROM cards AS T1 INNER JOIN foreign_data AS T2 ON T2.uuid = T1.uuid WHERE T1.name = 'Ancestor''s Chosen' AND T2.language = 'Italian'"
+}

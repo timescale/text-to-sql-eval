@@ -1,0 +1,5 @@
+{
+  "database": "codebase_community",
+  "question": "For the user with the display name of \"Tiago Pasqualini\", how many posts did he/she own?\n\"Tiago Pasqualini\" is the DisplayName;",
+  "query": "SELECT COUNT(T1.Id) FROM users AS T1 INNER JOIN posts AS T2 ON T1.Id = T2.OwnerUserId WHERE T1.DisplayName = 'Tiago Pasqualini'"
+}

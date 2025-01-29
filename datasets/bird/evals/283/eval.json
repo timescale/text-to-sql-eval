@@ -1,0 +1,5 @@
+{
+  "database": "superhero",
+  "question": "Calculate the difference between Emil Blonsky's weight and Charles Chandler's weight.\ndifference = SUBTRACT(SUM(weight_kg WHERE full_name = 'Emil Blonsky'), SUM(weight_kg WHERE full_name = 'Charles Chandler')); Emil Blonsky is the full name of superhero; Charles Chandler is the full name of superhero;",
+  "query": "SELECT (SELECT weight_kg FROM superhero WHERE full_name LIKE 'Emil Blonsky') - (SELECT weight_kg FROM superhero WHERE full_name LIKE 'Charles Chandler') AS CALCULATE"
+}

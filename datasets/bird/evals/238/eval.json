@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "Who is the champion of the Canadian Grand Prix in 2008? Indicate his finish time.\nOnly the time of the champion shows in the format of \"hour: minutes: seconds.millionsecond\";",
+  "query": "SELECT T1.time FROM results AS T1 INNER JOIN races AS T2 ON T1.raceId = T2.raceId WHERE T2.name = 'Canadian Grand Prix' AND T2.year = 2008 AND T1.time LIKE '_:%:__.___'"
+}

@@ -1,0 +1,5 @@
+{
+  "database": "thrombosis_prediction",
+  "question": "Among the patients with normal anti-SM, how many of them does not have thrombosis?\nnormal anti-SM refers to SM IN('-', '+-'); SM = 'negative' means '-'; SM = '0' means '+-'; SM = '1' means '+'; does not have thrombosis refers to Thrombosis = 0;",
+  "query": "SELECT COUNT(T1.ID) FROM Examination AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID WHERE T2.SM IN ('negative', '0') AND T1.Thrombosis = 0"
+}

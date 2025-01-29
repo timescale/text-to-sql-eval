@@ -1,0 +1,5 @@
+{
+  "database": "student_club",
+  "question": "What's Angela Sanders's major?\nAngela Sanders is the full name; full name refers to first_name, last_name; major refers to major_name.",
+  "query": "SELECT T2.major_name FROM member AS T1 INNER JOIN major AS T2 ON T1.link_to_major = T2.major_id WHERE T1.first_name = 'Angela' AND T1.last_name = 'Sanders'"
+}

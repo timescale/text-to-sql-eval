@@ -1,0 +1,5 @@
+{
+  "database": "card_games",
+  "question": "How many Brazilian Portuguese translated sets are inside the Commander block?\nCommander block refer to block = 'Commander'; sets refer to code = setCode; Portuguese refer to language = 'Portuguese (Brasil)'",
+  "query": "SELECT COUNT(T1.id) FROM sets AS T1 INNER JOIN set_translations AS T2 ON T1.code = T2.setCode WHERE T2.language = 'Portuguese (Brazil)' AND T1.block = 'Commander'"
+}

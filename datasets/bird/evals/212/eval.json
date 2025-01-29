@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "Which country is the oldest driver from?\ndate of birth refers to drivers.dob; The larger the birthday value, the younger the person is, and vice versa;",
+  "query": "SELECT nationality FROM drivers WHERE NOT dob IS NULL ORDER BY dob ASC NULLS FIRST LIMIT 1"
+}

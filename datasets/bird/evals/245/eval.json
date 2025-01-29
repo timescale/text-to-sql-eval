@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "Which top 20 driver created the shortest lap time ever record in a Formula_1 race? Please give them full names.\nshortest lap time refers to MIN(time); the time format for the shortest lap time is 'MM:SS.mmm' or 'M:SS.mmm'; full name of the driver refers to forename, surname",
+  "query": "WITH lap_times_in_seconds AS (SELECT driverId, (CASE WHEN SPLIT_PART(time, ':', 1) <> '' THEN CAST(SPLIT_PART(time, ':', 1) AS float) * 60 ELSE 0 END + CASE WHEN SPLIT_PART(SPLIT_PART(time, ':', 2), '.', 1) <> '' THEN CAST(SPLIT_PART(SPLIT_PART(time, ':', 2), '.', 1) AS float) ELSE 0 END + CASE WHEN SPLIT_PART(SPLIT_PART(time, ':', 2), '.', 2) <> '' THEN CAST(SPLIT_PART(SPLIT_PART(time, ':', 2), '.', 2) AS float) / 1000 ELSE 0 END) AS time_in_seconds FROM lapTimes) SELECT T2.forename, T2.surname, T1.driverId FROM (SELECT driverId, MIN(time_in_seconds) AS min_time_in_seconds FROM lap_times_in_seconds GROUP BY driverId) AS T1 INNER JOIN drivers AS T2 ON T1.driverId = T2.driverId ORDER BY T1.min_time_in_seconds ASC LIMIT 20"
+}

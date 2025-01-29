@@ -1,0 +1,5 @@
+{
+  "database": "student_club",
+  "question": "Among the events attended by more than 10 members of the Student_Club, how many of them are meetings?\nmeetings events refers to type = 'Meeting'; attended by more than 10 members refers to COUNT(event_id) > 10",
+  "query": "SELECT T1.event_name FROM event AS T1 INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event GROUP BY T1.event_id HAVING COUNT(T2.link_to_event) > 10 EXCEPT SELECT T1.event_name FROM event AS T1 WHERE T1.type = 'Meeting'"
+}

@@ -1,0 +1,5 @@
+{
+  "database": "card_games",
+  "question": "What is the language of the card with the multiverse number 149934?\nmultiverse number 149934 refers to multiverseid = 149934;",
+  "query": "SELECT language FROM foreign_data WHERE multiverseid = 149934"
+}

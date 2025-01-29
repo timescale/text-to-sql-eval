@@ -1,0 +1,5 @@
+{
+  "database": "codebase_community",
+  "question": "What is the display name of the user who last edited the post \"Examples for teaching: Correlation does not mean causation\"?\n\"Examples for teaching: Correlation does not mean causation\" is the Title of post; user who last edited refers to LastEditorUserId",
+  "query": "SELECT T2.DisplayName FROM posts AS T1 INNER JOIN users AS T2 ON T1.LastEditorUserId = T2.Id WHERE T1.Title = 'Examples for teaching: Correlation does not mean causation'"
+}

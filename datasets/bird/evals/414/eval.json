@@ -1,0 +1,5 @@
+{
+  "database": "toxicology",
+  "question": "What is the percentage of molecules that are carcinogenic? Please provide your answer as a percentage with three decimal places.\nlabel = '+' mean molecules are carcinogenic; percentage = DIVIDE(SUM(label = '+'), COUNT(molecule_id)) as percent",
+  "query": "SELECT ROUND(CAST((CAST(COUNT(CASE WHEN t.label = '+' THEN t.molecule_id ELSE NULL END) AS REAL) / NULLIF(COUNT(t.molecule_id), 0) * 100) AS NUMERIC), 3) AS percentage FROM molecule t"
+}

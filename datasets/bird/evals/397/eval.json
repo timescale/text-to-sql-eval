@@ -1,0 +1,5 @@
+{
+  "database": "card_games",
+  "question": "Find and list the names of sets which doesn't have Japanese translation but have Korean translation.\nnames of sets refers to name; doesn't have Japanese translation refers to language not like '%Japanese%'; have Korean translation refers to language = 'Korean'",
+  "query": "SELECT name FROM sets WHERE code IN (SELECT setCode FROM set_translations WHERE language = 'Korean' AND NOT language LIKE '%Japanese%')"
+}

@@ -1,0 +1,5 @@
+{
+  "database": "formula_1",
+  "question": "For the constructor which got the highest point in the race No. 9 , what is its introduction website?\nrace number refers to raceId; constructor which got the highest point refers to MAX(constructorResults.points); introduction website of the constructor refers to url;",
+  "query": "SELECT T2.url FROM constructorResults AS T1 INNER JOIN constructors AS T2 ON T2.constructorId = T1.constructorId WHERE T1.raceId = 9 ORDER BY T1.points DESC NULLS LAST LIMIT 1"
+}

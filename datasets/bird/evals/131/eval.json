@@ -1,0 +1,5 @@
+{
+  "database": "european_football_2",
+  "question": "What are the speed in which attacks are put together of the top 4 teams with the highest build Up Play Speed?\nspeed in which attacks are put together refers to buildUpPlaySpeed;highest build up play speed refers to MAX(buildUpPlaySpeed)",
+  "query": "SELECT t1.buildUpPlaySpeed FROM Team_Attributes AS t1 INNER JOIN Team AS t2 ON t1.team_api_id = t2.team_api_id ORDER BY t1.buildUpPlaySpeed ASC NULLS FIRST LIMIT 4"
+}

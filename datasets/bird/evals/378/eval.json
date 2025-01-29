@@ -1,0 +1,5 @@
+{
+  "database": "card_games",
+  "question": "Which card costs more converted mana, \"Serra Angel\" or \"Shrine Keeper\"?\n\"Serra Angel\" refers to name = 'Serra Angel'; \"Shrine Keeper\" refers to name = 'Shrine Keeper'; card costs more converted mana when the value of convertedManaCost is greater",
+  "query": "SELECT name FROM cards WHERE name IN ('Serra Angel', 'Shrine Keeper') ORDER BY convertedManaCost DESC NULLS LAST LIMIT 1"
+}
