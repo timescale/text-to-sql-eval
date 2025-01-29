@@ -30,12 +30,13 @@ def cli():
 
 
 @cli.command()
-@click.option("--provider", default="openai", help="Provider to use for embeddings [default openai]")
+@click.option("--provider", default="ollama", help="Provider to use for embeddings [default ollama]")
 @click.option("--model", default=None, help="Model to use for embeddings")
+@click.option("--dimensions", default=576, help="Number of dimensions for embeddings")
 @click.option("--dataset", default="all", help="Dataset to load [defaults to all datasets]")
 @click.option("--database", default="all", help="Database to load [defaults to all databases]")
 @click.option("--no-comments", is_flag=True, default=False, help="Do not use obj comments for embeddings")
-def load(provider: str, model: Optional[str], dataset: str, database: str, no_comments: bool) -> None:
+def load(provider: str, model: Optional[str], dimensions: int, dataset: str, database: str, no_comments: bool) -> None:
     """
     Load the datasets into the database.
     """
@@ -55,9 +56,12 @@ def load(provider: str, model: Optional[str], dataset: str, database: str, no_co
         dataset = datasets[i]
         print(f"  {dataset}")
         for entry in (root_directory / "datasets" / dataset / "databases").iterdir():
-            if database != "all" and entry.stem != database:
+            if not entry.name.endswith(".sql") and not entry.name.endswith(".sql-part000.bin"):
                 continue
-            db_name = f"{dataset}_{entry.stem}"
+            name = entry.stem if entry.name.endswith(".sql") else entry.stem[:-12]
+            if database != "all" and name != database:
+                continue
+            db_name = f"{dataset}_{name}"
             print(f"    {db_name}")
             with psycopg.connect(get_psycopg_str()) as root_db:
                 root_db.autocommit = True
@@ -67,8 +71,19 @@ def load(provider: str, model: Optional[str], dataset: str, database: str, no_co
                 root_db.execute(f"CREATE DATABASE {db_name}")
             with psycopg.connect(get_psycopg_str(db_name)) as db:
                 print("      Restoring dump")
-                with entry.open() as fp:
-                    db.execute(fp.read())
+                file = ""
+                if entry.name.endswith(".sql"):
+                    with entry.open() as fp:
+                        file = fp.read()
+                else:
+                    i = 0
+                    while True:
+                        sql_file = entry.parent / f"{name}.sql-part{str(i).zfill(3)}.bin"
+                        if not sql_file.exists():
+                            break
+                        file += sql_file.read_text()
+                        i += 1
+                db.execute(file)
                 if pgai:
                     print("      Initializing pgai")
                     with db.cursor() as cur:
@@ -80,14 +95,14 @@ def load(provider: str, model: Optional[str], dataset: str, database: str, no_co
                         cur.execute("select ai.grant_ai_usage('postgres', true)")
                         cur.execute(
                             f"""
-                            select ai.initialize_semantic_catalog(
+                            select ai.create_semantic_catalog(
                                 embedding=>ai.embedding_{provider}(
                                     %s,
-                                    576
+                                    %s
                                 )
                             )
                             """,
-                            (model,),
+                            (model, dimensions,),
                         )
                         db.commit()
                         cur.execute(
@@ -158,7 +173,7 @@ def load(provider: str, model: Optional[str], dataset: str, database: str, no_co
 @cli.command()
 @click.argument("agent")
 @click.argument("task")
-@click.option("--provider", default="openai", help="Provider to use for the task [default openai]")
+@click.option("--provider", default="anthropic", help="Provider to use for the task [default anthropic]")
 @click.option("--model", default=None, help="Model to use for task")
 @click.option("--dataset", default="all", help="Dataset to evaluate [default eval all datasets]")
 @click.option("--database", default=None, help="Database to evaluate")

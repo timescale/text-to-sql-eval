@@ -24,42 +24,33 @@ def get_tables(
 def text_to_sql(
     conn: psycopg.Connection, inp: str, provider: Provider, model: str
 ) -> TextToSql:
+    messages = []
+    def notice_handler(notice: psycopg.errors.Diagnostic):
+        messages.append({
+            "role": "notice",
+            "content": notice.message_primary
+        })
+
+    conn.add_notice_handler(notice_handler)
     with conn.cursor() as cur:
         setup_pgai_config(cur)
-        cur.execute(
-            """
-            select ai._text_to_sql_prompt(%s)
-            """,
-            (inp,),
-        )
-        prompt = cur.fetchone()[0]
+        cur.statusmessage
+        cur.execute("set client_min_messages to 'DEBUG1';")
         cur.execute(
             f"""
             select ai.text_to_sql(
                 %s,
-                ai.text_to_sql_{provider}(%s)
+                config => '{{"provider": "{provider}", "model": "{model}"}}'::jsonb
             )
             """,
             (
                 inp,
-                model,
             ),
         )
         query = cur.fetchone()[0]
+        cur.execute("set client_min_messages to 'NOTICE';")
+    conn.remove_notice_handler(notice_handler)
     return {
-        "messages": [
-            {
-                "role": "system",
-                "content": """
-                    You are an expert database developer and DBA specializing in PostgreSQL.
-                    You will be provided with context about a database model and a question to be answered.
-                    You respond with nothing but a SQL statement that addresses the question posed.
-                    You should not wrap the SQL statement in markdown.
-                    The SQL statement must be valid syntax for PostgreSQL.
-                    SQL features and functions that are built-in to PostgreSQL may be used.
-                """.strip(),
-            },
-            {"role": "user", "content": prompt},
-        ],
+        "messages": messages,
         "query": query,
     }
