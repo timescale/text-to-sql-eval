@@ -57,8 +57,13 @@ jobs:
       # each job will run a different combination of
       # (dataset, database)
       matrix: ${{ fromJson(needs.generate_matrix.outputs.matrix) }}
+      fail-fast: false
 
     steps:
+      - run: |
+          cd /opt
+          find . -maxdepth 1 -mindepth 1 '!' -path ./containerd '!' -path ./actionarchivecache '!' -path ./runner '!' -path ./runner-cache -exec rm -rf '{}' ';'
+
       - uses: actions/checkout@v4
 
       - uses: ./.github/actions/setup-pgai
