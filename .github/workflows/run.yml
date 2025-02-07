@@ -26,8 +26,37 @@ on:
           - pgai
 
 jobs:
-  run:
+  generate_matrix:
     runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          python-version: 3.12
+      - run: uv sync
+      - run: |
+          echo -e "
+          ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }}
+          OLLAMA_HOST=http://localhost:11434
+          OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+          POSTGRES_USER=postgres
+          POSTGRES_PASSWORD=postgres
+          POSTGRES_HOST=localhost
+          POSTGRES_PORT=5432
+          " > .env
+      - id: set-matrix
+        run: echo "matrix=$(uv run python3 -m suite generate-matrix)" >> "$GITHUB_OUTPUT"
+
+  run:
+    needs: generate_matrix
+    runs-on: ubuntu-latest
+    strategy:
+      # each job will run a different combination of
+      # (dataset, database)
+      matrix: ${{ fromJson(needs.generate_matrix.outputs.matrix) }}
 
     steps:
       - uses: actions/checkout@v4
@@ -54,5 +83,5 @@ jobs:
           POSTGRES_PORT=5432
           " > .env
 
-      - run: uv run python3 -m suite load --provider ollama --model smollm:135m
-      - run: uv run python3 -m suite eval ${{ inputs.agent }} ${{ inputs.task }}
+      - run: uv run python3 -m suite load --provider ollama --model smollm:135m --dataset ${{ matrix.dataset }} --database ${{ matrix.database }}
+      - run: uv run python3 -m suite eval --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} ${{ inputs.agent }} ${{ inputs.task }}
