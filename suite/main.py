@@ -277,6 +277,7 @@ def eval(
     agent_fn = get_agent_fn(agent, task)
     errored_evals = {}  # type: dict[str, list[str]]
     failed_evals = {}  # type: dict[str, list[str]]
+    results = {} # type: dict[str, dict[str, Any]]
     for i in range(len(datasets)):
         if i > 0:
             print()
@@ -350,3 +351,15 @@ def eval(
             print(f"Failed evals:\n{sorted(failed_evals[dataset])}")
         if len(errored_evals[dataset]) > 0:
             print(f"Errored evals:\n{sorted(errored_evals[dataset])}")
+        results[dataset] = {
+            "passing": passing,
+            "total": total,
+            "failed": failed_evals[dataset],
+            "errored": errored_evals[dataset],
+        }
+
+    with (root_directory / "results.json").open("w") as fp:
+        json.dump(
+            results,
+            fp,
+        )
