@@ -6,24 +6,39 @@ on:
       branch:
         description: 'Branch of pgai to use'
         required: true
-        default: 'main'
         type: string
+        default: 'main'
       task:
         description: What task to evaluate
         required: true
-        default: 'text_to_sql'
         type: choice
+        default: 'text_to_sql'
         options:
           - get_tables
           - text_to_sql
       agent:
         description: What agent to use
         required: true
-        default: 'pgai'
         type: choice
+        default: 'pgai'
         options:
           - baseline
           - pgai
+      provider:
+        description: What provider to use
+        required: true
+        type: choice
+        default: 'anthropic'
+        options:
+          - anthropic
+          - ollama
+          - openai
+      model:
+        description: What model to use
+        required: false
+        type: string
+        default: ''
+
 
 jobs:
   generate_matrix:
@@ -88,5 +103,12 @@ jobs:
           POSTGRES_PORT=5432
           " > .env
 
-      - run: uv run python3 -m suite load --provider ollama --model smollm:135m --dataset ${{ matrix.dataset }} --database ${{ matrix.database }}
-      - run: uv run python3 -m suite eval --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} ${{ inputs.agent }} ${{ inputs.task }}
+      - name: Get model to use
+        run: echo "model=$(uv run python3 -m suite get-model ${{ inputs.provider }} ${{ inputs.model }})" > $GITHUB_OUTPUT
+        id: model
+
+      - name: Load dataset ${{ matrix.dataset }} ${{ matrix.database }}
+        run: uv run python3 -m suite load --provider ollama --model smollm:135m --dataset ${{ matrix.dataset }} --database ${{ matrix.database }}
+
+      - name: Run eval
+        run: uv run python3 -m suite eval --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} --provider ${{ inputs.provider }} --model ${{ steps.model.outputs.model }} ${{ inputs.agent }} ${{ inputs.task }}

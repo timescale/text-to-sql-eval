@@ -32,6 +32,18 @@ def cli():
 
 
 @cli.command()
+@click.argument("provider")
+@click.argument("model", required=False)
+def get_model(provider: str, model: Optional[str]) -> None:
+    """
+    Given a provider, returns the default model for it if no model was provided.
+    """
+    if model is None:
+        model = get_default_model(provider)
+    print(model)
+
+
+@cli.command()
 def generate_matrix() -> None:
     """
     Generates a matrix of all datasets and their databases for GitHub actions.
