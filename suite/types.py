@@ -11,3 +11,10 @@ class PromptMessage(TypedDict):
 class TextToSql(TypedDict):
     messages: list[PromptMessage]
     query: str
+
+
+class Results(TypedDict):
+    passing: int
+    total: int
+    failed: list[str]
+    errored: list[str]

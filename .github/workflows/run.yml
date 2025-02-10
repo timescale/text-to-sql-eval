@@ -112,3 +112,43 @@ jobs:
 
       - name: Run eval
         run: uv run python3 -m suite eval --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} --provider ${{ inputs.provider }} --model ${{ steps.model.outputs.model }} ${{ inputs.agent }} ${{ inputs.task }}
+
+      - name: Upload eval results
+        uses: actions/upload-artifact@v4
+        with:
+          name: results-${{ matrix.dataset }}-${{ matrix.database }}.json
+          path: results.json
+
+  report_results:
+    needs: run
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          python-version: 3.12
+      - run: uv sync
+
+      - run: |
+          echo -e "
+          ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }}
+          OLLAMA_HOST=http://localhost:11434
+          OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+          POSTGRES_USER=postgres
+          POSTGRES_PASSWORD=postgres
+          POSTGRES_HOST=localhost
+          POSTGRES_PORT=5432
+          " > .env
+
+      - name: Download eval results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: results-*.json
+          path: results
+          merge-multiple: true
+
+      - name: Generate report
+        run: uv run python3 -m suite generate-report

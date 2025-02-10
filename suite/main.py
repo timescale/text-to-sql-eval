@@ -11,6 +11,7 @@ from .agents import get_agent_fn
 from .exceptions import GetExpectedError
 from .tasks.get_tables import run as get_tables
 from .tasks.text_to_sql import run as text_to_sql
+from .types import Results
 from .utils import (
     get_default_embedding_model,
     get_default_model,
@@ -277,7 +278,7 @@ def eval(
     agent_fn = get_agent_fn(agent, task)
     errored_evals = {}  # type: dict[str, list[str]]
     failed_evals = {}  # type: dict[str, list[str]]
-    results = {} # type: dict[str, dict[str, Any]]
+    results = {}  # type: dict[str, Results]
     for i in range(len(datasets)):
         if i > 0:
             print()
@@ -363,3 +364,36 @@ def eval(
             results,
             fp,
         )
+
+
+@cli.command()
+def generate_report():
+    results_dir = root_directory / "results"
+    results = {}  # type: dict[str, Results]
+    if not results_dir.exists() or not results_dir.is_dir():
+        print("No results direcotry found. Please run the eval command first.")
+        return
+    for result_file in results_dir.iterdir():
+        if not result_file.is_file() or not result_file.name.endswith(".json"):
+            continue
+        with result_file.open() as fp:
+            results = json.load(fp)
+        for dataset, result in results.items():
+            if dataset not in results:
+                results[dataset] = {
+                    "passing": 0,
+                    "total": 0,
+                    "failed": [],
+                    "errored": [],
+                }
+            results[dataset]["passing"] += result["passing"]
+            results[dataset]["total"] += result["total"]
+            results[dataset]["failed"] += result["failed"]
+            results[dataset]["errored"] += result["errored"]
+
+    for dataset, result in results.items():
+        print(f"{dataset}: {result['passing']}/{result['total']}")
+        if len(result["failed"]) > 0:
+            print(f"  Failed evals:\n{sorted(result['failed'])}")
+        if len(result["errored"]) > 0:
+            print(f"  Errored evals:\n{sorted(result['errored'])}")
