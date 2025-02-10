@@ -1,7 +1,7 @@
 # Assumes that have downloaded the Spider dataset to the spider_data directory
-# in the root of the repository. Takes all questions in dev.json and creates
-# a directory for each question in the datasets/spider/evals directory with
-# a JSON file that contains the database, question, and query.
+# in the root of the repository. Takes all questions from the various *.json
+# files and creates a directory for each question in the datasets/spider/evals
+# directory with a JSON file that contains the database, question, and query.
 
 import json
 import shutil

@@ -25,16 +25,13 @@ def text_to_sql(
     conn: psycopg.Connection, inp: str, provider: Provider, model: str
 ) -> TextToSql:
     messages = []
+
     def notice_handler(notice: psycopg.errors.Diagnostic):
-        messages.append({
-            "role": "notice",
-            "content": notice.message_primary
-        })
+        messages.append({"role": "notice", "content": notice.message_primary})
 
     conn.add_notice_handler(notice_handler)
     with conn.cursor() as cur:
         setup_pgai_config(cur)
-        cur.statusmessage
         cur.execute("set client_min_messages to 'DEBUG1';")
         cur.execute(
             f"""
@@ -43,9 +40,7 @@ def text_to_sql(
                 config => '{{"provider": "{provider}", "model": "{model}"}}'::jsonb
             )
             """,
-            (
-                inp,
-            ),
+            (inp,),
         )
         query = cur.fetchone()[0]
         cur.execute("set client_min_messages to 'NOTICE';")
