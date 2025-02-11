@@ -39,6 +39,7 @@ on:
         default: ''
       load_dimensions:
         description: Number of dimensions to use for loading data
+        required: true
         type: number
         default: 576
       eval_provider:
@@ -122,8 +123,10 @@ jobs:
 
       - name: Get models
         run: |
-          echo "load_model=$(uv run python3 -m suite get-model ${{ inputs.load_provider }} ${{ inputs.load_model }})" > $GITHUB_OUTPUT
-          echo "eval_model=$(uv run python3 -m suite get-model ${{ inputs.eval_provider }} ${{ inputs.eval_model }})" > $GITHUB_OUTPUT
+          echo "load_model=$(uv run python3 -m suite get-model load ${{ inputs.load_provider }} ${{ inputs.load_model }})"
+          echo "load_model=$(uv run python3 -m suite get-model load ${{ inputs.load_provider }} ${{ inputs.load_model }})" >> $GITHUB_OUTPUT
+          echo "eval_model=$(uv run python3 -m suite get-model eval ${{ inputs.eval_provider }} ${{ inputs.eval_model }})"
+          echo "eval_model=$(uv run python3 -m suite get-model eval ${{ inputs.eval_provider }} ${{ inputs.eval_model }})" >> $GITHUB_OUTPUT
         id: model
 
       - name: Pull ollama model for loading

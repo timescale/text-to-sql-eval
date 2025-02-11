@@ -34,14 +34,18 @@ def cli():
 
 
 @cli.command()
+@click.argument("stage")
 @click.argument("provider")
 @click.argument("model", required=False)
-def get_model(provider: str, model: Optional[str]) -> None:
+def get_model(stage: str, provider: str, model: Optional[str]) -> None:
     """
     Given a provider, returns the default model for it if no model was provided.
     """
+    if stage not in ["eval", "load"]:
+        raise ValueError(f"Invalid stage: {stage}")
     if model is None:
-        model = get_default_model(provider)
+        fn = get_default_model if stage == "eval" else get_default_embedding_model
+        model = fn(provider)
     print(model)
 
 
