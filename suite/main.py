@@ -1,6 +1,7 @@
 import json
 import os
 from pathlib import Path
+from traceback import format_exc
 from typing import Optional
 
 import click
@@ -298,6 +299,7 @@ def eval(
                 if error_path.exists():
                     error_path.unlink()
                 exc = None
+                traceback = None
                 try:
                     result = task_fn(
                         db,
@@ -311,9 +313,11 @@ def eval(
                 except GetExpectedError as e:
                     result = None
                     exc = e
+                    traceback = format_exc()
                 except Exception as e:
                     result = False
                     exc = e
+                    traceback = format_exc()
                 to_print = "    "
                 if result is True:
                     to_print += "PASS"
@@ -324,9 +328,11 @@ def eval(
                     total -= 1
                 print(to_print, end="")
                 if exc:
-                    print(f" ({type(exc).__name__})", end="")
+                    class_name = type(exc).__name__
+                    print(f" ({class_name})", end="")
                     with error_path.open("w") as fp:
-                        fp.write(type(exc).__name__ + "\n\n")
+                        fp.write(class_name + "\n\n")
+                        fp.write(traceback + "\n\n")
                         fp.write(str(exc))
                 print()
                 if result is True:
