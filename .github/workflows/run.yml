@@ -24,8 +24,25 @@ on:
         options:
           - baseline
           - pgai
-      provider:
-        description: What provider to use
+      load_provider:
+        description: What provider to use for loading data
+        required: true
+        type: choice
+        default: 'ollama'
+        options:
+          - ollama
+          - openai
+      load_model:
+        description: What model to use for loading data
+        required: false
+        type: string
+        default: ''
+      load_dimensions:
+        description: Number of dimensions to use for loading data
+        type: number
+        default: 576
+      eval_provider:
+        description: What provider to use for eval
         required: true
         type: choice
         default: 'anthropic'
@@ -33,8 +50,8 @@ on:
           - anthropic
           - ollama
           - openai
-      model:
-        description: What model to use
+      eval_model:
+        description: What model to use for eval
         required: false
         type: string
         default: ''
@@ -103,15 +120,17 @@ jobs:
           POSTGRES_PORT=5432
           " > .env
 
-      - name: Get model to use
-        run: echo "model=$(uv run python3 -m suite get-model ${{ inputs.provider }} ${{ inputs.model }})" > $GITHUB_OUTPUT
+      - name: Get models
+        run: |
+          echo "load_model=$(uv run python3 -m suite get-model ${{ inputs.load_provider }} ${{ inputs.load_model }})" > $GITHUB_OUTPUT
+          echo "eval_model=$(uv run python3 -m suite get-model ${{ inputs.eval_provider }} ${{ inputs.eval_model }})" > $GITHUB_OUTPUT
         id: model
 
       - name: Load dataset ${{ matrix.dataset }} ${{ matrix.database }}
-        run: uv run python3 -m suite load --provider ollama --model smollm:135m --dataset ${{ matrix.dataset }} --database ${{ matrix.database }}
+        run: uv run python3 -m suite load --provider ${{ inputs.load_provider }} --model ${{ steps.model.outputs.load_model }} --dimensions ${{ inputs.load_dimensions }} --dataset ${{ matrix.dataset }} --database ${{ matrix.database }}
 
       - name: Run eval
-        run: uv run python3 -m suite eval --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} --provider ${{ inputs.provider }} --model ${{ steps.model.outputs.model }} ${{ inputs.agent }} ${{ inputs.task }}
+        run: uv run python3 -m suite eval --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} --provider ${{ inputs.eval_provider }} --model ${{ steps.model.outputs.eval_model }} ${{ inputs.agent }} ${{ inputs.task }}
 
       - run: mv results.json results-${{ matrix.dataset }}-${{ matrix.database }}.json
 
