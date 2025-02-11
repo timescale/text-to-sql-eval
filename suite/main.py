@@ -214,6 +214,11 @@ def load(
                                 ),
                             )
                         db.commit()
+                        extra_args = ""
+                        params = [model,]
+                        if provider == "openai":
+                            extra_args = ", dimensions => %s"
+                            params.append(dimensions)
                         cur.execute(
                             f"""
                             insert into ai.semantic_catalog_obj_1_store(embedding_uuid, objtype, objnames, objargs, chunk_seq, chunk, embedding)
@@ -224,10 +229,10 @@ def load(
                                 objargs,
                                 0,
                                 description,
-                                ai.{provider}_embed(%s, description)
+                                ai.{provider}_embed(%s, description{extra_args})
                             from ai.semantic_catalog_obj
                             """,
-                            (model,),
+                            params,
                         )
                         cur.execute("delete from ai._vectorizer_q_1")
 
