@@ -12,12 +12,17 @@ import os
 import shutil
 import subprocess
 from pathlib import Path
+import sys
 
 import psycopg
 from dotenv import load_dotenv
 
 load_dotenv()
 
+skip_load = False
+for arg in sys.argv:
+    if arg == "--skip-load":
+        skip_load = True
 
 def get_psycopg_str(dbname: str = "postgres") -> str:
     return f"host={os.environ['POSTGRES_HOST']} dbname={dbname} user={os.environ['POSTGRES_USER']} password={os.environ['POSTGRES_PASSWORD']}"
@@ -31,62 +36,63 @@ shutil.rmtree(dataset_dir)
 
 bird_dir = Path(current_directory, "..", "bird_minidev")
 
-with (bird_dir / "MINIDEV" / "dev_tables.json").open() as fp:
-    dev_tables = json.load(fp)
+if not skip_load:
+    with (bird_dir / "MINIDEV" / "dev_tables.json").open() as fp:
+        dev_tables = json.load(fp)
 
-with psycopg.connect(get_psycopg_str()) as conn:
-    conn.autocommit = True
-    conn.execute("DROP DATABASE IF EXISTS bird_minidev")
-    conn.execute("CREATE DATABASE bird_minidev")
+    with psycopg.connect(get_psycopg_str()) as conn:
+        conn.autocommit = True
+        conn.execute("DROP DATABASE IF EXISTS bird_minidev")
+        conn.execute("CREATE DATABASE bird_minidev")
 
-    base_args = [
-        "-h",
-        os.environ["POSTGRES_HOST"],
-        "-U",
-        os.environ["POSTGRES_USER"],
-        "-d",
-        "bird_minidev",
-    ]
+        base_args = [
+            "-h",
+            os.environ["POSTGRES_HOST"],
+            "-U",
+            os.environ["POSTGRES_USER"],
+            "-d",
+            "bird_minidev",
+        ]
 
-    env = os.environ.copy()
-    env["PGPASSWORD"] = os.environ["POSTGRES_PASSWORD"]
+        env = os.environ.copy()
+        env["PGPASSWORD"] = os.environ["POSTGRES_PASSWORD"]
 
-    cmd = [
-        "psql",
-        *base_args,
-        "-f",
-        str(bird_dir / "MINIDEV_postgresql" / "BIRD_dev.sql"),
-    ]
-    subprocess.run(cmd, check=True, env=env)
+        cmd = [
+            "psql",
+            *base_args,
+            "-f",
+            str(bird_dir / "MINIDEV_postgresql" / "BIRD_dev.sql"),
+        ]
+        subprocess.run(cmd, check=True, env=env)
 
-with psycopg.connect(get_psycopg_str("bird_minidev")) as conn:
-    conn.autocommit = True
-    for db_dir in (bird_dir / "MINIDEV" / "dev_databases").iterdir():
-        for csv_file in (db_dir / "database_description").iterdir():
-            with csv_file.open("r", encoding="latin-1") as fp:
-                reader = csv.reader(fp)
-                next(reader)
-                for row in reader:
-                    column_name = row[0].strip()
-                    description = row[2].strip()
-                    extra = row[4].strip()
+    with psycopg.connect(get_psycopg_str("bird_minidev")) as conn:
+        conn.autocommit = True
+        for db_dir in (bird_dir / "MINIDEV" / "dev_databases").iterdir():
+            for csv_file in (db_dir / "database_description").iterdir():
+                with csv_file.open("r", encoding="latin-1") as fp:
+                    reader = csv.reader(fp)
+                    next(reader)
+                    for row in reader:
+                        column_name = row[0].strip()
+                        description = row[2].strip()
+                        extra = row[4].strip()
 
-                table_name = csv_file.stem.lower()
-                comment = f"{description}."
-                if extra:
-                    comment += f" {extra}."
-                comment = comment.replace("'", "''")
-                try:
-                    conn.execute(
-                        f'COMMENT ON COLUMN "{table_name}"."{column_name}" IS \'{comment}\''
-                    )
-                except:
+                    table_name = csv_file.stem.lower()
+                    comment = f"{description}."
+                    if extra:
+                        comment += f" {extra}."
+                    comment = comment.replace("'", "''")
                     try:
                         conn.execute(
-                            f'COMMENT ON COLUMN "{table_name}"."{column_name.lower()}" IS \'{comment}\''
+                            f'COMMENT ON COLUMN "{table_name}"."{column_name}" IS \'{comment}\''
                         )
                     except:
-                        pass
+                        try:
+                            conn.execute(
+                                f'COMMENT ON COLUMN "{table_name}"."{column_name.lower()}" IS \'{comment}\''
+                            )
+                        except:
+                            pass
 
 for obj in dev_tables:
     cmd = [

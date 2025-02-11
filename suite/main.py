@@ -61,9 +61,9 @@ def generate_matrix() -> None:
                 continue
             db_name = database.name
             if db_name.endswith(".bin"):
-                if not db_name.endswith(".sql-part000.bin"):
+                if ".part" in db_name and ".part000" not in db_name:
                     continue
-                db_name = db_name[:-16]
+                db_name = db_name[:-12]
             else:
                 db_name = database.stem
             include.append({"dataset": dataset.name, "database": db_name})
@@ -117,11 +117,9 @@ def load(
         dataset = datasets[i]
         print(f"  {dataset}")
         for entry in (datasets_dir / dataset / "databases").iterdir():
-            if not entry.name.endswith(".sql") and not entry.name.endswith(
-                ".sql-part000.bin"
-            ):
+            if ".part" in entry.name and ".part000" not in entry.name:
                 continue
-            name = entry.stem if entry.name.endswith(".sql") else entry.stem[:-12]
+            name = entry.stem if ".part" not in entry.name else entry.name[:-12]
             if database != "all" and name != database:
                 continue
             db_name = f"{dataset}_{name}"
@@ -134,21 +132,19 @@ def load(
                 root_db.execute(f"CREATE DATABASE {db_name}")
             with psycopg.connect(get_psycopg_str(db_name)) as db:
                 print("      Restoring dump")
-                file = ""
-                if entry.name.endswith(".sql"):
+                if ".part" not in entry.name:
                     with entry.open() as fp:
-                        file = fp.read()
+                        db.execute(fp.read())
                 else:
                     i = 0
                     while True:
                         sql_file = (
-                            entry.parent / f"{name}.sql-part{str(i).zfill(3)}.bin"
+                            entry.parent / f"{name}.part{str(i).zfill(3)}.sql"
                         )
                         if not sql_file.exists():
                             break
-                        file += sql_file.read_text()
+                        db.execute(sql_file.read_text())
                         i += 1
-                db.execute(file)
                 if pgai:
                     print("      Initializing pgai")
                     with db.cursor() as cur:
