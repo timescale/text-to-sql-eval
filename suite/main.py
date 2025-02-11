@@ -385,31 +385,52 @@ def eval(
 @cli.command()
 def generate_report():
     results_dir = root_directory / "results"
-    results = {}  # type: dict[str, Results]
+    combined_results = {}  # type: dict[str, Results]
     if not results_dir.exists() or not results_dir.is_dir():
         print("No results direcotry found. Please run the eval command first.")
         return
-    for result_file in results_dir.iterdir():
-        if not result_file.is_file() or not result_file.name.endswith(".json"):
+    for results_file in results_dir.iterdir():
+        if not results_file.is_file() or not results_file.name.endswith(".json"):
             continue
-        with result_file.open() as fp:
-            results = json.load(fp)
+        with results_file.open() as fp:
+            try:
+                results = json.load(fp)
+            except json.JSONDecodeError:
+                print(f"Failed to decode {results_file.name}, contents:")
+                print()
+                print(fp.read())
+                print()
+                print("Skipping file...")
+                continue
         for dataset, result in results.items():
-            if dataset not in results:
-                results[dataset] = {
+            if dataset not in combined_results:
+                combined_results[dataset] = {
                     "passing": 0,
                     "total": 0,
                     "failed": [],
+                    "failed_error_counts": {},
                     "errored": [],
                 }
-            results[dataset]["passing"] += result["passing"]
-            results[dataset]["total"] += result["total"]
-            results[dataset]["failed"] += result["failed"]
-            results[dataset]["errored"] += result["errored"]
+            combined_results[dataset]["passing"] += result["passing"]
+            combined_results[dataset]["total"] += result["total"]
+            combined_results[dataset]["failed"] += result["failed"]
+            for error, count in result["failed_error_counts"].items():
+                if error not in combined_results[dataset]["failed_error_counts"]:
+                    combined_results[dataset]["failed_error_counts"][error] = 0
+                combined_results[dataset]["failed_error_counts"][error] += count
+            combined_results[dataset]["errored"] += result["errored"]
 
-    for dataset, result in results.items():
+    i = 0
+    for dataset, result in combined_results.items():
+        if i > 0:
+            print()
         print(f"{dataset}: {result['passing']}/{result['total']}")
         if len(result["failed"]) > 0:
-            print(f"  Failed evals:\n{sorted(result['failed'])}")
+            print("  Failed error type counts:")
+            for error in sorted(result["failed_error_counts"].keys()):
+                print(f"    {error}: {result['failed_error_counts'][error]}")
+            print(f"  Failed evals:\n    {sorted(result['failed'])}")
+
         if len(result["errored"]) > 0:
-            print(f"  Errored evals:\n{sorted(result['errored'])}")
+            print(f"  Errored evals:\n    {sorted(result['errored'])}")
+        i += 1
