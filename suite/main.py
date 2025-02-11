@@ -416,17 +416,26 @@ def generate_report():
                 combined_results[dataset]["failed_error_counts"][error] += count
             combined_results[dataset]["errored"] += result["errored"]
 
+    passing = 0
+    total = 0
+    for results in combined_results.values():
+        passing += results["passing"]
+        total += results["total"]
+    print(f"Overall: {passing}/{total} ({round(passing/total, 2)})")
+    print()
+
     i = 0
-    for dataset, result in combined_results.items():
+    for dataset in sorted(combined_results.keys()):
         if i > 0:
             print()
-        print(f"{dataset}: {result['passing']}/{result['total']}")
-        if len(result["failed"]) > 0:
+        results = combined_results[dataset]
+        print(f"{dataset}: {results['passing']}/{results['total']} ({round(results['passing']/results['total'], 2)})")
+        if len(results["failed"]) > 0:
             print("  Failed error type counts:")
-            for error in sorted(result["failed_error_counts"].keys()):
-                print(f"    {error}: {result['failed_error_counts'][error]}")
-            print(f"  Failed evals:\n    {sorted(result['failed'])}")
+            for error in sorted(results["failed_error_counts"].keys()):
+                print(f"    {error}: {results['failed_error_counts'][error]}")
+            print(f"  Failed evals:\n    {sorted(results['failed'])}")
 
-        if len(result["errored"]) > 0:
-            print(f"  Errored evals:\n    {sorted(result['errored'])}")
+        if len(results["errored"]) > 0:
+            print(f"  Errored evals:\n    {sorted(results['errored'])}")
         i += 1
