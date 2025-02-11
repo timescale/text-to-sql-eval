@@ -113,11 +113,13 @@ jobs:
       - name: Run eval
         run: uv run python3 -m suite eval --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} --provider ${{ inputs.provider }} --model ${{ steps.model.outputs.model }} ${{ inputs.agent }} ${{ inputs.task }}
 
+      - run: mv results.json results-${{ matrix.dataset }}-${{ matrix.database }}.json
+
       - name: Upload eval results
         uses: actions/upload-artifact@v4
         with:
           name: results-${{ matrix.dataset }}-${{ matrix.database }}.json
-          path: results.json
+          path: results-${{ matrix.dataset }}-${{ matrix.database }}.json
 
   report_results:
     needs: run
@@ -146,7 +148,6 @@ jobs:
       - name: Download eval results
         uses: actions/download-artifact@v4
         with:
-          pattern: results-*.json
           path: results
           merge-multiple: true
 
