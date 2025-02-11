@@ -60,9 +60,9 @@ def generate_matrix() -> None:
             if not database.is_file():
                 continue
             db_name = database.name
-            if db_name.endswith(".bin"):
-                if ".part" in db_name and ".part000" not in db_name:
-                    continue
+            if ".part" in db_name and ".part000" not in db_name:
+                continue
+            if ".part000" in db_name:
                 db_name = db_name[:-12]
             else:
                 db_name = database.stem
