@@ -17,4 +17,5 @@ class Results(TypedDict):
     passing: int
     total: int
     failed: list[str]
+    failed_error_counts: dict[str, int]
     errored: list[str]

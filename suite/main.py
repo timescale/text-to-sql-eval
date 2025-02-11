@@ -279,6 +279,7 @@ def eval(
     agent_fn = get_agent_fn(agent, task)
     errored_evals = {}  # type: dict[str, list[str]]
     failed_evals = {}  # type: dict[str, list[str]]
+    failed_error_counts = {}  # type: dict[str, dict[str, int]]
     results = {}  # type: dict[str, Results]
     for i in range(len(datasets)):
         if i > 0:
@@ -286,6 +287,7 @@ def eval(
         dataset = datasets[i]
         errored_evals[dataset] = []
         failed_evals[dataset] = []
+        failed_error_counts[dataset] = {}
         passing = 0
         total = 0
         print(f"Evaluating {dataset}...")
@@ -329,6 +331,9 @@ def eval(
                 print(to_print, end="")
                 if exc:
                     class_name = type(exc).__name__
+                    if class_name not in failed_error_counts[dataset]:
+                        failed_error_counts[dataset][class_name] = 0
+                    failed_error_counts[dataset][class_name] += 1
                     print(f" ({class_name})", end="")
                     with error_path.open("w") as fp:
                         fp.write(class_name + "\n\n")
@@ -355,13 +360,18 @@ def eval(
 
         print(f"  {1 if total == 0 else round(passing/total, 2)} ({passing}/{total})")
         if len(failed_evals[dataset]) > 0:
+            print("Failed error type counts:")
+            for error in sorted(failed_error_counts[dataset].keys()):
+                print(f"  {error}: {failed_error_counts[dataset][error]}")
             print(f"Failed evals:\n{sorted(failed_evals[dataset])}")
         if len(errored_evals[dataset]) > 0:
             print(f"Errored evals:\n{sorted(errored_evals[dataset])}")
+
         results[dataset] = {
             "passing": passing,
             "total": total,
             "failed": failed_evals[dataset],
+            "failed_error_counts": failed_error_counts[dataset],
             "errored": errored_evals[dataset],
         }
 
