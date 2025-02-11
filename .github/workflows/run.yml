@@ -6,24 +6,39 @@ on:
       branch:
         description: 'Branch of pgai to use'
         required: true
-        default: 'main'
         type: string
+        default: 'main'
       task:
         description: What task to evaluate
         required: true
-        default: 'text_to_sql'
         type: choice
+        default: 'text_to_sql'
         options:
           - get_tables
           - text_to_sql
       agent:
         description: What agent to use
         required: true
-        default: 'pgai'
         type: choice
+        default: 'pgai'
         options:
           - baseline
           - pgai
+      provider:
+        description: What provider to use
+        required: true
+        type: choice
+        default: 'anthropic'
+        options:
+          - anthropic
+          - ollama
+          - openai
+      model:
+        description: What model to use
+        required: false
+        type: string
+        default: ''
+
 
 jobs:
   generate_matrix:
@@ -57,8 +72,13 @@ jobs:
       # each job will run a different combination of
       # (dataset, database)
       matrix: ${{ fromJson(needs.generate_matrix.outputs.matrix) }}
+      fail-fast: false
 
     steps:
+      - run: |
+          cd /opt
+          find . -maxdepth 1 -mindepth 1 '!' -path ./containerd '!' -path ./actionarchivecache '!' -path ./runner '!' -path ./runner-cache -exec rm -rf '{}' ';'
+
       - uses: actions/checkout@v4
 
       - uses: ./.github/actions/setup-pgai
@@ -83,5 +103,52 @@ jobs:
           POSTGRES_PORT=5432
           " > .env
 
-      - run: uv run python3 -m suite load --provider ollama --model smollm:135m --dataset ${{ matrix.dataset }} --database ${{ matrix.database }}
-      - run: uv run python3 -m suite eval --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} ${{ inputs.agent }} ${{ inputs.task }}
+      - name: Get model to use
+        run: echo "model=$(uv run python3 -m suite get-model ${{ inputs.provider }} ${{ inputs.model }})" > $GITHUB_OUTPUT
+        id: model
+
+      - name: Load dataset ${{ matrix.dataset }} ${{ matrix.database }}
+        run: uv run python3 -m suite load --provider ollama --model smollm:135m --dataset ${{ matrix.dataset }} --database ${{ matrix.database }}
+
+      - name: Run eval
+        run: uv run python3 -m suite eval --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} --provider ${{ inputs.provider }} --model ${{ steps.model.outputs.model }} ${{ inputs.agent }} ${{ inputs.task }}
+
+      - name: Upload eval results
+        uses: actions/upload-artifact@v4
+        with:
+          name: results-${{ matrix.dataset }}-${{ matrix.database }}.json
+          path: results.json
+
+  report_results:
+    needs: run
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          python-version: 3.12
+      - run: uv sync
+
+      - run: |
+          echo -e "
+          ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }}
+          OLLAMA_HOST=http://localhost:11434
+          OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+          POSTGRES_USER=postgres
+          POSTGRES_PASSWORD=postgres
+          POSTGRES_HOST=localhost
+          POSTGRES_PORT=5432
+          " > .env
+
+      - name: Download eval results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: results-*.json
+          path: results
+          merge-multiple: true
+
+      - name: Generate report
+        run: uv run python3 -m suite generate-report

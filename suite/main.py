@@ -11,6 +11,7 @@ from .agents import get_agent_fn
 from .exceptions import GetExpectedError
 from .tasks.get_tables import run as get_tables
 from .tasks.text_to_sql import run as text_to_sql
+from .types import Results
 from .utils import (
     get_default_embedding_model,
     get_default_model,
@@ -29,6 +30,18 @@ datasets_dir = root_directory / "datasets"
 @click.group()
 def cli():
     pass
+
+
+@cli.command()
+@click.argument("provider")
+@click.argument("model", required=False)
+def get_model(provider: str, model: Optional[str]) -> None:
+    """
+    Given a provider, returns the default model for it if no model was provided.
+    """
+    if model is None:
+        model = get_default_model(provider)
+    print(model)
 
 
 @cli.command()
@@ -265,6 +278,7 @@ def eval(
     agent_fn = get_agent_fn(agent, task)
     errored_evals = {}  # type: dict[str, list[str]]
     failed_evals = {}  # type: dict[str, list[str]]
+    results = {}  # type: dict[str, Results]
     for i in range(len(datasets)):
         if i > 0:
             print()
@@ -338,3 +352,48 @@ def eval(
             print(f"Failed evals:\n{sorted(failed_evals[dataset])}")
         if len(errored_evals[dataset]) > 0:
             print(f"Errored evals:\n{sorted(errored_evals[dataset])}")
+        results[dataset] = {
+            "passing": passing,
+            "total": total,
+            "failed": failed_evals[dataset],
+            "errored": errored_evals[dataset],
+        }
+
+    with (root_directory / "results.json").open("w") as fp:
+        json.dump(
+            results,
+            fp,
+        )
+
+
+@cli.command()
+def generate_report():
+    results_dir = root_directory / "results"
+    results = {}  # type: dict[str, Results]
+    if not results_dir.exists() or not results_dir.is_dir():
+        print("No results direcotry found. Please run the eval command first.")
+        return
+    for result_file in results_dir.iterdir():
+        if not result_file.is_file() or not result_file.name.endswith(".json"):
+            continue
+        with result_file.open() as fp:
+            results = json.load(fp)
+        for dataset, result in results.items():
+            if dataset not in results:
+                results[dataset] = {
+                    "passing": 0,
+                    "total": 0,
+                    "failed": [],
+                    "errored": [],
+                }
+            results[dataset]["passing"] += result["passing"]
+            results[dataset]["total"] += result["total"]
+            results[dataset]["failed"] += result["failed"]
+            results[dataset]["errored"] += result["errored"]
+
+    for dataset, result in results.items():
+        print(f"{dataset}: {result['passing']}/{result['total']}")
+        if len(result["failed"]) > 0:
+            print(f"  Failed evals:\n{sorted(result['failed'])}")
+        if len(result["errored"]) > 0:
+            print(f"  Errored evals:\n{sorted(result['errored'])}")

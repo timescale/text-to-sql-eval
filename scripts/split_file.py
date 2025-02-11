@@ -13,7 +13,7 @@ if file_size <= chunk_size:
     # print(f"The file is {file_size / (1024 * 1024):.2f} MB, which is not larger than {limit}MB.")
     raise SystemExit()
 
-with open(file_path, 'rb') as f:
+with open(file_path, "rb") as f:
     chunk_number = 0
     while True:
         chunk = f.read(chunk_size)
@@ -21,7 +21,7 @@ with open(file_path, 'rb') as f:
             break  # End of file reached
 
         chunk_name = f"{file_path}-part{chunk_number:03}.bin"
-        with open(chunk_name, 'wb') as chunk_file:
+        with open(chunk_name, "wb") as chunk_file:
             chunk_file.write(chunk)
 
         # print(f"Written chunk {chunk_number:03} to {chunk_name}")

@@ -7,13 +7,14 @@ Given the BIRD mini dataset at ../bird_minidev, this:
 """
 
 import csv
-from dotenv import load_dotenv
 import json
 import os
-from pathlib import Path
-import psycopg
 import shutil
 import subprocess
+from pathlib import Path
+
+import psycopg
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -44,13 +45,18 @@ with psycopg.connect(get_psycopg_str()) as conn:
         "-U",
         os.environ["POSTGRES_USER"],
         "-d",
-        "bird_minidev"
+        "bird_minidev",
     ]
 
     env = os.environ.copy()
-    env['PGPASSWORD'] = os.environ["POSTGRES_PASSWORD"]
+    env["PGPASSWORD"] = os.environ["POSTGRES_PASSWORD"]
 
-    cmd = ["psql", *base_args, "-f", str(bird_dir / "MINIDEV_postgresql" / "BIRD_dev.sql")]
+    cmd = [
+        "psql",
+        *base_args,
+        "-f",
+        str(bird_dir / "MINIDEV_postgresql" / "BIRD_dev.sql"),
+    ]
     subprocess.run(cmd, check=True, env=env)
 
 with psycopg.connect(get_psycopg_str("bird_minidev")) as conn:
@@ -71,10 +77,14 @@ with psycopg.connect(get_psycopg_str("bird_minidev")) as conn:
                     comment += f" {extra}."
                 comment = comment.replace("'", "''")
                 try:
-                    conn.execute(f"COMMENT ON COLUMN \"{table_name}\".\"{column_name}\" IS '{comment}'")
+                    conn.execute(
+                        f'COMMENT ON COLUMN "{table_name}"."{column_name}" IS \'{comment}\''
+                    )
                 except:
                     try:
-                        conn.execute(f"COMMENT ON COLUMN \"{table_name}\".\"{column_name.lower()}\" IS '{comment}'")
+                        conn.execute(
+                            f'COMMENT ON COLUMN "{table_name}"."{column_name.lower()}" IS \'{comment}\''
+                        )
                     except:
                         pass
 
