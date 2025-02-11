@@ -40,7 +40,7 @@ def text_to_sql(
             f"""
             select ai.text_to_sql(
                 %s,
-                config => '{{"provider": "{provider}", "model": "{model}"}}'::jsonb
+                config => '{{"provider": "{provider}", "model": "{model}", "max_iter": 4}}'::jsonb
             )
             """,
             (
