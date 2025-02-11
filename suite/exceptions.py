@@ -8,3 +8,7 @@ class GetExpectedError(Exception):
 
 class QueryExecutionError(Exception):
     pass
+
+
+class FailedToGenerateQueryError(Exception):
+    pass

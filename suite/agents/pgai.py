@@ -1,6 +1,7 @@
 import psycopg
 from dotenv import load_dotenv
 
+from ..exceptions import FailedToGenerateQueryError
 from ..types import Provider, TextToSql
 from ..utils import setup_pgai_config
 
@@ -46,6 +47,7 @@ def text_to_sql(
         cur.execute("set client_min_messages to 'NOTICE';")
     conn.remove_notice_handler(notice_handler)
     return {
+        "error": FailedToGenerateQueryError() if query is None else None,
         "messages": messages,
         "query": query,
     }

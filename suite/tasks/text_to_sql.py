@@ -43,17 +43,19 @@ def run(
         gold_query = json.load(fp).get("query")
     try:
         result = agent_fn(conn, inp, provider, model)
-        query = result["query"]
     except Exception as e:
         raise AgentFnError(e) from e
-    with open(f"{path}/actual_query.sql", "w") as fp:
-        fp.write(query)
     with open(f"{path}/actual_messages.txt", "w") as fp:
         for i in range(len(result["messages"])):
             if i > 0:
                 fp.write("\n")
             message = result["messages"][i]
             fp.write(f"{message['role']}:\n{message['content']}")
+    if "error" in result and result["error"] is not None:
+        raise result["error"] if isinstance(result["error"], Exception) else AgentFnError(str(result["error"]))
+    query = result["query"]
+    with open(f"{path}/actual_query.sql", "w") as fp:
+        fp.write(query)
     try:
         expected = pl.read_database(gold_query, conn)
     except psycopg.DatabaseError as e:
