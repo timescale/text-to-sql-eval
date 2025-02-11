@@ -126,6 +126,14 @@ jobs:
           echo "eval_model=$(uv run python3 -m suite get-model ${{ inputs.eval_provider }} ${{ inputs.eval_model }})" > $GITHUB_OUTPUT
         id: model
 
+      - name: Pull ollama model for loading
+        if: ${{ inputs.load_provider == 'ollama' }}
+        run: docker exec ollama ollama pull ${{ steps.model.outputs.load_model }}
+
+      - name: Pull ollama model for eval
+        if: ${{ inputs.eval_provider == 'ollama' }}
+        run: docker exec ollama ollama pull ${{ steps.model.outputs.eval_model }}
+
       - name: Load dataset ${{ matrix.dataset }} ${{ matrix.database }}
         run: uv run python3 -m suite load --provider ${{ inputs.load_provider }} --model ${{ steps.model.outputs.load_model }} --dimensions ${{ inputs.load_dimensions }} --dataset ${{ matrix.dataset }} --database ${{ matrix.database }}
 

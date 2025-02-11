@@ -26,8 +26,3 @@ runs:
         docker exec pgai-ext just install
       shell: bash
       working-directory: pgai
-    - name: Pull ollama models
-      run: |
-        docker exec ollama ollama pull smollm:135m
-      #  docker exec ollama ollama pull llama3
-      shell: bash
