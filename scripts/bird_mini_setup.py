@@ -24,6 +24,7 @@ for arg in sys.argv:
     if arg == "--skip-load":
         skip_load = True
 
+
 def get_psycopg_str(dbname: str = "postgres") -> str:
     return f"host={os.environ['POSTGRES_HOST']} dbname={dbname} user={os.environ['POSTGRES_USER']} password={os.environ['POSTGRES_PASSWORD']}"
 

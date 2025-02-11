@@ -138,9 +138,7 @@ def load(
                 else:
                     i = 0
                     while True:
-                        sql_file = (
-                            entry.parent / f"{name}.part{str(i).zfill(3)}.sql"
-                        )
+                        sql_file = entry.parent / f"{name}.part{str(i).zfill(3)}.sql"
                         if not sql_file.exists():
                             break
                         db.execute(sql_file.read_text())
@@ -429,7 +427,9 @@ def generate_report():
         if i > 0:
             print()
         results = combined_results[dataset]
-        print(f"{dataset}: {results['passing']}/{results['total']} ({round(results['passing']/results['total'], 2)})")
+        print(
+            f"{dataset}: {results['passing']}/{results['total']} ({round(results['passing']/results['total'], 2)})"
+        )
         if len(results["failed"]) > 0:
             print("  Failed error type counts:")
             for error in sorted(results["failed_error_counts"].keys()):

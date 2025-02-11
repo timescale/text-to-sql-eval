@@ -52,7 +52,11 @@ def run(
             message = result["messages"][i]
             fp.write(f"{message['role']}:\n{message['content']}")
     if "error" in result and result["error"] is not None:
-        raise result["error"] if isinstance(result["error"], Exception) else AgentFnError(str(result["error"]))
+        raise (
+            result["error"]
+            if isinstance(result["error"], Exception)
+            else AgentFnError(str(result["error"]))
+        )
     query = result["query"]
     with open(f"{path}/actual_query.sql", "w") as fp:
         fp.write(query)

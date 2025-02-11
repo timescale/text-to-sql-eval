@@ -19,19 +19,21 @@ if not file_path.endswith(".sql"):
 file_size = os.path.getsize(file_path)
 
 if file_size <= chunk_size:
-    raise SystemExit(f"{os.path.basename(file_path)} is {file_size / (1024 * 1024):.2f} MB, which is not larger than {limit}MB, skipping.")
+    raise SystemExit(
+        f"{os.path.basename(file_path)} is {file_size / (1024 * 1024):.2f} MB, which is not larger than {limit}MB, skipping."
+    )
 
-next_chunk = b''
+next_chunk = b""
 with open(file_path, "rb") as f:
     chunk_number = 0
-    [root,ext] = os.path.splitext(file_path)
+    [root, ext] = os.path.splitext(file_path)
     while True:
         chunk = next_chunk + f.read(chunk_size)
-        next_chunk = b''
+        next_chunk = b""
         idx = max(chunk.rfind(b"';\n"), chunk.rfind(b");\n"))
         if idx > -1:
-            next_chunk = chunk[idx + 3:]
-            chunk = chunk[:idx + 3]
+            next_chunk = chunk[idx + 3 :]
+            chunk = chunk[: idx + 3]
         if not chunk:
             break  # End of file reached
         chunk_name = f"{root}.part{chunk_number:03}{ext}"
