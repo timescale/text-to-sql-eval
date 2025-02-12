@@ -4,6 +4,7 @@ import polars as pl
 import psycopg
 import simplejson as json
 from polars.testing import assert_frame_equal
+from sql_metadata import Parser
 
 from ..exceptions import AgentFnError, GetExpectedError, QueryExecutionError
 from ..types import Provider
@@ -66,6 +67,8 @@ def run(
         raise GetExpectedError(e) from e
     try:
         actual = pl.read_database(query, conn)
+        parser = Parser(query)
+        actual = actual.rename(parser.columns_aliases)
     except psycopg.DatabaseError as e:
         raise QueryExecutionError(e) from e
     return compare(actual, expected, strict)
