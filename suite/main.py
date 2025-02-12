@@ -337,7 +337,7 @@ def eval(
                     if class_name not in failed_error_counts[dataset]:
                         failed_error_counts[dataset][class_name] = 0
                     failed_error_counts[dataset][class_name] += 1
-                    print(f" ({class_name})", end="")
+                    print(f" ({class_name}: {str(exc)})", end="")
                     with error_path.open("w") as fp:
                         fp.write(class_name + "\n\n")
                         fp.write(traceback + "\n\n")
