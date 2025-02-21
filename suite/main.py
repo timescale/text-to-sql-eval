@@ -228,7 +228,7 @@ def load(
                             insert into ai.semantic_catalog_obj_1_store(embedding_uuid, id, chunk_seq, chunk, embedding)
                             select
                                 gen_random_uuid(),
-                                o.id
+                                o.id,
                                 0,
                                 o.description,
                                 ai.{provider}_embed(%s, o.description{extra_args})
