@@ -225,16 +225,14 @@ def load(
                             params.append(dimensions)
                         cur.execute(
                             f"""
-                            insert into ai.semantic_catalog_obj_1_store(embedding_uuid, objtype, objnames, objargs, chunk_seq, chunk, embedding)
+                            insert into ai.semantic_catalog_obj_1_store(embedding_uuid, id, chunk_seq, chunk, embedding)
                             select
                                 gen_random_uuid(),
-                                objtype,
-                                objnames,
-                                objargs,
+                                o.id
                                 0,
-                                description,
-                                ai.{provider}_embed(%s, description{extra_args})
-                            from ai.semantic_catalog_obj
+                                o.description,
+                                ai.{provider}_embed(%s, o.description{extra_args})
+                            from ai.semantic_catalog_obj o
                             """,
                             params,
                         )
