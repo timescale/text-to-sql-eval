@@ -1,5 +1,5 @@
 {
     "database": "yelp",
     "question": "Find all users who have written tips for \" Barrio Cafe \" in 2015",
-    "query": "SELECT t3.name FROM tip AS t2 JOIN business AS t1 ON t2.business_id = t1.business_id JOIN USER AS t3 ON t3.user_id = t2.user_id WHERE t1.name = 'Barrio Cafe' AND t2.year = 2015"
+    "query": "SELECT t3.name FROM tip AS t2 JOIN business AS t1 ON t2.business_id = t1.business_id JOIN users AS t3 ON t3.user_id = t2.user_id WHERE t1.name = 'Barrio Cafe' AND t2.year = 2015"
 }

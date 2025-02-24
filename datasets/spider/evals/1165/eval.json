@@ -1,5 +1,5 @@
 {
     "database": "yelp",
     "question": "Find all businesses in Texas with a rating below 2",
-    "query": "SELECT name FROM business WHERE rating < 2 AND state = 'Texas'"
+    "query": "SELECT b.bid FROM public.business b JOIN public.review r ON b.business_id = r.business_id WHERE b.state = 'TX' GROUP BY b.bid HAVING AVG(r.rating) < 2"
 }
