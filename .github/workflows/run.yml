@@ -108,6 +108,8 @@ jobs:
           echo "load_dimensions=${{ inputs.load_dimensions }}"
           echo "eval_provider=${{ inputs.eval_provider }}"
           echo "eval_model=${{ steps.model.outputs.eval_model }}"
+          echo "entire_schema=${{ inputs.entire_schema }}"
+          echo "gold_tables=${{ inputs.gold_tables }}"
           echo "matrix="
           echo "${{ steps.set-matrix.outputs.matrix }}" | jq '.'
   run:
