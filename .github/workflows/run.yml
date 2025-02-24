@@ -81,7 +81,8 @@ jobs:
           enable-cache: true
           python-version: 3.12
       - run: uv sync
-      - run: |
+      - name: Setup env vars
+        run: |
           echo -e "
           ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }}
           OLLAMA_HOST=http://localhost:11434
@@ -111,7 +112,7 @@ jobs:
           echo "entire_schema=${{ inputs.entire_schema }}"
           echo "gold_tables=${{ inputs.gold_tables }}"
           echo "matrix="
-          echo "${{ steps.set-matrix.outputs.matrix }}" | jq '.'
+          echo '${{ steps.set-matrix.outputs.matrix }}' | jq '.'
   run:
     needs: generate_matrix
     runs-on: ubuntu-latest
@@ -139,7 +140,8 @@ jobs:
 
       - run: uv sync
 
-      - run: |
+      - name: Setup env vars
+        run: |
           echo -e "
           ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }}
           OLLAMA_HOST=http://localhost:11434
@@ -185,7 +187,8 @@ jobs:
           python-version: 3.12
       - run: uv sync
 
-      - run: |
+      - name: Setup env vars
+        run: |
           echo -e "
           ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }}
           OLLAMA_HOST=http://localhost:11434
