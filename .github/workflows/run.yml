@@ -164,7 +164,7 @@ jobs:
         run: uv run python3 -m suite load --provider ${{ inputs.load_provider }} --model ${{ needs.generate_matrix.outputs.load_model }} --dimensions ${{ inputs.load_dimensions }} --dataset ${{ matrix.dataset }} --database ${{ matrix.database }}
 
       - name: Run eval
-        run: uv run python3 -m suite eval --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} --provider ${{ inputs.eval_provider }} --model ${{ needs.generate_matrix.outputs.eval_model }} ${{ inputs.agent }} ${{ inputs.task }}
+        run: uv run python3 -m suite eval --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} --provider ${{ inputs.eval_provider }} --model ${{ needs.generate_matrix.outputs.eval_model }} ${{ inputs.entire_schema && '--entire-schema' || '' }} ${{ inputs.gold_tables && '--gold-tables' || '' }} ${{ inputs.agent }} ${{ inputs.task }}
 
       - run: mv results.json results-${{ matrix.dataset }}-${{ matrix.database }}.json
 
