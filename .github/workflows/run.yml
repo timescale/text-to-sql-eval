@@ -63,6 +63,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
+      load_model: ${{ steps.model.outputs.load_model }}
+      eval_model: ${{ steps.model.outputs.eval_model }}
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
@@ -80,9 +82,25 @@ jobs:
           POSTGRES_HOST=localhost
           POSTGRES_PORT=5432
           " > .env
-      - id: set-matrix
+      - name: Get models
+        id: model
+        run: |
+          echo "load_model=$(uv run python3 -m suite get-model load ${{ inputs.load_provider }} ${{ inputs.load_model }})" >> $GITHUB_OUTPUT
+          echo "eval_model=$(uv run python3 -m suite get-model eval ${{ inputs.eval_provider }} ${{ inputs.eval_model }})" >> $GITHUB_OUTPUT
+
+      - name: Generate matrix
+        id: set-matrix
         run: echo "matrix=$(uv run python3 -m suite generate-matrix)" >> "$GITHUB_OUTPUT"
 
+      - name: Diagnostic information
+        run: |
+          echo "load_provider=${{ inputs.load_provider }}"
+          echo "load_model=${{ steps.model.outputs.load_model }}"
+          echo "load_dimensions=${{ inputs.load_dimensions }}"
+          echo "eval_provider=${{ inputs.eval_provider }}"
+          echo "eval_model=${{ steps.model.outputs.eval_model }}"
+          echo "matrix="
+          echo "${{ steps.set-matrix.outputs.matrix }}" | jq '.'
   run:
     needs: generate_matrix
     runs-on: ubuntu-latest
@@ -121,27 +139,19 @@ jobs:
           POSTGRES_PORT=5432
           " > .env
 
-      - name: Get models
-        run: |
-          echo "load_model=$(uv run python3 -m suite get-model load ${{ inputs.load_provider }} ${{ inputs.load_model }})"
-          echo "load_model=$(uv run python3 -m suite get-model load ${{ inputs.load_provider }} ${{ inputs.load_model }})" >> $GITHUB_OUTPUT
-          echo "eval_model=$(uv run python3 -m suite get-model eval ${{ inputs.eval_provider }} ${{ inputs.eval_model }})"
-          echo "eval_model=$(uv run python3 -m suite get-model eval ${{ inputs.eval_provider }} ${{ inputs.eval_model }})" >> $GITHUB_OUTPUT
-        id: model
-
       - name: Pull ollama model for loading
         if: ${{ inputs.load_provider == 'ollama' }}
-        run: docker exec ollama ollama pull ${{ steps.model.outputs.load_model }}
+        run: docker exec ollama ollama pull ${{ needs.generate_matrix.outputs.load_model }}
 
       - name: Pull ollama model for eval
         if: ${{ inputs.eval_provider == 'ollama' }}
-        run: docker exec ollama ollama pull ${{ steps.model.outputs.eval_model }}
+        run: docker exec ollama ollama pull ${{ needs.generate_matrix.outputs.eval_model }}
 
       - name: Load dataset ${{ matrix.dataset }} ${{ matrix.database }}
-        run: uv run python3 -m suite load --provider ${{ inputs.load_provider }} --model ${{ steps.model.outputs.load_model }} --dimensions ${{ inputs.load_dimensions }} --dataset ${{ matrix.dataset }} --database ${{ matrix.database }}
+        run: uv run python3 -m suite load --provider ${{ inputs.load_provider }} --model ${{ needs.generate_matrix.outputs.load_model }} --dimensions ${{ inputs.load_dimensions }} --dataset ${{ matrix.dataset }} --database ${{ matrix.database }}
 
       - name: Run eval
-        run: uv run python3 -m suite eval --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} --provider ${{ inputs.eval_provider }} --model ${{ steps.model.outputs.eval_model }} ${{ inputs.agent }} ${{ inputs.task }}
+        run: uv run python3 -m suite eval --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} --provider ${{ inputs.eval_provider }} --model ${{ needs.generate_matrix.outputs.eval_model }} ${{ inputs.agent }} ${{ inputs.task }}
 
       - run: mv results.json results-${{ matrix.dataset }}-${{ matrix.database }}.json
 
