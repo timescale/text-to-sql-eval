@@ -56,7 +56,16 @@ on:
         required: false
         type: string
         default: ''
-
+      entire_schema:
+        description: Whether to use the entire schema for LLM
+        required: true
+        type: boolean
+        default: false
+      gold_tables:
+        description: Whether to only use gold tables for LLM
+        required: true
+        type: boolean
+        default: false
 
 jobs:
   generate_matrix:

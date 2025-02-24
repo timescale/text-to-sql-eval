@@ -23,7 +23,12 @@ def get_tables(
 
 
 def text_to_sql(
-    conn: psycopg.Connection, inp: str, provider: Provider, model: str
+    conn: psycopg.Connection,
+    inp: str,
+    provider: Provider,
+    model: str,
+    entire_schema: bool,
+    gold_tables: list[str],
 ) -> TextToSql:
     messages = []
 
@@ -34,11 +39,16 @@ def text_to_sql(
     with conn.cursor() as cur:
         setup_pgai_config(cur)
         cur.execute("set client_min_messages to 'DEBUG1';")
+        extra = ""
+        if entire_schema:
+            extra = ', "include_entire_schema": true'
+        if len(gold_tables) > 0:
+            extra = f', "only_these_objects": [{", ".join([f'"public.{table}"' for table in gold_tables])}]'
         cur.execute(
             f"""
             select ai.text_to_sql(
                 %s,
-                config => '{{"provider": "{provider}", "model": "{model}", "max_iter": 4}}'::jsonb
+                config => '{{"provider": "{provider}", "model": "{model}", "max_iter": 4 {extra}}}'::jsonb
             )
             """,
             (inp,),

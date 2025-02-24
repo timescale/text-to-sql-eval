@@ -51,7 +51,12 @@ def get_tables(
 
 
 def text_to_sql(
-    conn: psycopg.Connection, inp: str, provider: Provider, model: str
+    conn: psycopg.Connection,
+    inp: str,
+    provider: Provider,
+    model: str,
+    entire_schema: bool,
+    gold_tables: list[str],
 ) -> TextToSql:
     tables = get_tables(conn, inp, provider, model)
     table_ddl = []

@@ -34,6 +34,8 @@ def run(
     agent_fn: callable,
     provider: Provider,
     model: str,
+    entire_schema: bool,
+    gold_tables: bool,
     strict: bool,
 ) -> bool:
     if os.path.exists(f"{path}/actual_query.sql"):
@@ -42,8 +44,12 @@ def run(
         os.unlink(f"{path}/actual_messages.txt")
     with open(f"{path}/eval.json", "r") as fp:
         gold_query = json.load(fp).get("query")
+    gold_tables_list = []
+    if gold_tables:
+        parser = Parser(gold_query)
+        gold_tables_list = [table.lower() for table in parser.tables]
     try:
-        result = agent_fn(conn, inp, provider, model)
+        result = agent_fn(conn, inp, provider, model, entire_schema, gold_tables_list)
     except Exception as e:
         raise AgentFnError(e) from e
     with open(f"{path}/actual_messages.txt", "w") as fp:

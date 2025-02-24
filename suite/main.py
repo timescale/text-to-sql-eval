@@ -219,7 +219,9 @@ def load(
                             )
                         db.commit()
                         extra_args = ""
-                        params = [model,]
+                        params = [
+                            model,
+                        ]
                         if provider == "openai":
                             extra_args = ", dimensions => %s"
                             params.append(dimensions)
@@ -253,6 +255,18 @@ def load(
 )
 @click.option("--database", default=None, help="Database to evaluate")
 @click.option("--eval", default=None, help="Eval case to run")
+@click.option(
+    "--entire-schema",
+    is_flag=True,
+    default=False,
+    help="Agent should always use entire schema in LLM prompt",
+)
+@click.option(
+    "--gold-tables",
+    is_flag=True,
+    default=False,
+    help="Agent should only use gold tables in LLM prompt",
+)
 @click.option("--strict", is_flag=True, default=False, help="Use strict evaluation")
 def eval(
     task: str,
@@ -262,6 +276,8 @@ def eval(
     dataset: str,
     database: Optional[str],
     eval: Optional[str],
+    entire_schema: bool,
+    gold_tables: bool,
     strict: bool,
 ) -> None:
     """
@@ -311,6 +327,8 @@ def eval(
                         agent_fn,
                         provider,
                         model,
+                        entire_schema,
+                        gold_tables,
                         strict,
                     )
                 except GetExpectedError as e:
