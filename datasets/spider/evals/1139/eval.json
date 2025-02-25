@@ -1,5 +1,5 @@
 {
     "database": "yelp",
     "question": "Find the cities of businesses rated below 1.5",
-    "query": "SELECT city FROM business WHERE rating < 1.5"
+    "query": "SELECT b.city FROM public.business b JOIN public.review r ON b.business_id = r.business_id GROUP BY b.city HAVING AVG(r.rating) < 1.5"
 }

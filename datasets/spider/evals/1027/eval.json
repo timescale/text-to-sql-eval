@@ -1,5 +1,5 @@
 {
     "database": "scholar",
     "question": "Who writes a lot of papers in Machine Learning ?",
-    "query": "SELECT DISTINCT t1.authorname FROM paperkeyphrase AS t2 JOIN keyphrase AS t4 ON t2.keyphraseid = t4.keyphraseid JOIN writes AS t3 ON t3.paperid = t2.paperid JOIN author AS t1 ON t3.authorid = t1.authorid WHERE t4.keyphrasename = 'Machine Learning' GROUP BY t1.authorname ORDER BY COUNT(DISTINCT t3.paperid) DESC NULLS LAST"
+    "query": "SELECT t1.authorname, COUNT(t3.paperid) AS paper_count FROM paperkeyphrase AS t2 JOIN keyphrase AS t4 ON t2.keyphraseid = t4.keyphraseid JOIN writes AS t3 ON t3.paperid = t2.paperid JOIN author AS t1 ON t3.authorid = t1.authorid WHERE t4.keyphrasename = 'Machine Learning' GROUP BY t1.authorname ORDER BY paper_count DESC NULLS LAST"
 }
