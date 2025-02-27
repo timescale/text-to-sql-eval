@@ -1,5 +1,5 @@
 {
     "database": "yelp",
     "question": "Find users whose average review rating is below 3",
-    "query": "SELECT t2.name FROM USER AS t2 JOIN review AS t1 ON t2.user_id = t1.user_id GROUP BY t2.name HAVING AVG(t1.rating) < 3"
+    "query": "SELECT t2.name FROM user AS t2 JOIN review AS t1 ON t2.user_id = t1.user_id GROUP BY t2.name HAVING AVG(t1.rating) < 3"
 }
