@@ -319,7 +319,7 @@ INSERT INTO public.restaurant VALUES (498, 'berrys pastry shop', 'bakery', 'anti
 INSERT INTO public.restaurant VALUES (499, 'windmill family restaurant & bakery', 'bakery', 'antioch', 2.0);
 INSERT INTO public.restaurant VALUES (500, 'renee''s bakery', 'bakery', 'aptos', 2.0);
 INSERT INTO public.restaurant VALUES (501, 'hello croissant', 'bakery', 'berkeley', 2.0);
-INSERT INTO public.restaurant VALUES (502, 'windmill family restaurant & bakery', 'bakery', 'bethel island', 2.0);
+INSERT INTO public.restaurant VALUES (502, 'windmill family restaurant & bakery', 'bakery', 'bethel island', 3.0);
 INSERT INTO public.restaurant VALUES (503, 'gayle''s bakery & rosticceria', 'bakery', 'capitola', 3.0);
 INSERT INTO public.restaurant VALUES (504, 'granny eng''s donut & bakery', 'bakery', 'daly city', 2.0);
 INSERT INTO public.restaurant VALUES (505, 'paradise bakery', 'bakery', 'el cerrito', 2.0);
