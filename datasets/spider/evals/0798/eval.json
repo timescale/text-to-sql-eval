@@ -1,5 +1,0 @@
-{
-    "database": "scholar",
-    "question": "keyphrases used by Christof Dallermassl in 2000",
-    "query": "SELECT DISTINCT t2.keyphraseid FROM paper AS t3 JOIN paperkeyphrase AS t2 ON t3.paperid = t2.paperid JOIN writes AS t4 ON t4.paperid = t3.paperid JOIN author AS t1 ON t4.authorid = t1.authorid WHERE t1.authorname = 'Christof Dallermassl' AND t3.year = 2000"
-}

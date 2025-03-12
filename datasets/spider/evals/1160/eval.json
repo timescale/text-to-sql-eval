@@ -1,5 +1,0 @@
-{
-    "database": "yelp",
-    "question": "Find all restaurant reviewed by Patrick in \" Dallas \"",
-    "query": "SELECT DISTINCT b.bid FROM public.business b JOIN public.review r ON b.business_id = r.business_id JOIN public.users u ON r.user_id = u.user_id WHERE u.name = 'Patrick' AND b.city = 'Dallas'"
-}

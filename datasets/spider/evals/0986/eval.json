@@ -1,5 +1,0 @@
-{
-    "database": "scholar",
-    "question": "conferences in 2013",
-    "query": "SELECT DISTINCT venueid FROM paper WHERE YEAR = 2013"
-}

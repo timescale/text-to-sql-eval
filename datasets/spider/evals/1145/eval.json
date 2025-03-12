@@ -1,5 +1,0 @@
-{
-    "database": "yelp",
-    "question": "list all the businesses which have a review by Niloofar",
-    "query": "SELECT t1.name FROM review AS t2 JOIN business AS t1 ON t2.business_id = t1.business_id JOIN users AS t3 ON t3.user_id = t2.user_id WHERE t3.name = 'Niloofar'"
-}

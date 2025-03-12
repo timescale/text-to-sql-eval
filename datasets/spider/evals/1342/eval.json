@@ -1,5 +1,0 @@
-{
-    "database": "academic",
-    "question": "return me the number of papers in PVLDB containing keyword \" Keyword search \" .",
-    "query": "SELECT COUNT(DISTINCT t4.title) FROM publication_keyword AS t2 JOIN keyword AS t1 ON t2.kid = t1.kid JOIN publication AS t4 ON t4.pid = t2.pid JOIN journal AS t3 ON t4.jid = t3.jid WHERE t3.name = 'PVLDB' AND t1.keyword = 'Keyword search'"
-}

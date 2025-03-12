@@ -1,5 +1,0 @@
-{
-    "database": "academic",
-    "question": "return me the papers by \" H. V. Jagadish \" on VLDB conference with more than 200 citations .",
-    "query": "SELECT t4.title FROM publication AS t4 JOIN conference AS t2 ON t4.cid = t2.cid JOIN writes AS t3 ON t3.pid = t4.pid JOIN author AS t1 ON t3.aid = t1.aid WHERE t1.name = 'H. V. Jagadish' AND t2.name = 'VLDB' AND t4.citation_num > 200"
-}

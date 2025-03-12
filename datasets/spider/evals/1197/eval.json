@@ -1,5 +1,0 @@
-{
-    "database": "yelp",
-    "question": "how many users reviewed \" Sushi Too \" in Pittsburgh",
-    "query": "SELECT COUNT(DISTINCT t3.name) FROM review AS t2 JOIN business AS t1 ON t2.business_id = t1.business_id JOIN USER AS t3 ON t3.user_id = t2.user_id WHERE t1.city = 'Pittsburgh' AND t1.name = 'Sushi Too'"
-}

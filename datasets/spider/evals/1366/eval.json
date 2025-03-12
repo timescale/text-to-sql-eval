@@ -1,5 +1,0 @@
-{
-    "database": "academic",
-    "question": "return me the total citations of papers in PVLDB before 2005 .",
-    "query": "SELECT SUM(t2.citation_num) FROM publication AS t2 JOIN journal AS t1 ON t2.jid = t1.jid WHERE t1.name = 'PVLDB' AND t2.year < 2005"
-}

@@ -1,5 +1,0 @@
-{
-    "database": "academic",
-    "question": "return me the papers written by \" H. V. Jagadish \" and \" Divesh Srivastava \" .",
-    "query": "SELECT t5.title FROM writes AS t3 JOIN author AS t2 ON t3.aid = t2.aid JOIN publication AS t5 ON t3.pid = t5.pid JOIN writes AS t4 ON t4.pid = t5.pid JOIN author AS t1 ON t4.aid = t1.aid WHERE t2.name = 'H. V. Jagadish' AND t1.name = 'Divesh Srivastava'"
-}

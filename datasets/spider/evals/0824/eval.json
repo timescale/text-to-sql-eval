@@ -1,5 +1,0 @@
-{
-    "database": "scholar",
-    "question": "semantic parsing dataset",
-    "query": "SELECT DISTINCT t2.datasetid FROM paperdataset AS t3 JOIN dataset AS t2 ON t3.datasetid = t2.datasetid JOIN paperkeyphrase AS t1 ON t1.paperid = t3.paperid JOIN keyphrase AS t4 ON t1.keyphraseid = t4.keyphraseid WHERE t4.keyphrasename = 'semantic parsing'"
-}

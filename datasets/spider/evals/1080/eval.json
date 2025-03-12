@@ -1,5 +1,0 @@
-{
-    "database": "scholar",
-    "question": "what papers do parsing papers typically cite ?",
-    "query": "SELECT DISTINCT t4.citedpaperid FROM paperkeyphrase AS t2 JOIN keyphrase AS t1 ON t2.keyphraseid = t1.keyphraseid JOIN paper AS t3 ON t3.paperid = t2.paperid JOIN cite AS t4 ON t3.paperid = t4.citingpaperid WHERE t1.keyphrasename = 'parsing'"
-}

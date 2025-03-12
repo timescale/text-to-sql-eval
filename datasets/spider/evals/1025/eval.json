@@ -1,5 +1,0 @@
-{
-    "database": "scholar",
-    "question": "List the journals published in March , 2011",
-    "query": "SELECT DISTINCT journalid FROM paper WHERE YEAR = 2011 GROUP BY journalid"
-}

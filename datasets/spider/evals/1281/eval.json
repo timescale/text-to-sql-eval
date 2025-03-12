@@ -1,5 +1,0 @@
-{
-    "database": "academic",
-    "question": "return me the papers by \" H. V. Jagadish \" after 2000 .",
-    "query": "SELECT t3.title FROM writes AS t2 JOIN author AS t1 ON t2.aid = t1.aid JOIN publication AS t3 ON t2.pid = t3.pid WHERE t1.name = 'H. V. Jagadish' AND t3.year > 2000"
-}

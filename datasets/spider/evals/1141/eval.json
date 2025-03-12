@@ -1,5 +1,0 @@
-{
-    "database": "yelp",
-    "question": "List all the reviews which rated a business less than 1",
-    "query": "SELECT text FROM review WHERE rating < 1"
-}

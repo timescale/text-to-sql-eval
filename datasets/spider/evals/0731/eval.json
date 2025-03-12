@@ -1,5 +1,0 @@
-{
-    "database": "scholar",
-    "question": "papers that mention Question Answering",
-    "query": "SELECT DISTINCT t3.paperid FROM paperkeyphrase AS t2 JOIN keyphrase AS t1 ON t2.keyphraseid = t1.keyphraseid JOIN paper AS t3 ON t3.paperid = t2.paperid WHERE t1.keyphrasename = 'Question Answering'"
-}

@@ -1,5 +1,0 @@
-{
-    "database": "yelp",
-    "question": "What is the average rating of reviews written in year 2014 ?",
-    "query": "SELECT AVG(rating) FROM review WHERE YEAR = 2014"
-}

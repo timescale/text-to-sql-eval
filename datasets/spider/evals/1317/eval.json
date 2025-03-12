@@ -1,5 +1,0 @@
-{
-    "database": "academic",
-    "question": "return me the number of journals which have papers by \" H. V. Jagadish \" .",
-    "query": "SELECT COUNT(DISTINCT t2.name) FROM publication AS t4 JOIN journal AS t2 ON t4.jid = t2.jid JOIN writes AS t3 ON t3.pid = t4.pid JOIN author AS t1 ON t3.aid = t1.aid WHERE t1.name = 'H. V. Jagadish'"
-}

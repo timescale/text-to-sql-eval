@@ -1,5 +1,0 @@
-{
-    "database": "scholar",
-    "question": "What venues are for Neuroscience ?",
-    "query": "SELECT DISTINCT venueid FROM venue WHERE venuename = 'Neuroscience'"
-}

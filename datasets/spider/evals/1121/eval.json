@@ -1,5 +1,0 @@
-{
-    "database": "scholar",
-    "question": "I want the co-authors of papers on Machine Translation Output with Philipp Koehn",
-    "query": "SELECT DISTINCT t1.authorid FROM paperkeyphrase AS t6 JOIN keyphrase AS t3 ON t6.keyphraseid = t3.keyphraseid JOIN writes AS t4 ON t4.paperid = t6.paperid JOIN writes AS t5 ON t5.paperid = t4.paperid JOIN author AS t1 ON t5.authorid = t1.authorid JOIN author AS t2 ON t4.authorid = t2.authorid WHERE t2.authorname = 'Philipp Koehn' AND t3.keyphrasename = 'Machine Translation Output'"
-}

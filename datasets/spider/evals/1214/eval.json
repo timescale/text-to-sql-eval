@@ -1,5 +1,0 @@
-{
-    "database": "yelp",
-    "question": "Find the average number of checkins in restaurant \" Barrio Cafe \" per day",
-    "query": "SELECT AVG(t3.count), t3.day FROM category AS t2 JOIN business AS t1 ON t2.business_id = t1.business_id JOIN checkin AS t3 ON t3.business_id = t1.business_id WHERE t1.name = 'Barrio Cafe' AND t2.category_name = 'restaurant' GROUP BY t3.day"
-}

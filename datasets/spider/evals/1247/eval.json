@@ -1,5 +1,0 @@
-{
-    "database": "academic",
-    "question": "return me the abstract of \" Making database systems usable \" .",
-    "query": "SELECT abstract FROM publication WHERE title = 'Making database systems usable'"
-}

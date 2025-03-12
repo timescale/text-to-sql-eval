@@ -1,5 +1,0 @@
-{
-    "database": "yelp",
-    "question": "How many Target are there in \" Los Angeles \" ?",
-    "query": "SELECT COUNT(DISTINCT business_id) FROM business WHERE city = 'Los Angeles' AND name = 'Target'"
-}

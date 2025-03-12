@@ -1,5 +1,0 @@
-{
-    "database": "academic",
-    "question": "return me the papers written by \" H. V. Jagadish \" and \" Yunyao Li \" on PVLDB after 2005 .",
-    "query": "SELECT t6.title FROM publication AS t6 JOIN journal AS t4 ON t6.jid = t4.jid JOIN writes AS t3 ON t3.pid = t6.pid JOIN writes AS t5 ON t5.pid = t6.pid JOIN author AS t1 ON t5.aid = t1.aid JOIN author AS t2 ON t3.aid = t2.aid WHERE t2.name = 'H. V. Jagadish' AND t1.name = 'Yunyao Li' AND t4.name = 'PVLDB' AND t6.year > 2005"
-}

@@ -1,5 +1,0 @@
-{
-    "database": "yelp",
-    "question": "which neighbourhood has the most number of businesses in Madison",
-    "query": "SELECT t1.neighbourhood_name FROM neighbourhood AS t1 JOIN business AS t2 ON t1.business_id = t2.business_id WHERE t2.city = 'Madison' GROUP BY t1.neighbourhood_name ORDER BY COUNT(DISTINCT t2.name) DESC NULLS LAST LIMIT 1"
-}

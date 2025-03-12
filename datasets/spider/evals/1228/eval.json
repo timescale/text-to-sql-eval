@@ -1,5 +1,0 @@
-{
-    "database": "yelp",
-    "question": "Return me the number of tips that are written by Michelle .",
-    "query": "SELECT COUNT(DISTINCT t1.text) FROM USER AS t2 JOIN tip AS t1 ON t2.user_id = t1.user_id WHERE t2.name = 'Michelle'"
-}

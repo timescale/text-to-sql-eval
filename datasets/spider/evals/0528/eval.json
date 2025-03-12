@@ -1,5 +1,0 @@
-{
-    "database": "geo",
-    "question": "what states have a capital that is the highest point in the state",
-    "query": "SELECT t1.state_name FROM state AS t1 JOIN highlow AS t2 ON t1.capital = t2.highest_point"
-}

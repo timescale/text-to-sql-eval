@@ -1,5 +1,0 @@
-{
-    "database": "academic",
-    "question": "return me the paper in Databases area with the most citations .",
-    "query": "SELECT t3.title FROM DOMAIN AS t2 JOIN domain_publication AS t1 ON t2.did = t1.did JOIN publication AS t3 ON t3.pid = t1.pid WHERE t2.name = 'Databases' ORDER BY t3.citation_num DESC NULLS LAST LIMIT 1"
-}

@@ -1,5 +1,5 @@
 {
     "database": "geo",
-    "question": "which rivers do not run through usa",
-    "query": "SELECT river_name FROM river WHERE country_name <> 'usa'"
+    "question": "which rivers do not run through mississippi",
+    "query": "SELECT river_name FROM river WHERE traverse <> 'mississippi'"
 }

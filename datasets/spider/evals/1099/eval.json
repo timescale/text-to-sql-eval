@@ -1,5 +1,0 @@
-{
-    "database": "scholar",
-    "question": "In 2010 what journal published an article about Trophic Cascade ?",
-    "query": "SELECT DISTINCT t3.journalid FROM paperkeyphrase AS t2 JOIN keyphrase AS t1 ON t2.keyphraseid = t1.keyphraseid JOIN paper AS t3 ON t3.paperid = t2.paperid WHERE t1.keyphrasename = 'Trophic Cascade' AND t3.year = 2010 GROUP BY t3.journalid"
-}

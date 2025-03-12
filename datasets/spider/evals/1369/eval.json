@@ -1,5 +1,0 @@
-{
-    "database": "academic",
-    "question": "return me the total citations of all the papers in the VLDB conference .",
-    "query": "SELECT SUM(t2.citation_num) FROM publication AS t2 JOIN conference AS t1 ON t2.cid = t1.cid WHERE t1.name = 'VLDB'"
-}

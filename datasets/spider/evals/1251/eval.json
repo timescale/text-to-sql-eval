@@ -1,5 +1,0 @@
-{
-    "database": "academic",
-    "question": "return me the homepage of the VLDB conference .",
-    "query": "SELECT homepage FROM conference WHERE name = 'VLDB'"
-}

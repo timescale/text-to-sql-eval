@@ -1,5 +1,5 @@
 {
   "database": "codebase_community",
-  "question": "User No.3025 gave a comment at 20:29:39 on 2014/4/23 to a post, how many favorite counts did that post get?\nuser no. 3025 refers to UserId = '3025'; comment at 20:29:39 on 2014/4/23 refers to CreationDate = '2014/4/23 20:29:39.0'",
-  "query": "SELECT T1.FavoriteCount FROM posts AS T1 INNER JOIN comments AS T2 ON T1.Id = T2.PostId WHERE T2.CreationDate = '2014-04-23 20:29:39.0' AND T2.UserId = 3025"
+  "question": "User No.3025 gave a comment at 12:29:39 on 2014/4/23 to a post, how many favorite counts did that post get?\nuser no. 3025 refers to UserId = '3025'; comment at 12:29:39 on 2014/4/23 refers to CreationDate = '2014/4/23 12:29:39.0'",
+  "query": "SELECT T1.FavoriteCount FROM posts AS T1 INNER JOIN comments AS T2 ON T1.Id = T2.PostId WHERE T2.CreationDate = '2014-04-23 12:29:39.0' AND T2.UserId = 3025"
 }

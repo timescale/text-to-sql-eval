@@ -1,5 +1,0 @@
-{
-    "database": "scholar",
-    "question": "Which journals did linda shapiro submit papers to ?",
-    "query": "SELECT DISTINCT t2.journalid FROM paper AS t3 JOIN journal AS t2 ON t3.journalid = t2.journalid JOIN writes AS t4 ON t4.paperid = t3.paperid JOIN author AS t1 ON t4.authorid = t1.authorid WHERE t1.authorname = 'linda shapiro'"
-}

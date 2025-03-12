@@ -1,5 +1,0 @@
-{
-    "database": "scholar",
-    "question": "How many paper has Ed Desmond written about Semantic Parsing ?",
-    "query": "SELECT DISTINCT COUNT(DISTINCT t3.paperid) FROM paperkeyphrase AS t1 JOIN keyphrase AS t4 ON t1.keyphraseid = t4.keyphraseid JOIN writes AS t3 ON t3.paperid = t1.paperid JOIN author AS t2 ON t3.authorid = t2.authorid WHERE t2.authorname = 'Ed Desmond' AND t4.keyphrasename = 'Semantic Parsing'"
-}

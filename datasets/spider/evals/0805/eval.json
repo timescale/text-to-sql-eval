@@ -1,5 +1,0 @@
-{
-    "database": "scholar",
-    "question": "best paper in TACL 2014 ?",
-    "query": "SELECT DISTINCT COUNT(DISTINCT t3.citingpaperid), t1.paperid FROM paper AS t1 JOIN cite AS t3 ON t1.paperid = t3.citedpaperid JOIN venue AS t2 ON t2.venueid = t1.venueid WHERE t1.year = 2014 AND t2.venuename = 'TACL' GROUP BY t1.paperid ORDER BY COUNT(DISTINCT t3.citingpaperid) DESC NULLS LAST"
-}

@@ -1,5 +1,0 @@
-{
-    "database": "academic",
-    "question": "return me all the papers in VLDB conference in \" University of Michigan \" .",
-    "query": "SELECT t5.title FROM organization AS t3 JOIN author AS t1 ON t3.oid = t1.oid JOIN writes AS t4 ON t4.aid = t1.aid JOIN publication AS t5 ON t4.pid = t5.pid JOIN conference AS t2 ON t5.cid = t2.cid WHERE t2.name = 'VLDB' AND t3.name = 'University of Michigan'"
-}

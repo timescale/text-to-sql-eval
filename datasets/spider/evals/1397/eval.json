@@ -1,5 +1,0 @@
-{
-    "database": "academic",
-    "question": "return me the keyword, which have been contained by the most number of papers by \" H. V. Jagadish \" .",
-    "query": "SELECT t1.keyword FROM publication_keyword AS t5 JOIN keyword AS t1 ON t5.kid = t1.kid JOIN publication AS t3 ON t3.pid = t5.pid JOIN writes AS t4 ON t4.pid = t3.pid JOIN author AS t2 ON t4.aid = t2.aid WHERE t2.name = 'H. V. Jagadish' GROUP BY t1.keyword ORDER BY COUNT(DISTINCT t3.title) DESC NULLS LAST LIMIT 1"
-}

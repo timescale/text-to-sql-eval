@@ -1,5 +1,0 @@
-{
-    "database": "academic",
-    "question": "return me the papers on VLDB conference after 2000 .",
-    "query": "SELECT t2.title FROM publication AS t2 JOIN conference AS t1 ON t2.cid = t1.cid WHERE t1.name = 'VLDB' AND t2.year > 2000"
-}

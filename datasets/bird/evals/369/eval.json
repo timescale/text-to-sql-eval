@@ -1,5 +1,0 @@
-{
-  "database": "card_games",
-  "question": "Indicates the number of cards with pre-modern format, ruling text \"This is a triggered mana ability.\" that do not have multiple faces.\npre-modern format refers to format = 'premodern' ;do not have multiple faces refers to side IS NULL",
-  "query": "SELECT COUNT(T1.id) FROM cards AS T1 INNER JOIN legalities AS T2 ON T1.uuid = T2.uuid INNER JOIN rulings AS T3 ON T1.uuid = T3.uuid WHERE T2.format = 'premodern' AND T3.text = 'This is a triggered mana ability.' AND T1.Side IS NULL"
-}

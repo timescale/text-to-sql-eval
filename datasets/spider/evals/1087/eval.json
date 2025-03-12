@@ -1,5 +1,0 @@
-{
-    "database": "scholar",
-    "question": "What are the best NLP conferences ?",
-    "query": "SELECT DISTINCT COUNT(DISTINCT t4.citingpaperid), t3.venueid FROM paperkeyphrase AS t2 JOIN keyphrase AS t1 ON t2.keyphraseid = t1.keyphraseid JOIN paper AS t3 ON t3.paperid = t2.paperid JOIN cite AS t4 ON t3.paperid = t4.citedpaperid WHERE t1.keyphrasename = 'NLP' GROUP BY t3.venueid ORDER BY COUNT(DISTINCT t4.citingpaperid) DESC NULLS LAST"
-}

@@ -1,5 +1,0 @@
-{
-    "database": "yelp",
-    "question": "Find all Bars in \" Los Angeles \" with at least 30 reviews and average rating above 3 stars",
-    "query": "SELECT t1.name FROM category AS t2 JOIN business AS t1 ON t2.business_id = t1.business_id WHERE t1.city = 'Los Angeles' AND t1.rating > 3 AND t1.review_count > 30 AND t2.category_name = 'Bars'"
-}

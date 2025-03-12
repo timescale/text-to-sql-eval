@@ -1,5 +1,0 @@
-{
-    "database": "academic",
-    "question": "return me the number of papers which contain the keyword \" Natural Language \" .",
-    "query": "SELECT COUNT(DISTINCT t3.title) FROM publication_keyword AS t2 JOIN keyword AS t1 ON t2.kid = t1.kid JOIN publication AS t3 ON t3.pid = t2.pid WHERE t1.keyword = 'Natural Language'"
-}

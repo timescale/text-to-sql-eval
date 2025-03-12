@@ -1,5 +1,0 @@
-{
-    "database": "scholar",
-    "question": "What are some papers dealing with Semantic Data in YAGO ?",
-    "query": "SELECT DISTINCT t2.paperid FROM paperdataset AS t3 JOIN dataset AS t1 ON t3.datasetid = t1.datasetid JOIN paperkeyphrase AS t2 ON t2.paperid = t3.paperid JOIN keyphrase AS t4 ON t2.keyphraseid = t4.keyphraseid WHERE t1.datasetname = 'YAGO' AND t4.keyphrasename = 'Semantic Data'"
-}

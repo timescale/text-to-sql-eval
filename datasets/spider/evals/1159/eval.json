@@ -1,5 +1,0 @@
-{
-    "database": "yelp",
-    "question": "List the addresses of all Walmart in \" Los Angeles \"",
-    "query": "SELECT full_address FROM business WHERE city = 'Los Angeles' AND name = 'Walmart'"
-}

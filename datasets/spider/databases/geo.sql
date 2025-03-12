@@ -333,6 +333,7 @@ INSERT INTO "city" VALUES
 ('huntsville',142513,'usa','alabama'),
 ('tuscaloosa',75143,'usa','alabama'),
 ('anchorage',174431,'usa','alaska'),
+('juneau',31555,'usa','alaska'),
 ('phoenix',789704,'usa','arizona'),
 ('tucson',330537,'usa','arizona'),
 ('mesa',152453,'usa','arizona'),
@@ -990,7 +991,8 @@ INSERT INTO "river" VALUES
 ('wateree catawba',636,'usa','north carolina'),
 ('wateree catawba',636,'usa','south carolina'),
 ('white',1110,'usa','arkansas'),
-('white',1110,'usa','missouri');
+('white',1110,'usa','missouri'),
+('yukon',3190,'usa','alaska');
 
 INSERT INTO "state" VALUES
 ('alabama',3894000,51700,'usa','montgomery',75.31914893617021),

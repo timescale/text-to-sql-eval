@@ -1,5 +1,0 @@
-{
-    "database": "scholar",
-    "question": "top authors working on ImageNet ?",
-    "query": "SELECT DISTINCT COUNT(t4.paperid), t3.paperid FROM paperdataset AS t2 JOIN dataset AS t1 ON t2.datasetid = t1.datasetid JOIN paper AS t4 ON t4.paperid = t2.paperid JOIN writes AS t3 ON t3.paperid = t4.paperid WHERE t1.datasetname = 'ImageNet' GROUP BY t3.paperid ORDER BY COUNT(t4.paperid) DESC NULLS LAST"
-}

@@ -1,5 +1,0 @@
-{
-    "database": "scholar",
-    "question": "What is the venue of Fracture of acrylic bone cement ?",
-    "query": "SELECT DISTINCT venueid FROM paper WHERE title = 'Fracture of acrylic bone cement'"
-}

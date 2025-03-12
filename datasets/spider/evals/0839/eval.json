@@ -1,5 +1,0 @@
-{
-    "database": "scholar",
-    "question": "Where does Peter Mertens publish ?",
-    "query": "SELECT DISTINCT t3.journalid, t4.venueid FROM venue AS t4 JOIN paper AS t3 ON t4.venueid = t3.venueid JOIN writes AS t2 ON t2.paperid = t3.paperid JOIN author AS t1 ON t2.authorid = t1.authorid WHERE t1.authorname = 'Peter Mertens'"
-}

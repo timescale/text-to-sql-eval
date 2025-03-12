@@ -1,5 +1,0 @@
-{
-    "database": "academic",
-    "question": "return me all the organizations .",
-    "query": "SELECT name FROM organization"
-}

@@ -1,5 +1,0 @@
-{
-    "database": "scholar",
-    "question": "WebKB papers",
-    "query": "SELECT DISTINCT t3.paperid FROM paperdataset AS t2 JOIN dataset AS t1 ON t2.datasetid = t1.datasetid JOIN paper AS t3 ON t3.paperid = t2.paperid WHERE t1.datasetname = 'WebKB'"
-}

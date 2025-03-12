@@ -1,5 +1,0 @@
-{
-    "database": "academic",
-    "question": "return me the authors who have cooperated with \" H. V. Jagadish \" after 2000 .",
-    "query": "SELECT t2.name FROM writes AS t3 JOIN author AS t2 ON t3.aid = t2.aid JOIN publication AS t5 ON t3.pid = t5.pid JOIN writes AS t4 ON t4.pid = t5.pid JOIN author AS t1 ON t4.aid = t1.aid WHERE t1.name = 'H. V. Jagadish' AND t5.year > 2000"
-}

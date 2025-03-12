@@ -1,5 +1,0 @@
-{
-    "database": "academic",
-    "question": "return me the keywords in PVLDB .",
-    "query": "SELECT t1.keyword FROM publication_keyword AS t4 JOIN keyword AS t1 ON t4.kid = t1.kid JOIN publication AS t2 ON t2.pid = t4.pid JOIN journal AS t3 ON t2.jid = t3.jid WHERE t3.name = 'PVLDB'"
-}

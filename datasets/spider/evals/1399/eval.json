@@ -1,5 +1,0 @@
-{
-    "database": "academic",
-    "question": "return me the author in the \" University of Michigan \" whose papers in Databases area have the most total citations .",
-    "query": "SELECT t1.name FROM DOMAIN AS t4 JOIN domain_publication AS t2 ON t4.did = t2.did JOIN publication AS t5 ON t5.pid = t2.pid JOIN writes AS t3 ON t3.pid = t5.pid JOIN author AS t1 ON t3.aid = t1.aid JOIN organization AS t6 ON t6.oid = t1.oid WHERE t4.name = 'Databases' AND t6.name = 'University of Michigan' GROUP BY t1.name ORDER BY SUM(t5.citation_num) DESC NULLS LAST LIMIT 1"
-}

@@ -1,5 +1,5 @@
 {
   "database": "codebase_community",
-  "question": "User No.23853 gave a comment to a post at 9:08:18 on 2013/7/12, was that post well-finished?\nuser no. 23853 refers to UserId = '23853'; at 9:08:18 on 2013/7/12 refers to CreationDate = '2013-07-12 09:08:18.0'; not well-finished refers to ClosedDate IS NULL and vice versa",
-  "query": "SELECT CASE WHEN T2.ClosedDate IS NULL THEN 'NOT well-finished' ELSE 'well-finished' END AS resylt FROM comments AS T1 INNER JOIN posts AS T2 ON T1.PostId = T2.Id WHERE T1.UserId = 23853 AND T1.CreationDate = '2013-07-12 09:08:18.0'"
+  "question": "User No.23853 gave a comment to a post at 1:08:18 on 2013/7/12, was that post well-finished?\nuser no. 23853 refers to UserId = '23853'; at 1:08:18 on 2013/7/12 refers to CreationDate = '2013-07-12 01:08:18.0'; not well-finished refers to ClosedDate IS NULL and vice versa",
+  "query": "SELECT CASE WHEN T2.ClosedDate IS NULL THEN 'NOT well-finished' ELSE 'well-finished' END AS resylt FROM comments AS T1 INNER JOIN posts AS T2 ON T1.PostId = T2.Id WHERE T1.UserId = 23853 AND T1.CreationDate = '2013-07-12 01:08:18.0'"
 }

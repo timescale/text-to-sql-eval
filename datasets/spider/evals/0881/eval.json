@@ -1,5 +1,0 @@
-{
-    "database": "scholar",
-    "question": "what datasets did jitendra malik use ?",
-    "query": "SELECT DISTINCT t2.datasetid FROM paper AS t3 JOIN paperdataset AS t2 ON t3.paperid = t2.paperid JOIN writes AS t4 ON t4.paperid = t3.paperid JOIN author AS t1 ON t4.authorid = t1.authorid WHERE t1.authorname = 'jitendra malik'"
-}

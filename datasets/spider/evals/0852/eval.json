@@ -1,5 +1,0 @@
-{
-    "database": "scholar",
-    "question": "what was the first deep learning paper ?",
-    "query": "SELECT DISTINCT t2.datasetid, t4.year FROM paperdataset AS t3 JOIN dataset AS t2 ON t3.datasetid = t2.datasetid JOIN paperkeyphrase AS t1 ON t1.paperid = t3.paperid JOIN paper AS t4 ON t4.paperid = t3.paperid JOIN keyphrase AS t5 ON t1.keyphraseid = t5.keyphraseid WHERE t5.keyphrasename = 'deep learning' ORDER BY t4.year ASC NULLS FIRST"
-}

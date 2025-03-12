@@ -1,5 +1,0 @@
-{
-    "database": "yelp",
-    "question": "Find all users who reviewed restaurant \" Mesa Grill \"",
-    "query": "SELECT DISTINCT r.user_id FROM public.review r JOIN public.business b ON r.business_id = b.business_id WHERE b.name = 'Mesa Grill'"
-}

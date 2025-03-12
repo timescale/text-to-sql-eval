@@ -1,5 +1,0 @@
-{
-    "database": "yelp",
-    "question": "Give me all the Moroccan restaurant in Texas",
-    "query": "SELECT t1.name FROM category AS t2 JOIN business AS t1 ON t2.business_id = t1.business_id JOIN category AS t3 ON t3.business_id = t1.business_id WHERE t1.state = 'Texas' AND t2.category_name = 'Moroccan' AND t3.category_name = 'restaurant'"
-}

@@ -1,5 +1,0 @@
-{
-    "database": "academic",
-    "question": "return me the number of the organizations .",
-    "query": "SELECT COUNT(DISTINCT name) FROM organization"
-}
