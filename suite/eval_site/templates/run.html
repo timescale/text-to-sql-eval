@@ -1,0 +1,27 @@
+{% extends 'layout.html' %}
+{% block title %}Evals - Run {{ run["id"] }}{% endblock %}
+{% block content %}
+<h1>Evals - Run {{ run["id"] }}</h1>
+<table>
+  <thead>
+    <tr>
+      <th>dataset</th>
+      <th>database</th>
+      <th>name</th>
+      <th>status</th>
+      <th>details</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for eval in evals %}
+      <tr>
+        <td>{{ eval["dataset"] }}</td>
+        <td>{{ eval["database"] }}</td>
+        <td>{{ eval["name"] }}</td>
+        <td>{{ eval["status"] }}</td>
+        <td>{{ eval["details"] }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -11,8 +11,9 @@ import json
 import os
 import shutil
 import subprocess
-from pathlib import Path
 import sys
+from pathlib import Path
+from urllib.parse import urlparse
 
 import psycopg
 from dotenv import load_dotenv
@@ -26,7 +27,7 @@ for arg in sys.argv:
 
 
 def get_psycopg_str(dbname: str = "postgres") -> str:
-    return f"host={os.environ['POSTGRES_HOST']} dbname={dbname} user={os.environ['POSTGRES_USER']} password={os.environ['POSTGRES_PASSWORD']}"
+    return f"{os.environ['PGAI_POSTGRES_DSN']}/{dbname}"
 
 
 current_directory = Path(__file__).parent
@@ -36,6 +37,8 @@ shutil.rmtree(dataset_dir)
 (dataset_dir / "evals").mkdir()
 
 bird_dir = Path(current_directory, "..", "bird_minidev")
+
+pg_uri = urlparse(os.environ["PGAI_POSTGRES_DSN"])
 
 if not skip_load:
     with (bird_dir / "MINIDEV" / "dev_tables.json").open() as fp:
@@ -48,15 +51,15 @@ if not skip_load:
 
         base_args = [
             "-h",
-            os.environ["POSTGRES_HOST"],
+            pg_uri.hostname,
             "-U",
-            os.environ["POSTGRES_USER"],
+            pg_uri.username,
             "-d",
             "bird_minidev",
         ]
 
         env = os.environ.copy()
-        env["PGPASSWORD"] = os.environ["POSTGRES_PASSWORD"]
+        env["PGPASSWORD"] = pg_uri.password
 
         cmd = [
             "psql",

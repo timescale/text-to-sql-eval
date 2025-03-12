@@ -1,0 +1,27 @@
+{% extends 'layout.html' %}
+{% block title %}Runs{% endblock %}
+{% block content %}
+<h1>Runs</h1>
+<table>
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>task</th>
+      <th>start time</th>
+      <th>end time</th>
+      <th>scores</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for run in runs %}
+      <tr>
+        <td>{{ run["id"] }}</td>
+        <td>{{ run["task"] }}</td>
+        <td>{{ run["start_time"] }}</td>
+        <td>{{ run["end_time"] }}</td>
+        <td>{{ run["scores"] }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

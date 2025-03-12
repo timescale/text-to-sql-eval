@@ -74,7 +74,17 @@ def run(
     try:
         actual = pl.read_database(query, conn)
         parser = Parser(query)
-        actual = actual.rename(parser.columns_aliases)
+        if len(parser.columns_aliases) > 0:
+            actual = actual.rename(parser.columns_aliases)
     except psycopg.DatabaseError as e:
         raise QueryExecutionError(e) from e
-    return compare(actual, expected, strict)
+    details = {
+        "generated_query": query,
+        "expected_query": gold_query,
+    }
+    if gold_tables:
+        details["gold_tables"] = gold_tables_list
+    return {
+        "status": "pass" if compare(actual, expected, strict) else "fail",
+        "details": details
+    }

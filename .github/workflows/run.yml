@@ -87,10 +87,9 @@ jobs:
           ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }}
           OLLAMA_HOST=http://localhost:11434
           OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
-          POSTGRES_USER=postgres
-          POSTGRES_PASSWORD=postgres
-          POSTGRES_HOST=localhost
-          POSTGRES_PORT=5432
+          PGAI_POSTGRES_DSN=postgres://postgres:postgres@localhost:5432
+          REPORT_POSTGRES_DSN=${{ secrets.REPORT_POSTGRES_DSN }}
+          SOURCE=github-${{ github.actor }}
           " > .env
       - name: Get models
         id: model
@@ -146,10 +145,9 @@ jobs:
           ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }}
           OLLAMA_HOST=http://localhost:11434
           OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
-          POSTGRES_USER=postgres
-          POSTGRES_PASSWORD=postgres
-          POSTGRES_HOST=localhost
-          POSTGRES_PORT=5432
+          PGAI_POSTGRES_DSN=postgres://postgres:postgres@localhost:5432
+          REPORT_POSTGRES_DSN=${{ secrets.REPORT_POSTGRES_DSN }}
+          SOURCE=github-${{ github.actor }}
           " > .env
 
       - name: Pull ollama model for loading
@@ -166,7 +164,7 @@ jobs:
       - name: Run eval
         run: uv run python3 -m suite eval --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} --provider ${{ inputs.eval_provider }} --model ${{ needs.generate_matrix.outputs.eval_model }} ${{ inputs.entire_schema && '--entire-schema' || '' }} ${{ inputs.gold_tables && '--gold-tables' || '' }} ${{ inputs.agent }} ${{ inputs.task }}
 
-      - run: mv results.json results-${{ matrix.dataset }}-${{ matrix.database }}.json
+      - run: mv results/results.json results-${{ matrix.dataset }}-${{ matrix.database }}.json
 
       - name: Upload eval results
         uses: actions/upload-artifact@v4
@@ -193,10 +191,9 @@ jobs:
           ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }}
           OLLAMA_HOST=http://localhost:11434
           OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
-          POSTGRES_USER=postgres
-          POSTGRES_PASSWORD=postgres
-          POSTGRES_HOST=localhost
-          POSTGRES_PORT=5432
+          PGAI_POSTGRES_DSN=postgres://postgres:postgres@localhost:5432
+          REPORT_POSTGRES_DSN=${{ secrets.REPORT_POSTGRES_DSN }}
+          SOURCE=github-${{ github.actor }}
           " > .env
 
       - name: Download eval results

@@ -1,8 +1,9 @@
 import json
 import os
+import time
 from pathlib import Path
 from traceback import format_exc
-from typing import Optional
+from typing import Dict, Optional
 
 import click
 import psycopg
@@ -26,6 +27,7 @@ load_dotenv()
 
 root_directory = Path(__file__).resolve().parent.parent
 datasets_dir = root_directory / "datasets"
+results_dir = root_directory / "results"
 
 
 @click.group()
@@ -212,9 +214,11 @@ def load(
                                 (
                                     column[1],
                                     column[2],
-                                    column[3]
-                                    if column[3] and not no_comments
-                                    else f"{column[1]}.{column[2]}",
+                                    (
+                                        column[3]
+                                        if column[3] and not no_comments
+                                        else f"{column[1]}.{column[2]}"
+                                    ),
                                 ),
                             )
                         db.commit()
@@ -297,7 +301,17 @@ def eval(
     errored_evals = {}  # type: dict[str, list[str]]
     failed_evals = {}  # type: dict[str, list[str]]
     failed_error_counts = {}  # type: dict[str, dict[str, int]]
-    results = {}  # type: dict[str, Results]
+    eval_results = {}  # type: dict[str, Any]
+    results: Dict[str, str | Dict[str, Results]] = {
+        "task": task,
+        "details": {
+            "provider": provider,
+            "model": model,
+            "entire_schema": entire_schema,
+            "gold_tables": gold_tables,
+        },
+        "results": {},
+    }
     for i in range(len(datasets)):
         if i > 0:
             print()
@@ -305,6 +319,7 @@ def eval(
         errored_evals[dataset] = []
         failed_evals[dataset] = []
         failed_error_counts[dataset] = {}
+        eval_results[dataset] = []
         passing = 0
         total = 0
         print(f"Evaluating {dataset}...")
@@ -312,13 +327,12 @@ def eval(
         eval_paths = sorted(list(evals_path.iterdir()))
 
         def run_eval(eval_path: Path, dataset: str, inp: dict):
-            nonlocal errored_evals, failed_evals, passing, total
+            nonlocal errored_evals, eval_results, failed_evals, passing, total
             with psycopg.connect(get_psycopg_str(f"{dataset}_{inp['database']}")) as db:
                 error_path = eval_path / "error.txt"
                 if error_path.exists():
                     error_path.unlink()
-                exc = None
-                traceback = None
+                start = time.time()
                 try:
                     result = task_fn(
                         db,
@@ -331,40 +345,45 @@ def eval(
                         gold_tables,
                         strict,
                     )
-                except GetExpectedError as e:
-                    result = None
-                    exc = e
-                    traceback = format_exc()
-                except Exception as e:
-                    result = False
-                    exc = e
-                    traceback = format_exc()
-                to_print = "    "
-                if result is True:
-                    to_print += "PASS"
-                elif result is False:
-                    to_print += "FAIL"
-                else:
-                    to_print += "EXPECTED ERROR"
+                except GetExpectedError:
                     total -= 1
-                print(to_print, end="")
-                if exc:
-                    class_name = type(exc).__name__
-                    if class_name not in failed_error_counts[dataset]:
-                        failed_error_counts[dataset][class_name] = 0
-                    failed_error_counts[dataset][class_name] += 1
-                    print(f" ({class_name}: {str(exc)})", end="")
-                    with error_path.open("w") as fp:
-                        fp.write(class_name + "\n\n")
-                        fp.write(traceback + "\n\n")
-                        fp.write(str(exc))
-                print()
-                if result is True:
-                    passing += 1
-                elif result is False:
-                    failed_evals[dataset].append(eval_path.name)
-                else:
-                    errored_evals[dataset].append(eval_path.name)
+                    return
+                except Exception as e:
+                    result = {
+                        "status": "error",
+                        "details": {
+                            "exception_class": type(e).__name__,
+                            "exception": str(e),
+                            "exception_traceback": format_exc(),
+                        },
+                    }
+                duration = time.time() - start
+            result["dataset"] = dataset
+            result["database"] = inp["database"]
+            result["name"] = eval_path.name
+            result["question"] = inp["question"]
+            result["duration"] = duration
+            result["details"]["question"] = inp["question"]
+            to_print = f"    {result['status'].upper()}"
+            print(to_print, end="")
+            if result["status"] == "error":
+                class_name = result["details"]["exception_class"]
+                if class_name not in failed_error_counts[dataset]:
+                    failed_error_counts[dataset][class_name] = 0
+                failed_error_counts[dataset][class_name] += 1
+                print(f" ({class_name}: {result['details']['exception']})", end="")
+                with error_path.open("w") as fp:
+                    fp.write(class_name + "\n\n")
+                    fp.write(result["details"]["exception_traceback"] + "\n\n")
+                    fp.write(result["details"]["exception"])
+            print()
+            if result["status"] == "pass":
+                passing += 1
+            elif result["status"] == "fail":
+                failed_evals[dataset].append(eval_path.name)
+            else:
+                errored_evals[dataset].append(eval_path.name)
+            eval_results[dataset].append(result)
 
         for eval_path in eval_paths:
             if eval is not None and eval_path.name != eval:
@@ -386,15 +405,16 @@ def eval(
         if len(errored_evals[dataset]) > 0:
             print(f"Errored evals:\n{sorted(errored_evals[dataset])}")
 
-        results[dataset] = {
+        results["results"][dataset] = {
             "passing": passing,
             "total": total,
             "failed": failed_evals[dataset],
             "failed_error_counts": failed_error_counts[dataset],
             "errored": errored_evals[dataset],
+            "evals": eval_results[dataset],
         }
 
-    with (root_directory / "results.json").open("w") as fp:
+    with (results_dir / "results.json").open("w") as fp:
         json.dump(
             results,
             fp,
@@ -403,17 +423,17 @@ def eval(
 
 @cli.command()
 def generate_report():
-    results_dir = root_directory / "results"
     combined_results = {}  # type: dict[str, Results]
     if not results_dir.exists() or not results_dir.is_dir():
         print("No results direcotry found. Please run the eval command first.")
         return
+
     for results_file in results_dir.iterdir():
         if not results_file.is_file() or not results_file.name.endswith(".json"):
             continue
         with results_file.open() as fp:
             try:
-                results = json.load(fp)
+                results_obj = json.load(fp)
             except json.JSONDecodeError:
                 print(f"Failed to decode {results_file.name}, contents:")
                 print()
@@ -421,6 +441,7 @@ def generate_report():
                 print()
                 print("Skipping file...")
                 continue
+        results = results_obj["results"]
         for dataset, result in results.items():
             if dataset not in combined_results:
                 combined_results[dataset] = {
@@ -429,6 +450,7 @@ def generate_report():
                     "failed": [],
                     "failed_error_counts": {},
                     "errored": [],
+                    "evals": [],
                 }
             combined_results[dataset]["passing"] += result["passing"]
             combined_results[dataset]["total"] += result["total"]
@@ -438,9 +460,54 @@ def generate_report():
                     combined_results[dataset]["failed_error_counts"][error] = 0
                 combined_results[dataset]["failed_error_counts"][error] += count
             combined_results[dataset]["errored"] += result["errored"]
+            combined_results[dataset]["evals"] += result["evals"]
 
     passing = 0
     total = 0
+
+    # save results if REPORT_POSTGRES_DSN is set
+    if len(os.environ.get("REPORT_POSTGRES_DSN", "")) > 0:
+        with psycopg.connect(os.environ["REPORT_POSTGRES_DSN"]) as conn:
+            with conn.cursor() as cursor:
+                scores = {}
+                for dataset in combined_results:
+                    scores[dataset] = {
+                        "passing": combined_results[dataset]["passing"],
+                        "total": combined_results[dataset]["total"],
+                    }
+                cursor.execute(
+                    """
+                    INSERT INTO runs (source, start_time, end_time, scores, task, details)
+                    VALUES (%s, now(), now(), %s, %s, %s)
+                    RETURNING id
+                    """,
+                    (
+                        os.environ.get("SOURCE", "local"),
+                        json.dumps(scores),
+                        results_obj["task"],
+                        json.dumps(results_obj["details"]),
+                    ),
+                )
+                run_id = cursor.fetchone()[0]
+                for value in combined_results.values():
+                    for eval in value["evals"]:
+                        cursor.execute(
+                            """
+                            INSERT INTO evals (run_id, dataset, database, name, question, status, duration, details)
+                            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                            """,
+                            (
+                                run_id,
+                                eval["dataset"],
+                                eval["database"],
+                                eval["name"],
+                                eval["question"],
+                                eval["status"],
+                                eval["duration"],
+                                json.dumps(eval["details"]),
+                            ),
+                        )
+
     for results in combined_results.values():
         passing += results["passing"]
         total += results["total"]

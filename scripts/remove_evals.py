@@ -4,10 +4,10 @@ reference a database that does not exist. This is useful if we end up having to
 delete a database for whatever reason in a dataset.
 """
 
-from pathlib import Path
 import json
 import shutil
 import sys
+from pathlib import Path
 
 root_directory = Path(__file__).resolve().parent.parent
 dataset_directory = root_directory / "datasets" / sys.argv[1]

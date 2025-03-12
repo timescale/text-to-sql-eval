@@ -9,7 +9,7 @@ load_dotenv()
 
 
 def get_psycopg_str(dbname: str = "postgres") -> str:
-    return f"host={os.environ['POSTGRES_HOST']} dbname={dbname} user={os.environ['POSTGRES_USER']} password={os.environ['POSTGRES_PASSWORD']}"
+    return f"{os.environ['PGAI_POSTGRES_DSN']}/{dbname}"
 
 
 root_directory = Path(__file__).resolve().parent.parent
@@ -37,10 +37,7 @@ for dataset in datasets:
                 results = cur.fetchall()
                 if len(results) == 0:
                     error = "No results"
-                    print(f"  {name}: No results")
-                    failed += 1
         except psycopg.DatabaseError as e:
-            failed += 1
             error = f"Failed to execute query: {e}"
         finally:
             connections[inp["database"]].rollback()
