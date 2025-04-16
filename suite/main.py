@@ -9,7 +9,7 @@ import click
 import psycopg
 from dotenv import load_dotenv
 
-from .agents import get_agent_fn
+from .agents import get_agent_fn, get_agent_setup_fn
 from .exceptions import GetExpectedError
 from .tasks.get_tables import run as get_tables
 from .tasks.text_to_sql import run as text_to_sql
@@ -243,6 +243,34 @@ def load(
                             params,
                         )
                         cur.execute("delete from ai._vectorizer_q_1")
+
+@cli.command()
+@click.argument("agent")
+@click.option("--dataset", default="all", help="Dataset to setup [default all datasets]")
+@click.option("--database", default=None, help="Database to setup")
+def setup(agent: str, dataset: str, database: Optional[str]) -> None:
+    """
+    Setup the agent
+    """
+    agent_setup_fn = get_agent_setup_fn(agent)
+    print(f"Setting up agent {agent}...")
+    datasets = sorted(os.listdir(datasets_dir) if dataset == "all" else [dataset])
+    for i in range(len(datasets)):
+        if i > 0:
+            print()
+        dataset = datasets[i]
+        print(f"  Setting up {dataset}...")
+        for entry in (datasets_dir / dataset / "databases").iterdir():
+            if ".part" in entry.name and ".part000" not in entry.name:
+                continue
+            name = entry.stem if ".part" not in entry.name else entry.name[:-12]
+            if database and name != database:
+                continue
+            db_name = f"{dataset}_{name}"
+            print(f"    {db_name}", end="")
+            with psycopg.connect(get_psycopg_str(db_name)) as db:
+                agent_setup_fn(db)
+            print(" done")
 
 
 @cli.command()

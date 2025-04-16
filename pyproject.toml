@@ -7,6 +7,7 @@ requires-python = ">=3.11"
 dependencies = [
     "click>=8.1.7",
     "flask>=3.1.0",
+    "langchain-huggingface>=0.1.2",
     "openai>=1.56.1",
     "polars>=1.17.1",
     "psycopg-pool>=3.2.6",
@@ -16,6 +17,7 @@ dependencies = [
     "simplejson>=3.19.3",
     "sql-metadata>=2.15.0",
     "sqlglot>=26.0.1",
+    "vanna[openai,pgvector,postgres]>=0.7.9",
 ]
 
 [dependency-groups]
