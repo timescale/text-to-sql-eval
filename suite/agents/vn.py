@@ -40,7 +40,19 @@ def get_vanna_client(conn: psycopg.Connection):
 
 def setup(conn: psycopg.Connection):
     vn = get_vanna_client(conn)
-    df_information_schema = vn.run_sql("SELECT * FROM information_schema.columns")
+    df_information_schema = vn.run_sql("""
+        SELECT
+            *,
+            col_description(('"' || table_schema || '"."' || table_name || '"')::regclass::oid, ordinal_position) AS column_comment
+        FROM
+            information_schema.columns
+        WHERE
+            table_schema = 'public'
+        ORDER BY
+            table_schema,
+            table_name,
+            ordinal_position;
+    """)
     plan = vn.get_training_plan_generic(df_information_schema)
     vn.train(plan=plan)
 
