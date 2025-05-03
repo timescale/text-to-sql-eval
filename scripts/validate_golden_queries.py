@@ -9,7 +9,7 @@ load_dotenv()
 
 
 def get_psycopg_str(dbname: str = "postgres") -> str:
-    return f"{os.environ['PGAI_POSTGRES_DSN']}/{dbname}"
+    return f"{os.environ['POSTGRES_DSN']}/{dbname}"
 
 
 root_directory = Path(__file__).resolve().parent.parent

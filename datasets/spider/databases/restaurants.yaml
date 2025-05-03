@@ -1,0 +1,51 @@
+---
+type: header
+schema_version: '1'
+...
+---
+schema: public
+name: geographic
+type: table
+description: Lists each city along with its corresponding county and broader geographic
+  region.
+columns:
+- name: city_name
+  description: Name of the city.
+- name: county
+  description: County in which the city is located.
+- name: region
+  description: Larger area or region that the city belongs to.
+...
+---
+schema: public
+name: location
+type: table
+description: Contains street address details for each restaurant by restaurant ID.
+columns:
+- name: restaurant_id
+  description: Unique identifier linking the address to a restaurant.
+- name: house_number
+  description: Numeric part of the restaurant's street address.
+- name: street_name
+  description: Name of the street where the restaurant is located.
+- name: city_name
+  description: City in which the restaurant address is situated.
+...
+---
+schema: public
+name: restaurant
+type: table
+description: Stores core information about each restaurant, including its cuisine,
+  city, and rating.
+columns:
+- name: id
+  description: Primary key identifier for the restaurant.
+- name: name
+  description: Name of the restaurant.
+- name: food_type
+  description: Type of cuisine or food style offered by the restaurant.
+- name: city_name
+  description: City where the restaurant is located.
+- name: rating
+  description: Numeric rating score assigned to the restaurant.
+...

@@ -1,0 +1,298 @@
+---
+type: header
+schema_version: '1'
+...
+---
+schema: public
+name: constructorresults
+type: table
+description: Stores the points and status achieved by each constructor in a particular
+  race.
+columns:
+- name: constructorresultsid
+  description: Unique identifier for the constructor-race result record.
+- name: raceid
+  description: Reference to the race in which the constructor competed.
+- name: constructorid
+  description: Reference to the constructor team whose result is recorded.
+- name: points
+  description: Championship points earned by the constructor in that race.
+- name: status
+  description: Additional status information about the result, if any.
+...
+---
+schema: public
+name: constructors
+type: table
+description: Holds reference data for Formula 1 constructor teams.
+columns:
+- name: constructorid
+  description: Primary key for each constructor team.
+- name: constructorref
+  description: Short textual identifier for the constructor.
+- name: name
+  description: Full name of the constructor team.
+- name: nationality
+  description: Nationality of the constructor team.
+- name: url
+  description: Web link to more information about the constructor.
+...
+---
+schema: public
+name: constructorstandings
+type: table
+description: Tracks cumulative championship standings for each constructor after a
+  given race.
+columns:
+- name: constructorstandingsid
+  description: Unique identifier for the constructor standings record.
+- name: raceid
+  description: Race after which the standings are calculated.
+- name: constructorid
+  description: Constructor team whose standings are recorded.
+- name: points
+  description: Total championship points accumulated by the constructor up to that
+    race.
+- name: position
+  description: Numeric rank of the constructor in the championship standings.
+- name: positiontext
+  description: Rank expressed as text, mirroring position.
+- name: wins
+  description: Number of race wins counted toward the standings.
+...
+---
+schema: public
+name: drivers
+type: table
+description: Contains biographical and identifier information for Formula 1 drivers.
+columns:
+- name: driverid
+  description: Primary key for each driver.
+- name: driverref
+  description: Short textual identifier for the driver.
+- name: number
+  description: Car racing number used by the driver.
+- name: code
+  description: Three-letter FIA driver code.
+- name: forename
+  description: Driver's first name.
+- name: surname
+  description: Driver's family name.
+- name: dob
+  description: Date of birth of the driver.
+- name: nationality
+  description: Nationality of the driver.
+- name: url
+  description: Web link to the driver's biography.
+...
+---
+schema: public
+name: driverstandings
+type: table
+description: Stores cumulative championship standings for each driver after a given
+  race.
+columns:
+- name: driverstandingsid
+  description: Unique identifier for the driver standings record.
+- name: raceid
+  description: Race after which the driver standings are calculated.
+- name: driverid
+  description: Driver whose standings are recorded.
+- name: points
+  description: Total championship points accumulated by the driver up to that race.
+- name: position
+  description: Numeric rank of the driver in the championship standings.
+- name: positiontext
+  description: Rank expressed as text, mirroring position.
+- name: wins
+  description: Number of race wins counted toward the standings.
+...
+---
+schema: public
+name: circuits
+type: table
+description: Each record represents a Formula 1 circuit with its location, coordinates
+  and reference links.
+columns:
+- name: circuitid
+  description: Unique identifier for the circuit.
+- name: circuitref
+  description: Short text code referencing the circuit.
+- name: name
+  description: Full name of the circuit.
+- name: location
+  description: City or locality where the circuit is situated.
+- name: country
+  description: Country in which the circuit is located.
+- name: lat
+  description: Latitude coordinate of the circuit.
+- name: lng
+  description: Longitude coordinate of the circuit.
+- name: alt
+  description: Altitude of the circuit above sea level in meters.
+- name: url
+  description: Wikipedia or reference URL for the circuit.
+...
+---
+schema: public
+name: laptimes
+type: table
+description: Lap-by-lap timing information for each driver in a specific race.
+columns:
+- name: raceid
+  description: Identifier of the race this lap belongs to.
+- name: driverid
+  description: Identifier of the driver who completed the lap.
+- name: lap
+  description: Sequential lap number within the race.
+- name: position
+  description: Driver's track position at the end of the lap.
+- name: time
+  description: Lap time in minutes and seconds format.
+- name: milliseconds
+  description: Lap time expressed in milliseconds.
+...
+---
+schema: public
+name: pitstops
+type: table
+description: Details of each pit stop made by a driver during a race.
+columns:
+- name: raceid
+  description: Identifier of the race in which the pit stop occurred.
+- name: driverid
+  description: Identifier of the driver making the pit stop.
+- name: stop
+  description: Sequential number of the pit stop for that driver in the race.
+- name: lap
+  description: Lap on which the pit stop occurred.
+- name: time
+  description: Clock time at which the pit stop happened.
+- name: duration
+  description: Length of the pit stop in seconds.
+- name: milliseconds
+  description: Pit stop duration expressed in milliseconds.
+...
+---
+schema: public
+name: qualifying
+type: table
+description: Qualifying session results for each driver and constructor before a race.
+columns:
+- name: qualifyid
+  description: Unique identifier for the qualifying record.
+- name: raceid
+  description: Race associated with this qualifying session.
+- name: driverid
+  description: Driver who set the qualifying times.
+- name: constructorid
+  description: Constructor team of the driver.
+- name: number
+  description: Car number used during qualifying.
+- name: position
+  description: Final grid position achieved from qualifying.
+- name: q1
+  description: Driver's lap time in the first qualifying session (Q1).
+- name: q2
+  description: Driver's lap time in the second qualifying session (Q2).
+- name: q3
+  description: Driver's lap time in the third qualifying session (Q3).
+...
+---
+schema: public
+name: races
+type: table
+description: Information about each Formula 1 race event including date, circuit and
+  reference link.
+columns:
+- name: raceid
+  description: Unique identifier for the race.
+- name: year
+  description: Season year in which the race took place.
+- name: round
+  description: Round number of the race within the season.
+- name: circuitid
+  description: Circuit where the race was held.
+- name: name
+  description: Official name of the Grand Prix.
+- name: date
+  description: Calendar date of the race.
+- name: time
+  description: Scheduled start time of the race.
+- name: url
+  description: Wikipedia or reference URL for the race.
+...
+---
+schema: public
+name: results
+type: table
+description: results stores the outcome details for each driver in each race, including
+  positions, times, points and related foreign keys to races, drivers, constructors
+  and status.
+columns:
+- name: resultid
+  description: unique surrogate key for each race result record.
+- name: raceid
+  description: identifier of the race to which this result pertains, referencing races
+    table.
+- name: driverid
+  description: identifier of the driver who achieved this result, referencing drivers
+    table.
+- name: constructorid
+  description: identifier of the constructor/team for the car, referencing constructors
+    table.
+- name: number
+  description: car number used by the driver in this race.
+- name: grid
+  description: starting grid position of the driver.
+- name: position
+  description: final classified finishing position if available.
+- name: positiontext
+  description: textual representation of final position, accommodating special cases
+    like 'R' or 'DQ'.
+- name: positionorder
+  description: numeric ordering value of position, useful for sorting.
+- name: points
+  description: championship points awarded for this result.
+- name: laps
+  description: number of laps completed by the driver.
+- name: time
+  description: race time or gap to leader displayed as text.
+- name: milliseconds
+  description: race time expressed in total milliseconds for precise comparisons.
+- name: fastestlap
+  description: lap number on which the driver's fastest lap occurred.
+- name: rank
+  description: ranking of the fastest lap relative to other drivers in the race.
+- name: fastestlaptime
+  description: formatted time of the driver's fastest lap.
+- name: fastestlapspeed
+  description: recorded speed of the fastest lap, generally in km/h or mph.
+- name: statusid
+  description: identifier indicating the driver's race status (e.g., Finished, DNF),
+    referencing status table.
+...
+---
+schema: public
+name: seasons
+type: table
+description: seasons lists each Formula One season year along with a link to its Wikipedia
+  page.
+columns:
+- name: year
+  description: primary key indicating the season year.
+- name: url
+  description: Wikipedia URL containing detailed information about the season.
+...
+---
+schema: public
+name: status
+type: table
+description: status defines the possible outcomes or classifications for a driver's
+  race result.
+columns:
+- name: statusid
+  description: primary key for each status type.
+- name: status
+  description: text describing the race outcome, such as 'Finished' or 'Accident'.
+...

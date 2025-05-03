@@ -1,0 +1,163 @@
+---
+type: header
+schema_version: '1'
+...
+---
+schema: public
+name: attendance
+type: table
+description: The attendance table links members to the events they attended.
+columns:
+- name: link_to_event
+  description: Identifier of the event attended, referencing event.event_id.
+- name: link_to_member
+  description: Identifier of the member who attended, referencing member.member_id.
+...
+---
+schema: public
+name: budget
+type: table
+description: The budget table stores financial allocations and spending details for
+  specific event categories.
+columns:
+- name: budget_id
+  description: Primary key uniquely identifying a budget record.
+- name: category
+  description: Spending category such as food, advertisement, etc.
+- name: spent
+  description: Amount already spent from the budget (in dollars).
+- name: remaining
+  description: Funds still available (or negative if overspent).
+- name: amount
+  description: Total allocated amount for the budget line.
+- name: event_status
+  description: Status of the associated event, e.g., Open or Closed.
+- name: link_to_event
+  description: Identifier of the related event, referencing event.event_id.
+...
+---
+schema: public
+name: event
+type: table
+description: The event table contains basic details about organizational events.
+columns:
+- name: event_id
+  description: Primary key uniquely identifying an event.
+- name: event_name
+  description: Descriptive name of the event.
+- name: event_date
+  description: Scheduled date and time of the event.
+- name: type
+  description: Event classification such as Meeting or Election.
+- name: notes
+  description: Additional notes or description about the event.
+- name: location
+  description: Venue where the event takes place.
+- name: status
+  description: Current status of the event (e.g., Open, Closed).
+...
+---
+schema: public
+name: expense
+type: table
+description: The expense table logs individual expenses incurred against event budgets
+  by members.
+columns:
+- name: expense_id
+  description: Primary key uniquely identifying an expense entry.
+- name: expense_description
+  description: Text description of what was purchased or paid for.
+- name: expense_date
+  description: Date the expense occurred.
+- name: cost
+  description: Monetary cost of the expense item.
+- name: approved
+  description: Indicates whether the expense was approved.
+- name: link_to_member
+  description: Identifier of the member who submitted the expense, referencing member.member_id.
+- name: link_to_budget
+  description: Identifier of the related budget line, referencing budget.budget_id.
+...
+---
+schema: public
+name: member
+type: table
+description: The member table stores personal and contact information for organization
+  members.
+columns:
+- name: member_id
+  description: Primary key uniquely identifying a member.
+- name: first_name
+  description: Member's first name.
+- name: last_name
+  description: Member's last name.
+- name: email
+  description: Member's email address.
+- name: position
+  description: Role or leadership position held by the member.
+- name: t_shirt_size
+  description: Preferred T-shirt size for apparel orders.
+- name: phone
+  description: Member's phone number.
+- name: zip
+  description: Zip code of the member's address, referencing zip_code.zip_code.
+- name: link_to_major
+  description: Identifier of the member's academic major, referencing major.major_id.
+...
+---
+schema: public
+name: income
+type: table
+description: Stores individual income transactions received by the organization, including
+  amount, date, source, and associated member.
+columns:
+- name: income_id
+  description: Unique identifier for each income record.
+- name: date_received
+  description: Date on which the income was received, stored as text.
+- name: amount
+  description: Monetary value of the income received.
+- name: source
+  description: Origin or type of the income, such as dues or donations.
+- name: notes
+  description: Optional free-text remarks about the income entry.
+- name: link_to_member
+  description: Identifier of the member associated with this income, referencing the
+    member table.
+...
+---
+schema: public
+name: major
+type: table
+description: Lists academic majors offered, including their names and the department
+  and college they belong to.
+columns:
+- name: major_id
+  description: Unique identifier for each academic major.
+- name: major_name
+  description: Official title of the major program.
+- name: department
+  description: Department responsible for administering the major.
+- name: college
+  description: College within the university that houses the major.
+...
+---
+schema: public
+name: zip_code
+type: table
+description: Contains U.S. ZIP codes with their type, associated city, county, state,
+  and two-letter state abbreviation.
+columns:
+- name: zip_code
+  description: Five-digit ZIP code serving as the primary key.
+- name: type
+  description: Classification of the ZIP code such as Unique or Standard.
+- name: city
+  description: City associated with the ZIP code.
+- name: county
+  description: County or county-equivalent corresponding to the ZIP code.
+- name: state
+  description: Full name of the state containing the ZIP code.
+- name: short_state
+  description: Two-letter USPS abbreviation for the state.
+...

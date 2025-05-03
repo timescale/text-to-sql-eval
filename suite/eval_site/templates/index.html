@@ -10,16 +10,18 @@
       <th>start time</th>
       <th>end time</th>
       <th>scores</th>
+      <th>details</th>
     </tr>
   </thead>
   <tbody>
     {% for run in runs %}
       <tr>
-        <td>{{ run["id"] }}</td>
+        <td><a href="/run/{{ run["id"] }}">{{ run["id"] }}</a></td>
         <td>{{ run["task"] }}</td>
         <td>{{ run["start_time"] }}</td>
         <td>{{ run["end_time"] }}</td>
         <td>{{ run["scores"] }}</td>
+        <td>{{ run["details"] }}</td>
       </tr>
     {% endfor %}
   </tbody>

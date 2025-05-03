@@ -6,6 +6,7 @@ import simplejson as json
 from polars.testing import assert_frame_equal
 from sql_metadata import Parser
 
+from ..agents import AgentFn
 from ..exceptions import AgentFnError, GetExpectedError, QueryExecutionError
 from ..types import Provider
 
@@ -27,11 +28,11 @@ def compare(actual: pl.DataFrame, expected: pl.DataFrame, strict: bool) -> bool:
         return False
 
 
-def run(
+async def run(
     conn: psycopg.Connection,
     path: str,
     inp: str,
-    agent_fn: callable,
+    agent_fn: AgentFn,
     provider: Provider,
     model: str,
     entire_schema: bool,
@@ -49,7 +50,9 @@ def run(
         parser = Parser(gold_query)
         gold_tables_list = [table.lower() for table in parser.tables]
     try:
-        result = agent_fn(conn, inp, provider, model, entire_schema, gold_tables_list)
+        result = await agent_fn(
+            conn, inp, provider, model, entire_schema, gold_tables_list
+        )
     except Exception as e:
         raise AgentFnError(e) from e
     with open(f"{path}/actual_messages.txt", "w") as fp:
@@ -86,5 +89,5 @@ def run(
         details["gold_tables"] = gold_tables_list
     return {
         "status": "pass" if compare(actual, expected, strict) else "fail",
-        "details": details
+        "details": details,
     }

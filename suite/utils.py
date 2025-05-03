@@ -1,13 +1,21 @@
 import os
+from typing import Optional
 
 from dotenv import load_dotenv
-from psycopg import Cursor
+from psycopg import Connection, Cursor
 
 load_dotenv()
 
 
+def get_db_url_from_connection(conn: Connection, dbname: Optional[str] = None) -> str:
+    """
+    Get the database URL from a psycopg connection object.
+    """
+    return f"postgres://{conn.info.user}:{conn.info.password}@{conn.info.host}:{conn.info.port}/{dbname or conn.info.dbname}"
+
+
 def get_psycopg_str(dbname: str = "postgres") -> str:
-    return f"{os.environ['PGAI_POSTGRES_DSN']}/{dbname}"
+    return f"{os.environ['POSTGRES_DSN']}/{dbname}"
 
 
 def validate_embedding_provider(provider: str) -> bool:

@@ -1,0 +1,77 @@
+---
+type: header
+schema_version: '1'
+...
+---
+schema: public
+name: city
+type: table
+description: Stores information about individual cities, including their names, associated
+  country codes, districts, and populations.
+columns:
+- name: id
+  description: Unique identifier for the city.
+- name: name
+  description: Name of the city.
+- name: country_code
+  description: Three-letter ISO code of the country where the city is located.
+- name: district
+  description: Administrative district or province containing the city.
+- name: population
+  description: Number of inhabitants in the city.
+...
+---
+schema: public
+name: country
+type: table
+description: Contains detailed demographic, geographic, and political data for each
+  country.
+columns:
+- name: code
+  description: Primary three-letter ISO code identifying the country.
+- name: name
+  description: Official country name.
+- name: continent
+  description: Continent on which the country is located, constrained to predefined
+    values.
+- name: region
+  description: Sub-continental region designation.
+- name: surface_area
+  description: Total land area of the country in square kilometers.
+- name: indep_year
+  description: Year the country gained independence, if applicable.
+- name: population
+  description: Total population of the country.
+- name: life_expectancy
+  description: Average life expectancy in the country.
+- name: gnp
+  description: Gross National Product in millions of dollars.
+- name: gnp_old
+  description: Previously recorded Gross National Product value.
+- name: local_name
+  description: Country's name in its local language.
+- name: government_form
+  description: Description of the country's system of government.
+- name: head_of_state
+  description: Current head of state or monarch.
+- name: capital
+  description: ID of the capital city, referencing the city table.
+- name: code2
+  description: Two-letter ISO code for the country.
+...
+---
+schema: public
+name: country_language
+type: table
+description: Lists languages spoken in each country, indicating whether they are official
+  and their prevalence.
+columns:
+- name: country_code
+  description: Three-letter ISO code of the associated country.
+- name: language
+  description: Name of the language spoken in the country.
+- name: is_official
+  description: Indicates whether the language is an official language of the country.
+- name: percentage
+  description: Percentage of the country's population that speaks the language.
+...

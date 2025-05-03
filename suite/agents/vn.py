@@ -2,16 +2,16 @@
 Vanna agent
 """
 
-from dotenv import load_dotenv
+import os
+import sys
+from io import StringIO
+
 import psycopg
+from dotenv import load_dotenv
 from vanna.openai import OpenAI_Chat
 from vanna.pgvector import PG_VectorStore
-import os
-from io import StringIO
-import sys
 
 from ..types import Provider, TextToSql
-
 
 load_dotenv()
 
@@ -23,22 +23,29 @@ class Vanna(PG_VectorStore, OpenAI_Chat):
 
 
 def get_vanna_client(conn: psycopg.Connection):
-    vn = Vanna(config={
-        'api_key': os.environ['OPENAI_API_KEY'],
-        'connection_string': f"postgresql://{conn.info.user}:{conn.info.password}@{conn.info.host}:{conn.info.port}/{conn.info.dbname}",
-        'model': 'gpt-4o',
-    })
+    vn = Vanna(
+        config={
+            "api_key": os.environ["OPENAI_API_KEY"],
+            "connection_string": f"postgresql://{conn.info.user}:{conn.info.password}@{conn.info.host}:{conn.info.port}/{conn.info.dbname}",
+            "model": "gpt-4o",
+        }
+    )
     vn.connect_to_postgres(
         host=conn.info.host,
         port=conn.info.port,
         dbname=conn.info.dbname,
         user=conn.info.user,
-        password=conn.info.password
+        password=conn.info.password,
     )
     return vn
 
 
-def setup(conn: psycopg.Connection):
+async def setup(
+    conn: psycopg.Connection,
+    provider: Provider,
+    model: str,
+    vector_dimensions: int,
+):
     vn = get_vanna_client(conn)
     df_information_schema = vn.run_sql("""
         SELECT
@@ -73,8 +80,4 @@ def text_to_sql(
     finally:
         sys.stdout = sys.__stdout__
 
-    return {
-        "error": None,
-        "messages": [],
-        "query": query
-    }
+    return {"error": None, "messages": [], "query": query}

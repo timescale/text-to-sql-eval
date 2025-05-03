@@ -1,0 +1,180 @@
+---
+type: header
+schema_version: '1'
+...
+---
+schema: public
+name: account
+type: table
+description: Stores basic information for each bank account, including its associated
+  district, statement frequency and the date the account was opened.
+columns:
+- name: account_id
+  description: Primary key uniquely identifying each bank account.
+- name: district_id
+  description: Identifier of the district where the account holder resides, referencing
+    district table.
+- name: frequency
+  description: Statement frequency or charging schedule for the account (e.g., monthly
+    fee).
+- name: date
+  description: Date on which the account was opened.
+...
+---
+schema: public
+name: card
+type: table
+description: Contains payment card details linked to a disposition, including card
+  type and issuance date.
+columns:
+- name: card_id
+  description: Primary key uniquely identifying each card.
+- name: disp_id
+  description: Identifier of the disposition (account-client relationship) to which
+    the card is assigned.
+- name: type
+  description: Category of the card such as gold or classic.
+- name: issued
+  description: Date when the card was issued.
+...
+---
+schema: public
+name: client
+type: table
+description: Holds demographic and district information for each banking client.
+columns:
+- name: client_id
+  description: Primary key uniquely identifying each client.
+- name: gender
+  description: Client's gender code (e.g., M or F).
+- name: birth_date
+  description: Date of birth of the client.
+- name: district_id
+  description: Identifier of the client's district, referencing district table.
+...
+---
+schema: public
+name: disp
+type: table
+description: Links clients to accounts indicating whether they are owners or authorized
+  users (disponents) of the account.
+columns:
+- name: disp_id
+  description: Primary key uniquely identifying each client-account disposition record.
+- name: client_id
+  description: Identifier of the client involved in the disposition.
+- name: account_id
+  description: Identifier of the associated bank account.
+- name: type
+  description: Role of the client with respect to the account, such as OWNER or DISPONENT.
+...
+---
+schema: public
+name: district
+type: table
+description: Stores demographic, geographic and socio-economic attributes for each
+  district.
+columns:
+- name: district_id
+  description: Primary key uniquely identifying each district.
+- name: a2
+  description: Name of the district in Czech.
+- name: a3
+  description: Region or area name containing the district.
+- name: a4
+  description: Population count of the district.
+- name: a5
+  description: Number of municipalities with inhabitants up to 499.
+- name: a6
+  description: "Number of municipalities with inhabitants 500\u20131999."
+- name: a7
+  description: "Number of municipalities with inhabitants 2000\u20139999."
+- name: a8
+  description: Number of municipalities with inhabitants 10000 or more.
+- name: a9
+  description: Number of cities in the district.
+- name: a10
+  description: Ratio of urban inhabitants.
+- name: a11
+  description: Average salary within the district.
+- name: a12
+  description: Unemployment rate (percentage) in the district.
+- name: a13
+  description: Proportion of entrepreneurs (self-employed) in the district.
+- name: a14
+  description: Number of criminals per 1000 inhabitants.
+- name: a15
+  description: Number of expired crimes per 1000 inhabitants.
+- name: a16
+  description: Number of offences reported per 1000 inhabitants.
+...
+---
+schema: public
+name: loan
+type: table
+description: Stores information about loans issued to customer accounts, including
+  principal, term, payment schedule, and status.
+columns:
+- name: loan_id
+  description: Unique identifier for each loan.
+- name: account_id
+  description: Identifier of the account that received the loan.
+- name: date
+  description: Date the loan was granted.
+- name: amount
+  description: Total principal amount of the loan.
+- name: duration
+  description: Length of the loan in months.
+- name: payments
+  description: Regular installment amount to be paid.
+- name: status
+  description: Current state or risk classification of the loan.
+...
+---
+schema: public
+name: order
+type: table
+description: Holds outgoing payment orders initiated from customer accounts, detailing
+  destination bank info, amount, and payment purpose.
+columns:
+- name: order_id
+  description: Unique identifier for each payment order.
+- name: account_id
+  description: Identifier of the account from which the order is sent.
+- name: bank_to
+  description: Code of the destination bank receiving the payment.
+- name: account_to
+  description: Destination account number to receive the funds.
+- name: amount
+  description: Amount of money to be transferred.
+- name: k_symbol
+  description: Payment purpose or category code.
+...
+---
+schema: public
+name: trans
+type: table
+description: Captures individual transaction records on accounts, including date,
+  type, operation details, amounts, running balance, and counter-party information.
+columns:
+- name: trans_id
+  description: Unique identifier for each transaction.
+- name: account_id
+  description: Identifier of the account on which the transaction occurred.
+- name: date
+  description: Date the transaction was posted.
+- name: type
+  description: High-level classification showing whether money was incoming or outgoing.
+- name: operation
+  description: Specific operation or reason associated with the transaction.
+- name: amount
+  description: Monetary value of the transaction.
+- name: balance
+  description: Account balance immediately after the transaction.
+- name: k_symbol
+  description: Optional payment category or symbol for the transaction.
+- name: bank
+  description: Code of the counterparty bank involved, if any.
+- name: account
+  description: Counterparty account number associated with the transaction.
+...

@@ -1,0 +1,84 @@
+---
+type: header
+schema_version: '1'
+...
+---
+schema: public
+name: customers
+type: table
+description: Stores each customer along with their market segment and preferred currency.
+columns:
+- name: customerid
+  description: Unique identifier for the customer.
+- name: segment
+  description: Business segment classification of the customer (e.g., SME, LAM).
+- name: currency
+  description: Currency code typically used by the customer.
+...
+---
+schema: public
+name: gasstations
+type: table
+description: Lists gas stations with their chain affiliation, country, and market
+  segment category.
+columns:
+- name: gasstationid
+  description: Unique identifier for the gas station.
+- name: chainid
+  description: Identifier of the chain to which the gas station belongs.
+- name: country
+  description: Country where the gas station is located.
+- name: segment
+  description: Positioning segment of the gas station, such as premium or value.
+...
+---
+schema: public
+name: products
+type: table
+description: Catalog of products sold, mapping a product ID to its description.
+columns:
+- name: productid
+  description: Unique identifier for the product.
+- name: description
+  description: Textual description or name of the product.
+...
+---
+schema: public
+name: transactions_1k
+type: table
+description: Holds individual fuel purchase transactions including date/time, customer,
+  station, product, amount and price.
+columns:
+- name: transactionid
+  description: Unique identifier for each transaction.
+- name: date
+  description: Calendar date when the transaction occurred.
+- name: time
+  description: Time of day the transaction was made.
+- name: customerid
+  description: Identifier of the customer who made the purchase.
+- name: cardid
+  description: Identifier of the payment or loyalty card used.
+- name: gasstationid
+  description: Identifier of the gas station where the purchase occurred.
+- name: productid
+  description: Identifier of the product purchased during the transaction.
+- name: amount
+  description: Quantity of product purchased, likely in liters.
+- name: price
+  description: Total price paid for the transaction.
+...
+---
+schema: public
+name: yearmonth
+type: table
+description: Summarizes monthly fuel consumption per customer.
+columns:
+- name: customerid
+  description: Identifier of the customer for the consumption summary.
+- name: date
+  description: Year-month key (YYYYMM) representing the period of the consumption
+    summary.
+- name: consumption
+  description: Total fuel consumption for the customer during the specified month.
+...

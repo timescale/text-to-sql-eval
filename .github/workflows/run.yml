@@ -76,6 +76,11 @@ jobs:
       eval_model: ${{ steps.model.outputs.eval_model }}
     steps:
       - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-pgai
+        with:
+          branch: ${{ inputs.branch }}
+
       - uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
@@ -87,7 +92,7 @@ jobs:
           ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }}
           OLLAMA_HOST=http://localhost:11434
           OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
-          PGAI_POSTGRES_DSN=postgres://postgres:postgres@localhost:5432
+          POSTGRES_DSN=postgresql://postgres:postgres@localhost:5555
           REPORT_POSTGRES_DSN=${{ secrets.REPORT_POSTGRES_DSN }}
           SOURCE=github-${{ github.actor }}
           " > .env
@@ -132,6 +137,15 @@ jobs:
         with:
           branch: ${{ inputs.branch }}
 
+      - name: Run timescale container
+        run: |
+          docker pull timescale/timescaledb-ha:pg17
+          docker run -d --name postgres \
+            -p 127.0.0.1:5555:5432 \
+            -e POSTGRES_HOST_AUTH_METHOD=trust \
+            -e POSTGRES_DB=postgres \
+            timescale/timescaledb-ha:pg17
+
       - uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
@@ -145,7 +159,7 @@ jobs:
           ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }}
           OLLAMA_HOST=http://localhost:11434
           OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
-          PGAI_POSTGRES_DSN=postgres://postgres:postgres@localhost:5432
+          POSTGRES_DSN=postgresql://postgres:postgres@localhost:5555
           REPORT_POSTGRES_DSN=${{ secrets.REPORT_POSTGRES_DSN }}
           SOURCE=github-${{ github.actor }}
           " > .env
@@ -159,8 +173,10 @@ jobs:
         run: docker exec ollama ollama pull ${{ needs.generate_matrix.outputs.eval_model }}
 
       - name: Load dataset ${{ matrix.dataset }} ${{ matrix.database }}
-        run: uv run python3 -m suite load --provider ${{ inputs.load_provider }} --model ${{ needs.generate_matrix.outputs.load_model }} --dimensions ${{ inputs.load_dimensions }} --dataset ${{ matrix.dataset }} --database ${{ matrix.database }}
+        run: uv run python3 -m suite load --dataset ${{ matrix.dataset }} --database ${{ matrix.database }}
 
+      - name: Setup dataset ${{ matrix.dataset }} ${{ matrix.database }}
+        run: uv run python3 -m suite setup --provider ${{ inputs.load_provider }} --model ${{ needs.generate_matrix.outputs.load_model }} --dimensions ${{ inputs.load_dimensions }} --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} pgai
       - name: Run eval
         run: uv run python3 -m suite eval --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} --provider ${{ inputs.eval_provider }} --model ${{ needs.generate_matrix.outputs.eval_model }} ${{ inputs.entire_schema && '--entire-schema' || '' }} ${{ inputs.gold_tables && '--gold-tables' || '' }} ${{ inputs.agent }} ${{ inputs.task }}
 
@@ -172,12 +188,23 @@ jobs:
           name: results-${{ matrix.dataset }}-${{ matrix.database }}.json
           path: results-${{ matrix.dataset }}-${{ matrix.database }}.json
 
+      - name: Clean up
+        if: always()
+        run: |
+          if [ "$(docker ps -aq -f name=postgres)" ]; then
+            docker rm -f postgres
+          fi
+
   report_results:
     needs: run
     runs-on: ubuntu-latest
     if: always()
     steps:
       - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-pgai
+        with:
+          branch: ${{ inputs.branch }}
 
       - uses: astral-sh/setup-uv@v5
         with:
@@ -191,7 +218,7 @@ jobs:
           ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }}
           OLLAMA_HOST=http://localhost:11434
           OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
-          PGAI_POSTGRES_DSN=postgres://postgres:postgres@localhost:5432
+          POSTGRES_DSN=postgresql://postgres:postgres@localhost:5555
           REPORT_POSTGRES_DSN=${{ secrets.REPORT_POSTGRES_DSN }}
           SOURCE=github-${{ github.actor }}
           " > .env

@@ -11,18 +11,9 @@ runs:
     - name: Run ollama container
       run: docker run -d --network host --name ollama ollama/ollama:0.5.4
       shell: bash
-    - run: sudo pipx install rust-just
-      shell: bash
     - run: git clone https://github.com/timescale/pgai/
+      working-directory: ../
       shell: bash
     - run: git checkout ${{ inputs.branch }}
       shell: bash
-      working-directory: pgai
-    - name: Setup pgai container
-      run: |
-        just ext docker-build
-        just ext docker-run
-        docker exec pgai-ext just build
-        docker exec pgai-ext just install
-      shell: bash
-      working-directory: pgai
+      working-directory: ../pgai

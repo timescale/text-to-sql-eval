@@ -26,14 +26,14 @@ root_directory = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 
 @click.command()
 def main():
-    main_postgres = psycopg.connect(f"{os.environ['PGAI_POSTGRES_DSN']}/postgres")
+    main_postgres = psycopg.connect(f"{os.environ['POSTGRES_DSN']}/postgres")
     main_postgres.autocommit = True
     for entry in os.scandir(os.path.join(root_directory, "spider_data", "database")):
         dbname = f"spider_{entry.name}"
         main_postgres.execute(f'DROP DATABASE IF EXISTS "{dbname}"')
         main_postgres.execute(f'CREATE DATABASE "{dbname}"')
         sqlite = sqlite3.connect(os.path.join(entry.path, f"{entry.name}.sqlite"))
-        postgres = psycopg.connect(f"{os.environ['PGAI_POSTGRES_DSN']}/{dbname}")
+        postgres = psycopg.connect(f"{os.environ['POSTGRES_DSN']}/{dbname}")
         postgres.autocommit = True
 
         sqlite_cursor = sqlite.cursor()

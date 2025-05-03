@@ -4,6 +4,7 @@ import os
 import psycopg
 from sql_metadata import Parser
 
+from ..agents import AgentFn
 from ..exceptions import AgentFnError
 from ..types import Provider
 
@@ -14,11 +15,11 @@ def compare(actual, expected, strict: bool) -> bool:
     )
 
 
-def run(
+async def run(
     conn: psycopg.Connection,
     path: str,
     inp: str,
-    agent_fn: callable,
+    agent_fn: AgentFn,
     provider: Provider,
     model: str,
     strict: bool,

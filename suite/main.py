@@ -1,3 +1,4 @@
+import asyncio
 import json
 import os
 import time
@@ -18,7 +19,6 @@ from .utils import (
     get_default_embedding_model,
     get_default_model,
     get_psycopg_str,
-    setup_pgai_config,
     validate_embedding_provider,
     validate_provider,
 )
@@ -63,6 +63,8 @@ def generate_matrix() -> None:
         if not dataset.is_dir():
             continue
         for database in (dataset / "databases").iterdir():
+            if database.suffix != ".sql":
+                continue
             if not database.is_file():
                 continue
             db_name = database.name
@@ -78,38 +80,18 @@ def generate_matrix() -> None:
 
 @cli.command()
 @click.option(
-    "--provider",
-    default="ollama",
-    help="Provider to use for embeddings [default ollama]",
-)
-@click.option("--model", default=None, help="Model to use for embeddings")
-@click.option("--dimensions", default=576, help="Number of dimensions for embeddings")
-@click.option(
     "--dataset", default="all", help="Dataset to load [defaults to all datasets]"
 )
 @click.option(
     "--database", default="all", help="Database to load [defaults to all databases]"
 )
-@click.option(
-    "--no-comments",
-    is_flag=True,
-    default=False,
-    help="Do not use obj comments for embeddings",
-)
 def load(
-    provider: str,
-    model: Optional[str],
-    dimensions: int,
     dataset: str,
     database: str,
-    no_comments: bool,
 ) -> None:
     """
     Load the datasets into the database.
     """
-    validate_embedding_provider(provider)
-    if model is None:
-        model = get_default_embedding_model(provider)
     datasets = os.listdir(datasets_dir) if dataset == "all" else [dataset]
     with psycopg.connect(get_psycopg_str()) as root_db:
         with root_db.cursor() as cur:
@@ -123,6 +105,8 @@ def load(
         dataset = datasets[i]
         print(f"  {dataset}")
         for entry in (datasets_dir / dataset / "databases").iterdir():
+            if entry.suffix != ".sql":
+                continue
             if ".part" in entry.name and ".part000" not in entry.name:
                 continue
             name = entry.stem if ".part" not in entry.name else entry.name[:-12]
@@ -149,128 +133,65 @@ def load(
                             break
                         db.execute(sql_file.read_text())
                         i += 1
-                if pgai:
-                    print("      Initializing pgai")
-                    with db.cursor() as cur:
-                        setup_pgai_config(cur)
-                        cur.execute(
-                            "select set_config('ai.enable_feature_flag_text_to_sql', 'true', false)"
-                        )
-                        cur.execute("CREATE EXTENSION ai CASCADE")
-                        cur.execute("select ai.grant_ai_usage('postgres', true)")
-                        cur.execute(
-                            f"""
-                            select ai.create_semantic_catalog(
-                                embedding=>ai.embedding_{provider}(
-                                    %s,
-                                    %s
-                                )
-                            )
-                            """,
-                            (
-                                model,
-                                dimensions,
-                            ),
-                        )
-                        db.commit()
-                        cur.execute(
-                            """
-                            SELECT table_name
-                            FROM information_schema.tables
-                            WHERE table_schema = 'public'
-                            AND table_type = 'BASE TABLE';
-                            """
-                        )
-                        tables = []
-                        for row in cur.fetchall():
-                            tables.append(row[0])
-                        cur.execute(
-                            """
-                            SELECT
-                                table_schema,
-                                table_name,
-                                column_name,
-                                col_description(('"' || table_schema || '"."' || table_name || '"')::regclass::oid, ordinal_position) AS column_comment
-                            FROM
-                                information_schema.columns
-                            WHERE
-                                table_schema = 'public'
-                            ORDER BY
-                                table_schema,
-                                table_name,
-                                ordinal_position;
-                            """
-                        )
-                        columns = []
-                        for row in cur.fetchall():
-                            columns.append(row)
-                        for table in tables:
-                            cur.execute(
-                                f"select ai.set_description('{table}', '{table}');"
-                            )
-                        for column in columns:
-                            cur.execute(
-                                "select ai.set_column_description(%s, %s, %s);",
-                                (
-                                    column[1],
-                                    column[2],
-                                    (
-                                        column[3]
-                                        if column[3] and not no_comments
-                                        else f"{column[1]}.{column[2]}"
-                                    ),
-                                ),
-                            )
-                        db.commit()
-                        extra_args = ""
-                        params = [
-                            model,
-                        ]
-                        if provider == "openai":
-                            extra_args = ", dimensions => %s"
-                            params.append(dimensions)
-                        cur.execute(
-                            f"""
-                            insert into ai.semantic_catalog_obj_1_store(embedding_uuid, id, chunk_seq, chunk, embedding)
-                            select
-                                gen_random_uuid(),
-                                o.id,
-                                0,
-                                o.description,
-                                ai.{provider}_embed(%s, o.description{extra_args})
-                            from ai.semantic_catalog_obj o
-                            """,
-                            params,
-                        )
-                        cur.execute("delete from ai._vectorizer_q_1")
+
 
 @cli.command()
 @click.argument("agent")
-@click.option("--dataset", default="all", help="Dataset to setup [default all datasets]")
+@click.option(
+    "--provider",
+    default="openai",
+    help="Provider to use for the embedding [default openai]",
+)
+@click.option("--model", default=None, help="Model to use for embedding")
+@click.option("--dimensions", default=576, help="Number of dimensions for embeddings")
+@click.option(
+    "--dataset", default="all", help="Dataset to setup [default all datasets]"
+)
 @click.option("--database", default=None, help="Database to setup")
-def setup(agent: str, dataset: str, database: Optional[str]) -> None:
+def setup(
+    agent: str,
+    provider: str,
+    model: Optional[str],
+    dimensions: int,
+    dataset: str,
+    database: Optional[str],
+) -> None:
     """
     Setup the agent
     """
+    validate_embedding_provider(provider)
+    if model is None:
+        model = get_default_embedding_model(provider)
     agent_setup_fn = get_agent_setup_fn(agent)
     print(f"Setting up agent {agent}...")
     datasets = sorted(os.listdir(datasets_dir) if dataset == "all" else [dataset])
-    for i in range(len(datasets)):
-        if i > 0:
-            print()
-        dataset = datasets[i]
-        print(f"  Setting up {dataset}...")
-        for entry in (datasets_dir / dataset / "databases").iterdir():
-            if ".part" in entry.name and ".part000" not in entry.name:
-                continue
-            name = entry.stem if ".part" not in entry.name else entry.name[:-12]
-            if database and name != database:
-                continue
-            db_name = f"{dataset}_{name}"
-            print(f"    {db_name}", end="")
-            with psycopg.connect(get_psycopg_str(db_name)) as db:
-                agent_setup_fn(db)
-            print(" done")
+
+    async def run():
+        for i in range(len(datasets)):
+            if i > 0:
+                print()
+            dataset = datasets[i]
+            print(f"  Setting up {dataset}...")
+            for entry in (datasets_dir / dataset / "databases").iterdir():
+                if entry.suffix != ".sql":
+                    continue
+                if ".part" in entry.name and ".part000" not in entry.name:
+                    continue
+                name = entry.stem if ".part" not in entry.name else entry.name[:-12]
+                if database and name != database:
+                    continue
+                db_name = f"{dataset}_{name}"
+                print(f"    {db_name}", end="")
+                with psycopg.connect(get_psycopg_str(db_name)) as db:
+                    await agent_setup_fn(
+                        db,
+                        provider,
+                        model,
+                        dimensions,
+                    )
+                print(" done")
+
+    asyncio.run(run())
 
 
 @cli.command()
@@ -340,108 +261,114 @@ def eval(
         },
         "results": {},
     }
-    for i in range(len(datasets)):
-        if i > 0:
-            print()
-        dataset = datasets[i]
-        errored_evals[dataset] = []
-        failed_evals[dataset] = []
-        failed_error_counts[dataset] = {}
-        eval_results[dataset] = []
-        passing = 0
-        total = 0
-        print(f"Evaluating {dataset}...")
-        evals_path = datasets_dir / dataset / "evals"
-        eval_paths = sorted(list(evals_path.iterdir()))
 
-        def run_eval(eval_path: Path, dataset: str, inp: dict):
-            nonlocal errored_evals, eval_results, failed_evals, passing, total
-            with psycopg.connect(get_psycopg_str(f"{dataset}_{inp['database']}")) as db:
-                error_path = eval_path / "error.txt"
-                if error_path.exists():
-                    error_path.unlink()
-                start = time.time()
-                try:
-                    result = task_fn(
-                        db,
-                        str(eval_path),
-                        inp["question"],
-                        agent_fn,
-                        provider,
-                        model,
-                        entire_schema,
-                        gold_tables,
-                        strict,
-                    )
-                except GetExpectedError:
-                    total -= 1
-                    return
-                except Exception as e:
-                    result = {
-                        "status": "error",
-                        "details": {
-                            "exception_class": type(e).__name__,
-                            "exception": str(e),
-                            "exception_traceback": format_exc(),
-                        },
-                    }
-                duration = time.time() - start
-            result["dataset"] = dataset
-            result["database"] = inp["database"]
-            result["name"] = eval_path.name
-            result["question"] = inp["question"]
-            result["duration"] = duration
-            result["details"]["question"] = inp["question"]
-            to_print = f"    {result['status'].upper()}"
-            print(to_print, end="")
-            if result["status"] == "error":
-                class_name = result["details"]["exception_class"]
-                if class_name not in failed_error_counts[dataset]:
-                    failed_error_counts[dataset][class_name] = 0
-                failed_error_counts[dataset][class_name] += 1
-                print(f" ({class_name}: {result['details']['exception']})", end="")
-                with error_path.open("w") as fp:
-                    fp.write(class_name + "\n\n")
-                    fp.write(result["details"]["exception_traceback"] + "\n\n")
-                    fp.write(result["details"]["exception"])
-            print()
-            if result["status"] == "pass":
-                passing += 1
-            elif result["status"] == "fail":
-                failed_evals[dataset].append(eval_path.name)
-            else:
-                errored_evals[dataset].append(eval_path.name)
-            eval_results[dataset].append(result)
+    async def run():
+        for i in range(len(datasets)):
+            if i > 0:
+                print()
+            dataset = datasets[i]
+            errored_evals[dataset] = []
+            failed_evals[dataset] = []
+            failed_error_counts[dataset] = {}
+            eval_results[dataset] = []
+            passing = 0
+            total = 0
+            print(f"Evaluating {dataset}...")
+            evals_path = datasets_dir / dataset / "evals"
+            eval_paths = sorted(list(evals_path.iterdir()))
 
-        for eval_path in eval_paths:
-            if eval is not None and eval_path.name != eval:
-                continue
-            with (eval_path / "eval.json").open() as fp:
-                inp = json.load(fp)
-            if database and inp["database"] != database:
-                continue
-            print(f"  {eval_path.name}:")
-            total += 1
-            run_eval(eval_path, dataset, inp)
+            def run_eval(eval_path: Path, dataset: str, inp: dict):
+                nonlocal errored_evals, eval_results, failed_evals, passing, total
 
-        print(f"  {1 if total == 0 else round(passing/total, 2)} ({passing}/{total})")
-        if len(failed_evals[dataset]) > 0:
-            print("Failed error type counts:")
-            for error in sorted(failed_error_counts[dataset].keys()):
-                print(f"  {error}: {failed_error_counts[dataset][error]}")
-            print(f"Failed evals:\n{sorted(failed_evals[dataset])}")
-        if len(errored_evals[dataset]) > 0:
-            print(f"Errored evals:\n{sorted(errored_evals[dataset])}")
+            for eval_path in eval_paths:
+                if eval is not None and eval_path.name != eval:
+                    continue
+                with (eval_path / "eval.json").open() as fp:
+                    inp = json.load(fp)
+                if database and inp["database"] != database:
+                    continue
+                print(f"  {eval_path.name}:")
+                total += 1
+                with psycopg.connect(
+                    get_psycopg_str(f"{dataset}_{inp['database']}")
+                ) as db:
+                    error_path = eval_path / "error.txt"
+                    if error_path.exists():
+                        error_path.unlink()
+                    start = time.time()
+                    try:
+                        result = await task_fn(
+                            db,
+                            str(eval_path),
+                            inp["question"],
+                            agent_fn,
+                            provider,
+                            model,
+                            entire_schema,
+                            gold_tables,
+                            strict,
+                        )
+                    except GetExpectedError:
+                        total -= 1
+                        return
+                    except Exception as e:
+                        result = {
+                            "status": "error",
+                            "details": {
+                                "exception_class": type(e).__name__,
+                                "exception": str(e),
+                                "exception_traceback": format_exc(),
+                            },
+                        }
+                    duration = time.time() - start
+                result["dataset"] = dataset
+                result["database"] = inp["database"]
+                result["name"] = eval_path.name
+                result["question"] = inp["question"]
+                result["duration"] = duration
+                result["details"]["question"] = inp["question"]
+                to_print = f"    {result['status'].upper()}"
+                print(to_print, end="")
+                if result["status"] == "error":
+                    class_name = result["details"]["exception_class"]
+                    if class_name not in failed_error_counts[dataset]:
+                        failed_error_counts[dataset][class_name] = 0
+                    failed_error_counts[dataset][class_name] += 1
+                    print(f" ({class_name}: {result['details']['exception']})", end="")
+                    with error_path.open("w") as fp:
+                        fp.write(class_name + "\n\n")
+                        fp.write(result["details"]["exception_traceback"] + "\n\n")
+                        fp.write(result["details"]["exception"])
+                print()
+                if result["status"] == "pass":
+                    passing += 1
+                elif result["status"] == "fail":
+                    failed_evals[dataset].append(eval_path.name)
+                else:
+                    errored_evals[dataset].append(eval_path.name)
+                eval_results[dataset].append(result)
 
-        results["results"][dataset] = {
-            "passing": passing,
-            "total": total,
-            "failed": failed_evals[dataset],
-            "failed_error_counts": failed_error_counts[dataset],
-            "errored": errored_evals[dataset],
-            "evals": eval_results[dataset],
-        }
+            print(
+                f"  {1 if total == 0 else round(passing/total, 2)} ({passing}/{total})"
+            )
+            if len(failed_evals[dataset]) > 0:
+                print("Failed error type counts:")
+                for error in sorted(failed_error_counts[dataset].keys()):
+                    print(f"  {error}: {failed_error_counts[dataset][error]}")
+                print(f"Failed evals:\n{sorted(failed_evals[dataset])}")
+            if len(errored_evals[dataset]) > 0:
+                print(f"Errored evals:\n{sorted(errored_evals[dataset])}")
 
+            results["results"][dataset] = {
+                "passing": passing,
+                "total": total,
+                "failed": failed_evals[dataset],
+                "failed_error_counts": failed_error_counts[dataset],
+                "errored": errored_evals[dataset],
+                "evals": eval_results[dataset],
+            }
+
+    asyncio.run(run())
     with (results_dir / "results.json").open("w") as fp:
         json.dump(
             results,

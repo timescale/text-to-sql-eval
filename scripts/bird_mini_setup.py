@@ -27,7 +27,7 @@ for arg in sys.argv:
 
 
 def get_psycopg_str(dbname: str = "postgres") -> str:
-    return f"{os.environ['PGAI_POSTGRES_DSN']}/{dbname}"
+    return f"{os.environ['POSTGRES_DSN']}/{dbname}"
 
 
 current_directory = Path(__file__).parent
@@ -38,7 +38,7 @@ shutil.rmtree(dataset_dir)
 
 bird_dir = Path(current_directory, "..", "bird_minidev")
 
-pg_uri = urlparse(os.environ["PGAI_POSTGRES_DSN"])
+pg_uri = urlparse(os.environ["POSTGRES_DSN"])
 
 if not skip_load:
     with (bird_dir / "MINIDEV" / "dev_tables.json").open() as fp:

@@ -1,0 +1,156 @@
+---
+type: header
+schema_version: '1'
+...
+---
+schema: public
+name: examination
+type: table
+description: Stores detailed autoantibody test results, coagulation findings, symptoms
+  and diagnosis recorded at each patient examination.
+columns:
+- name: id
+  description: Identifier linking the examination record to a patient.
+- name: Examination Date
+  description: Date on which the examination and laboratory tests were performed.
+- name: aCL IgG
+  description: Measured anticardiolipin IgG antibody titer.
+- name: aCL IgM
+  description: Measured anticardiolipin IgM antibody titer.
+- name: ana
+  description: Antinuclear antibody (ANA) titer value.
+- name: ANA Pattern
+  description: Text description of the ANA staining pattern observed.
+- name: aCL IgA
+  description: Measured anticardiolipin IgA antibody titer.
+- name: diagnosis
+  description: Clinical diagnosis associated with this examination.
+- name: kct
+  description: Kaolin clotting time result.
+- name: rvvt
+  description: Russell viper venom time result.
+- name: lac
+  description: Interpretation of lupus anticoagulant test (e.g., positive/negative).
+- name: symptoms
+  description: Free-text listing of patient symptoms at the time of examination.
+- name: thrombosis
+  description: Indicator (e.g., 1/0) for history or presence of thrombosis.
+...
+---
+schema: public
+name: laboratory
+type: table
+description: Captures a wide array of laboratory test results for patients on specific
+  dates, including biochemistry, hematology, coagulation and autoantibody panels.
+columns:
+- name: id
+  description: Patient identifier to which the laboratory results belong.
+- name: date
+  description: Date the laboratory tests were performed.
+- name: got
+  description: Aspartate aminotransferase (AST/GOT) enzyme level.
+- name: gpt
+  description: Alanine aminotransferase (ALT/GPT) enzyme level.
+- name: ldh
+  description: Lactate dehydrogenase enzyme concentration.
+- name: alp
+  description: Alkaline phosphatase enzyme level.
+- name: tp
+  description: Total serum protein concentration.
+- name: alb
+  description: Serum albumin concentration.
+- name: ua
+  description: Serum uric acid level.
+- name: un
+  description: Blood urea nitrogen value.
+- name: cre
+  description: Serum creatinine concentration.
+- name: T-BIL
+  description: Total bilirubin level.
+- name: T-CHO
+  description: Total cholesterol concentration.
+- name: tg
+  description: Triglyceride level.
+- name: cpk
+  description: Creatine phosphokinase enzyme level.
+- name: glu
+  description: Blood glucose concentration.
+- name: wbc
+  description: White blood cell count.
+- name: rbc
+  description: Red blood cell count.
+- name: hgb
+  description: Hemoglobin concentration.
+- name: hct
+  description: Hematocrit percentage.
+- name: plt
+  description: Platelet count.
+- name: pt
+  description: Prothrombin time result.
+- name: aptt
+  description: Activated partial thromboplastin time measurement.
+- name: fg
+  description: Fibrinogen concentration.
+- name: pic
+  description: Plasmin inhibitor complex level.
+- name: tat
+  description: "Thrombin\u2013antithrombin complex concentration."
+- name: tat2
+  description: "Second measurement or repeat of thrombin\u2013antithrombin complex."
+- name: U-PRO
+  description: Qualitative or quantitative urine protein result.
+- name: igg
+  description: Serum immunoglobulin G concentration.
+- name: iga
+  description: Serum immunoglobulin A concentration.
+- name: igm
+  description: Serum immunoglobulin M concentration.
+- name: crp
+  description: C-reactive protein result, possibly qualitative.
+- name: ra
+  description: Rheumatoid arthritis test result.
+- name: rf
+  description: Rheumatoid factor result.
+- name: c3
+  description: Complement component C3 level.
+- name: c4
+  description: Complement component C4 level.
+- name: rnp
+  description: Anti-RNP antibody test result.
+- name: sm
+  description: Anti-Smith antibody test result.
+- name: sc170
+  description: Anti-Scl-70 (topoisomerase I) antibody result.
+- name: ssa
+  description: Anti-SSA/Ro antibody result.
+- name: ssb
+  description: Anti-SSB/La antibody result.
+- name: centromea
+  description: Anticentromere antibody result.
+- name: dna
+  description: Anti-double stranded DNA antibody qualitative result.
+- name: DNA-II
+  description: Quantitative or secondary measure of anti-dsDNA antibodies.
+...
+---
+schema: public
+name: patient
+type: table
+description: Holds core demographic and admission information for each patient in
+  the study or database.
+columns:
+- name: id
+  description: Primary key uniquely identifying a patient.
+- name: sex
+  description: Patient's biological sex.
+- name: birthday
+  description: Patient's date of birth.
+- name: description
+  description: Date the patient's record or clinical description was created.
+- name: First Date
+  description: Date of the patient's first visit or symptom onset.
+- name: admission
+  description: Indicator of whether the patient was admitted (+/-).
+- name: diagnosis
+  description: Initial or main clinical diagnosis for the patient.
+...
