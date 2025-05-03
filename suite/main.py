@@ -419,50 +419,6 @@ def generate_report():
 
     passing = 0
     total = 0
-
-    # save results if REPORT_POSTGRES_DSN is set
-    if len(os.environ.get("REPORT_POSTGRES_DSN", "")) > 0:
-        with psycopg.connect(os.environ["REPORT_POSTGRES_DSN"]) as conn:
-            with conn.cursor() as cursor:
-                scores = {}
-                for dataset in combined_results:
-                    scores[dataset] = {
-                        "passing": combined_results[dataset]["passing"],
-                        "total": combined_results[dataset]["total"],
-                    }
-                cursor.execute(
-                    """
-                    INSERT INTO runs (source, start_time, end_time, scores, task, details)
-                    VALUES (%s, now(), now(), %s, %s, %s)
-                    RETURNING id
-                    """,
-                    (
-                        os.environ.get("SOURCE", "local"),
-                        json.dumps(scores),
-                        results_obj["task"],
-                        json.dumps(results_obj["details"]),
-                    ),
-                )
-                run_id = cursor.fetchone()[0]
-                for value in combined_results.values():
-                    for eval in value["evals"]:
-                        cursor.execute(
-                            """
-                            INSERT INTO evals (run_id, dataset, database, name, question, status, duration, details)
-                            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-                            """,
-                            (
-                                run_id,
-                                eval["dataset"],
-                                eval["database"],
-                                eval["name"],
-                                eval["question"],
-                                eval["status"],
-                                eval["duration"],
-                                json.dumps(eval["details"]),
-                            ),
-                        )
-
     for results in combined_results.values():
         passing += results["passing"]
         total += results["total"]
@@ -486,3 +442,56 @@ def generate_report():
         if len(results["errored"]) > 0:
             print(f"  Errored evals:\n    {sorted(results['errored'])}")
         i += 1
+
+    # save results if REPORT_POSTGRES_DSN is set
+    if len(os.environ.get("REPORT_POSTGRES_DSN", "")) > 0:
+        print("Saving results to database...", end="")
+        try:
+            with psycopg.connect(os.environ["REPORT_POSTGRES_DSN"]) as conn:
+                with conn.cursor() as cursor:
+                    scores = {}
+                    for dataset in combined_results:
+                        scores[dataset] = {
+                            "passing": combined_results[dataset]["passing"],
+                            "total": combined_results[dataset]["total"],
+                        }
+                    cursor.execute(
+                        """
+                        INSERT INTO runs (source, start_time, end_time, scores, task, details)
+                        VALUES (%s, now(), now(), %s, %s, %s)
+                        RETURNING id
+                        """,
+                        (
+                            os.environ.get("SOURCE", "local"),
+                            json.dumps(scores),
+                            results_obj["task"],
+                            json.dumps(results_obj["details"]),
+                        ),
+                    )
+                    run_id = cursor.fetchone()[0]
+                    for value in combined_results.values():
+                        for eval in value["evals"]:
+                            cursor.execute(
+                                """
+                                INSERT INTO evals (run_id, dataset, database, name, question, status, duration, details)
+                                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                                """,
+                                (
+                                    run_id,
+                                    eval["dataset"],
+                                    eval["database"],
+                                    eval["name"],
+                                    eval["question"],
+                                    eval["status"],
+                                    eval["duration"],
+                                    json.dumps(eval["details"]),
+                                ),
+                            )
+            print(" done")
+        except BaseException as e:
+            print(" ERROR")
+            print("Failed to save results to database")
+            print(f"Error: {e}")
+            print(format_exc())
+            print()
+            return
