@@ -27,6 +27,7 @@ def get_default_embedding_model(provider: str) -> str:
     models = {
         "ollama": "smollm:135m",
         "openai": "text-embedding-3-small",
+        "sentence_transformers": "nomic-ai/nomic-embed-text-v1.5",
     }
     if provider not in models:
         raise ValueError(f"Invalid provider: {provider}")

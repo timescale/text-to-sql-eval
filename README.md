@@ -25,22 +25,50 @@ Docker. You will want to edit the `.env` file with connection details for your D
 
 ## Running the suite
 
+### Locally
+
 ```text
 $ uv run python3 -m suite --help
-Usage: suite [OPTIONS] COMMAND [ARGS]...
+Usage: python -m suite [OPTIONS] COMMAND [ARGS]...
 
 Options:
   --help  Show this message and exit.
 
 Commands:
-  eval  Runs the eval suite for a given agent and task.
-  load  Load the datasets into the database.
+  eval             Runs the eval suite for a given agent and task.
+  generate-matrix  Generates a matrix of all datasets and their databases...
+  generate-report
+  get-model        Given a provider, returns the default model for it if...
+  load             Load the datasets into the database.
+  setup            Setup the agent
 ```
 
 1. Use the `load` command to load the datasets into your database.
+1. Use the `setup` command to setup your agent for loaded datasets.
 1. Use the `eval` command to run the eval suite.
 
-Both commands have various options/arguments, use `--help` to see more info.
+All commands have various options/arguments to configure behavior, use `--help` to see more info.
+
+### Via GH Actions
+
+The suite is setup to be runnable via GH actions via a workflow dispatch. To do so, go to the
+[Run Eval Suite](https://github.com/timescale/text-to-sql-eval/actions/workflows/run.yml) action,
+and use the "Run workflow" to configure various settings and trigger the suite. Each dataset and
+database tuple are split into their own job in the action, and the results are aggregated via the
+`report_results` job that runs at the end, where can view accuracy. Results are also saved to a
+database in Timescale Cloud.
+
+## Viewing Results
+
+If the `REPORT_POSTGRES_DSN` value is set, then runs of `eval` are recorded to that database and
+are viewable there, or via the eval site. To run the eval site, do:
+
+```bash
+uv run flask --app suite.eval_site run
+```
+
+To setup the eval site database, you must run `python3 scripts/setup_db.py` to create the necessary
+tables.
 
 ## Repository Structure
 
