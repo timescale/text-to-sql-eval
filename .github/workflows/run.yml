@@ -7,7 +7,7 @@ on:
         description: 'Branch of pgai to use'
         required: true
         type: string
-        default: 'main'
+        default: 'jgpruitt/semantic-catalog'
       task:
         description: What task to evaluate
         required: true
@@ -24,14 +24,16 @@ on:
         options:
           - baseline
           - pgai
+          - vn
       load_provider:
         description: What provider to use for loading data
         required: true
         type: choice
-        default: 'ollama'
+        default: 'openai'
         options:
           - ollama
           - openai
+          - sentence_transformers
       load_model:
         description: What model to use for loading data
         required: false
@@ -127,6 +129,10 @@ jobs:
       fail-fast: false
 
     steps:
+      - name: Run ollama container
+        if: ${{ inputs.load_provider == 'ollama' }} || ${{ inputs.eval_provider == 'ollama' }}
+        run: docker run -d --network host --name ollama ollama/ollama:0.5.4
+
       - run: |
           cd /opt
           find . -maxdepth 1 -mindepth 1 '!' -path ./containerd '!' -path ./actionarchivecache '!' -path ./runner '!' -path ./runner-cache -exec rm -rf '{}' ';'

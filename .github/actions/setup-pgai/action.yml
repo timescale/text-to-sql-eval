@@ -8,9 +8,6 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - name: Run ollama container
-      run: docker run -d --network host --name ollama ollama/ollama:0.5.4
-      shell: bash
     - run: git clone https://github.com/timescale/pgai/
       working-directory: ../
       shell: bash
