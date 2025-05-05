@@ -27,6 +27,14 @@ Docker. You will want to edit the `.env` file with connection details for your D
 
 ### Locally
 
+First, you should do:
+
+```bash
+cp .env.sample .env
+```
+
+and then configure your API keys and other values as necessary.
+
 ```text
 $ uv run python3 -m suite --help
 Usage: python -m suite [OPTIONS] COMMAND [ARGS]...
