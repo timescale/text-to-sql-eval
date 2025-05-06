@@ -9,6 +9,8 @@ from typing import Dict, Optional
 import click
 import psycopg
 from dotenv import load_dotenv
+from psycopg.sql import SQL, Identifier
+from yaml import safe_load_all
 
 from .agents import get_agent_fn, get_agent_setup_fn
 from .exceptions import GetExpectedError
@@ -133,6 +135,28 @@ def load(
                             break
                         db.execute(sql_file.read_text())
                         i += 1
+                print("      Loading descriptions")
+                with (datasets_dir / dataset / "databases" / f"{name}.yaml").open(
+                    "r"
+                ) as fp:
+                    for doc in safe_load_all(fp):
+                        if doc["type"] != "table":
+                            continue
+                        with db.cursor() as cur:
+                            cur.execute(
+                                SQL("COMMENT ON TABLE {} IS {}").format(
+                                    Identifier(doc["name"]),
+                                    doc["description"],
+                                ),
+                            )
+                            for column in doc["columns"]:
+                                cur.execute(
+                                    SQL("COMMENT ON COLUMN {}.{} IS {}").format(
+                                        Identifier(doc["name"]),
+                                        Identifier(column["name"]),
+                                        column["description"],
+                                    ),
+                                )
 
 
 @cli.command()

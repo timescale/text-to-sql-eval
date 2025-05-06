@@ -34,7 +34,7 @@ def get_agent_fn(agent: str, task: str) -> AgentFn:
         if task != "text_to_sql":
             raise ValueError(f"Invalid task for pgai: {task}")
         agent_fn = pgai_text_to_sql
-    elif agent == "vanna":
+    elif agent == "vanna" or agent == "vn":
         if task != "text_to_sql":
             raise ValueError(f"Invalid task for vanna: {task}")
         agent_fn = vanna_text_to_sql
@@ -48,7 +48,7 @@ def get_agent_setup_fn(
 ) -> Callable[[Connection, Provider, str, int], Awaitable[None]]:
     if agent == "pgai":
         return pgai_setup
-    if agent == "vanna":
+    if agent == "vanna" or agent == "vn":
         return vanna_setup
     else:
         raise ValueError(f"Invalid agent: {agent}")

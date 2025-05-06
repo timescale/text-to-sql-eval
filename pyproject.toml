@@ -16,10 +16,11 @@ dependencies = [
     "pydantic>=2.10.3",
     "pydantic-ai>=0.1.7",
     "python-dotenv>=1.0.1",
+    "pyyaml>=6.0.2",
     "simplejson>=3.19.3",
     "sql-metadata>=2.15.0",
     "sqlglot>=26.0.1",
-    "vanna[openai,pgvector,postgres]>=0.7.9",
+    "vanna[anthropic,openai,pgvector,postgres]>=0.7.9",
 ]
 
 [dependency-groups]

@@ -5,31 +5,58 @@ Vanna agent
 import os
 import sys
 from io import StringIO
+from typing import Union
 
 import psycopg
 from dotenv import load_dotenv
+from vanna.anthropic import Anthropic_Chat
 from vanna.openai import OpenAI_Chat
 from vanna.pgvector import PG_VectorStore
 
 from ..types import Provider, TextToSql
+from ..utils import get_db_url_from_connection
 
 load_dotenv()
 
 
-class Vanna(PG_VectorStore, OpenAI_Chat):
+class AnthropicVanna(PG_VectorStore, Anthropic_Chat):
     def __init__(self, config=None):
         PG_VectorStore.__init__(self, config=config)
-        OpenAI_Chat.__init__(self, config=config)
+        Anthropic_Chat.__init__(self, config=config)
 
 
-def get_vanna_client(conn: psycopg.Connection):
-    vn = Vanna(
-        config={
-            "api_key": os.environ["OPENAI_API_KEY"],
-            "connection_string": f"postgresql://{conn.info.user}:{conn.info.password}@{conn.info.host}:{conn.info.port}/{conn.info.dbname}",
-            "model": "gpt-4o",
-        }
-    )
+class OpenAIVanna(PG_VectorStore, OpenAI_Chat):
+    def __init__(self, config=None):
+        PG_VectorStore.__init__(self, config=config)
+        OpenAI_Chat.__init__(self, config={**config, "temperature": 1})
+
+
+VannaType = Union[OpenAIVanna, AnthropicVanna]
+
+
+def get_vanna_client(
+    conn: psycopg.Connection, provider: Provider = "openai", model="o4-mini"
+) -> VannaType:
+    if provider == "anthropic":
+        vn = AnthropicVanna(
+            config={
+                "api_key": os.environ["ANTHROPIC_API_KEY"],
+                "connection_string": get_db_url_from_connection(conn).replace(
+                    "postgres://", "postgresql://"
+                ),
+                "model": model,
+            }
+        )
+    elif provider == "openai":
+        vn = OpenAIVanna(
+            config={
+                "api_key": os.environ["OPENAI_API_KEY"],
+                "connection_string": get_db_url_from_connection(conn).replace(
+                    "postgres://", "postgresql://"
+                ),
+                "model": model,
+            }
+        )
     vn.connect_to_postgres(
         host=conn.info.host,
         port=conn.info.port,
@@ -64,7 +91,7 @@ async def setup(
     vn.train(plan=plan)
 
 
-def text_to_sql(
+async def text_to_sql(
     conn: psycopg.Connection,
     inp: str,
     provider: Provider,
@@ -72,11 +99,11 @@ def text_to_sql(
     entire_schema: bool,
     gold_tables: list[str],
 ) -> TextToSql:
-    vn = get_vanna_client(conn)
+    vn = get_vanna_client(conn, provider, model)
     try:
         sys.stdout = StringIO()
         os.environ["TOKENIZERS_PARALLELISM"] = "false"
-        query = vn.generate_sql(inp)
+        query = vn.generate_sql(inp, allow_llm_to_see_data=True)
     finally:
         sys.stdout = sys.__stdout__
 

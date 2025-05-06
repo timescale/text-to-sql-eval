@@ -4074,10 +4074,11 @@ dependencies = [
     { name = "pydantic" },
     { name = "pydantic-ai" },
     { name = "python-dotenv" },
+    { name = "pyyaml" },
     { name = "simplejson" },
     { name = "sql-metadata" },
     { name = "sqlglot" },
-    { name = "vanna", extra = ["openai", "pgvector", "postgres"] },
+    { name = "vanna", extra = ["anthropic", "openai", "pgvector", "postgres"] },
 ]
 
 [package.dev-dependencies]
@@ -4098,10 +4099,11 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.10.3" },
     { name = "pydantic-ai", specifier = ">=0.1.7" },
     { name = "python-dotenv", specifier = ">=1.0.1" },
+    { name = "pyyaml", specifier = ">=6.0.2" },
     { name = "simplejson", specifier = ">=3.19.3" },
     { name = "sql-metadata", specifier = ">=2.15.0" },
     { name = "sqlglot", specifier = ">=26.0.1" },
-    { name = "vanna", extras = ["openai", "pgvector", "postgres"], specifier = ">=0.7.9" },
+    { name = "vanna", extras = ["anthropic", "openai", "pgvector", "postgres"], specifier = ">=0.7.9" },
 ]
 
 [package.metadata.requires-dev]
@@ -4547,6 +4549,9 @@ wheels = [
 ]
 
 [package.optional-dependencies]
+anthropic = [
+    { name = "anthropic" },
+]
 openai = [
     { name = "openai" },
 ]

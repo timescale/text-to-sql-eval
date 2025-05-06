@@ -24,7 +24,7 @@ on:
         options:
           - baseline
           - pgai
-          - vn
+          - vanna
       load_provider:
         description: What provider to use for loading data
         required: true
@@ -182,7 +182,7 @@ jobs:
         run: uv run python3 -m suite load --dataset ${{ matrix.dataset }} --database ${{ matrix.database }}
 
       - name: Setup dataset ${{ matrix.dataset }} ${{ matrix.database }}
-        run: uv run python3 -m suite setup --provider ${{ inputs.load_provider }} --model ${{ needs.generate_matrix.outputs.load_model }} --dimensions ${{ inputs.load_dimensions }} --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} pgai
+        run: uv run python3 -m suite setup --provider ${{ inputs.load_provider }} --model ${{ needs.generate_matrix.outputs.load_model }} --dimensions ${{ inputs.load_dimensions }} --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} ${{ inputs.agent }}
       - name: Run eval
         run: uv run python3 -m suite eval --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} --provider ${{ inputs.eval_provider }} --model ${{ needs.generate_matrix.outputs.eval_model }} ${{ inputs.entire_schema && '--entire-schema' || '' }} ${{ inputs.gold_tables && '--gold-tables' || '' }} ${{ inputs.agent }} ${{ inputs.task }}
 
