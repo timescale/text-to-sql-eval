@@ -11,17 +11,24 @@ from ..exceptions import AgentFnError, GetExpectedError, QueryExecutionError
 from ..types import Provider
 
 
-def compare(actual: pl.DataFrame, expected: pl.DataFrame, strict: bool) -> bool:
-    actual_columns = set(actual.columns)
-    expected_columns = set(expected.columns)
-    if strict and actual_columns != expected_columns:
+def compare(actual: pl.DataFrame, expected: pl.DataFrame) -> bool:
+    column_mappings = {}
+
+    if len(actual.columns) < len(expected.columns):
         return False
-    elif not expected_columns.issubset(actual_columns):
-        return False
-    actual_new = actual.select(expected.columns)
+
+    for e_col in expected.columns:
+        e_values = expected[e_col]
+        for a_col in actual.columns:
+            # Check if the values match in the same order
+            if e_values.equals(actual[a_col]):
+                column_mappings[a_col] = e_col
+                break
+
+    actual_adjusted = actual.select(list(column_mappings.keys())).rename(column_mappings)
     try:
         assert_frame_equal(
-            actual_new, expected, check_column_order=False, check_row_order=False
+            actual_adjusted, expected, check_column_order=False, check_row_order=False
         )
         return True
     except AssertionError:
@@ -37,7 +44,7 @@ async def run(
     model: str,
     entire_schema: bool,
     gold_tables: bool,
-    strict: bool,
+    *args,
 ) -> bool:
     if os.path.exists(f"{path}/actual_query.sql"):
         os.unlink(f"{path}/actual_query.sql")
@@ -76,9 +83,6 @@ async def run(
         raise GetExpectedError(e) from e
     try:
         actual = pl.read_database(query, conn)
-        parser = Parser(query)
-        if len(parser.columns_aliases) > 0:
-            actual = actual.rename(parser.columns_aliases)
     except psycopg.DatabaseError as e:
         raise QueryExecutionError(e) from e
     details = {
@@ -88,6 +92,6 @@ async def run(
     if gold_tables:
         details["gold_tables"] = gold_tables_list
     return {
-        "status": "pass" if compare(actual, expected, strict) else "fail",
+        "status": "pass" if compare(actual, expected) else "fail",
         "details": details,
     }
