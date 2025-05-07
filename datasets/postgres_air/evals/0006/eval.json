@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Which aircraft model has the highest velocity?",
+    "query": "SELECT model\nFROM postgres_air.aircraft\nORDER BY velocity DESC\nLIMIT 1;"
+}

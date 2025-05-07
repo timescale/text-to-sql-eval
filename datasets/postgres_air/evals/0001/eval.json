@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What is the total number of aircraft in the fleet?",
+    "query": "SELECT COUNT(*) FROM postgres_air.aircraft;"
+}

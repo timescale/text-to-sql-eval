@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "How many international airports are in the database?",
+    "query": "SELECT COUNT(*) AS international_airport_count\nFROM postgres_air.airport\nWHERE intnl = true;"
+}

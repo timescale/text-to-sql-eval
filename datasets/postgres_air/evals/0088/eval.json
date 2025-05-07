@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What is the average booking price for flights departing from Tokyo airports?",
+    "query": "SELECT AVG(b.price) AS average_booking_price\nFROM postgres_air.booking b\nWHERE b.price IS NOT NULL\n  AND b.booking_id IN (\n    SELECT DISTINCT bl.booking_id\n    FROM postgres_air.booking_leg bl\n    JOIN postgres_air.flight f ON bl.flight_id = f.flight_id\n    JOIN postgres_air.airport a ON f.departure_airport = a.airport_code\n    WHERE a.city = 'TOKYO'\n  );"
+}

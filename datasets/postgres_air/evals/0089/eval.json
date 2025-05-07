@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Which frequent flyers have never used their membership to book a flight in 2024?",
+    "query": "SELECT ff.frequent_flyer_id,\n       ff.first_name,\n       ff.last_name,\n       ff.title,\n       ff.card_num,\n       ff.level,\n       ff.award_points,\n       ff.email,\n       ff.phone\nFROM postgres_air.frequent_flyer ff\nWHERE NOT EXISTS (\n    SELECT 1\n    FROM postgres_air.account a\n    JOIN postgres_air.booking b ON a.account_id = b.account_id\n    JOIN postgres_air.booking_leg bl ON b.booking_id = bl.booking_id\n    JOIN postgres_air.flight f ON bl.flight_id = f.flight_id\n    WHERE a.frequent_flyer_id = ff.frequent_flyer_id\n      AND f.scheduled_departure >= '2024-01-01'\n      AND f.scheduled_departure < '2025-01-01'\n);\n"
+}

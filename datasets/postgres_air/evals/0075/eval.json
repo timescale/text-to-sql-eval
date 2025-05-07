@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Which frequent flyers have traveled on flights with all three aircraft models (Airbus 340, Airbus 380, and Boeing 777-300)?",
+    "query": "SELECT ff.*\nFROM postgres_air.frequent_flyer ff\nJOIN postgres_air.account acct ON acct.frequent_flyer_id = ff.frequent_flyer_id\nJOIN postgres_air.booking b ON b.account_id = acct.account_id\nJOIN postgres_air.booking_leg bl ON b.booking_id = bl.booking_id\nJOIN postgres_air.flight f ON f.flight_id = bl.flight_id\nJOIN postgres_air.aircraft ac ON ac.code = f.aircraft_code\nWHERE ac.model IN ('Airbus 340', 'Airbus 380', 'Boeing 777-300')\nGROUP BY ff.frequent_flyer_id, ff.first_name, ff.last_name, ff.title, ff.card_num, ff.level, ff.award_points, ff.email, ff.phone, ff.update_ts\nHAVING COUNT(DISTINCT ac.model) = 3;"
+}

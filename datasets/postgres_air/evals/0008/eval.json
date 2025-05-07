@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What are the names of all airports located in the United States?",
+    "query": "SELECT airport_name\nFROM postgres_air.airport\nWHERE iso_country = 'US';"
+}

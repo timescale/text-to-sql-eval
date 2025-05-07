@@ -3,8 +3,7 @@ from pathlib import Path
 
 import pgai.semantic_catalog as sc
 import psycopg
-from pydantic_ai.settings import ModelSettings
-from pydantic_ai.usage import UsageLimits
+from psycopg.sql import Identifier, SQL
 
 from ..types import Provider, TextToSql
 from ..utils import get_db_url_from_connection
@@ -14,6 +13,7 @@ BASE_DB = "postgres://postgres@localhost:5555"
 
 async def setup(
     conn: psycopg.Connection,
+    dataset: str,
     provider: Provider,
     model: str,
     vector_dimensions: int,
@@ -56,7 +56,7 @@ async def setup(
         }
     )
 
-    [dataset, database] = conn.info.dbname.split("_", 1)
+    database = conn.info.dbname.replace(f"{dataset}_", "")
 
     yaml_file = (
         Path(__file__).parent.parent.parent

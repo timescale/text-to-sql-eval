@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What is the average number of passengers per booking?",
+    "query": "SELECT AVG(passenger_count) AS average_passengers\nFROM (\n  SELECT b.booking_id, COUNT(p.passenger_id) AS passenger_count\n  FROM postgres_air.booking b\n  LEFT JOIN postgres_air.passenger p ON b.booking_id = p.booking_id\n  GROUP BY b.booking_id\n) sub;"
+}

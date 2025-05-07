@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What is the average connecting time for passengers with multi-leg journeys?",
+    "query": "\nSELECT AVG(f_this.actual_departure - f_prior.actual_arrival) AS avg_connecting_time\nFROM\n(\n    SELECT\n      bl.*\n    , lag(bl.booking_leg_id) OVER (PARTITION BY bl.booking_id ORDER BY bl.leg_num) AS prior_booking_leg_id\n    FROM postgres_air.booking_leg bl\n) bl_this\nINNER JOIN postgres_air.booking_leg bl_prior ON (bl_this.prior_booking_leg_id = bl_prior.booking_leg_id)\nINNER JOIN postgres_air.flight f_this ON (bl_this.flight_id = f_this.flight_id)\nINNER JOIN postgres_air.flight f_prior ON (bl_prior.flight_id = f_prior.flight_id)\nWHERE f_prior.arrival_airport = f_this.departure_airport;\n"
+}

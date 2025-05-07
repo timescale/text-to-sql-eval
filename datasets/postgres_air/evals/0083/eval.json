@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What is the median age of passengers flying to Asian destinations?",
+    "query": "SELECT percentile_cont(0.5) WITHIN GROUP (ORDER BY age) AS median_age\nFROM (\n  SELECT DISTINCT p.passenger_id, p.age\n  FROM postgres_air.passenger p\n  JOIN postgres_air.boarding_pass bp ON p.passenger_id = bp.passenger_id\n  JOIN postgres_air.booking_leg bl ON bp.booking_leg_id = bl.booking_leg_id\n  JOIN postgres_air.flight f ON bl.flight_id = f.flight_id\n  JOIN postgres_air.airport a ON f.arrival_airport = a.airport_code\n  WHERE a.continent = 'AS' AND p.age IS NOT NULL\n) AS sub;"
+}

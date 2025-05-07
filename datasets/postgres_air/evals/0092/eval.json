@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What is the average age of frequent flyers in each membership level?",
+    "query": "SELECT f.level,\n       AVG(p.age) AS average_age\nFROM postgres_air.frequent_flyer f\nJOIN postgres_air.account a ON a.frequent_flyer_id = f.frequent_flyer_id\nJOIN postgres_air.passenger p ON p.account_id = a.account_id\nGROUP BY f.level;"
+}

@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "How many passengers over 65 years old flew on international flights in March 2024?",
+    "query": "SELECT COUNT(DISTINCT p.passenger_id) AS num_passengers\nFROM postgres_air.boarding_pass bp\nJOIN postgres_air.booking_leg bl ON bp.booking_leg_id = bl.booking_leg_id\nJOIN postgres_air.flight f ON bl.flight_id = f.flight_id\nJOIN postgres_air.passenger p ON bp.passenger_id = p.passenger_id\nJOIN postgres_air.airport ad ON f.departure_airport = ad.airport_code\nJOIN postgres_air.airport aa ON f.arrival_airport = aa.airport_code\nWHERE p.age > 65\n  AND f.scheduled_departure >= '2024-03-01'\n  AND f.scheduled_departure < '2024-04-01'\n  AND ad.iso_country <> aa.iso_country;"
+}

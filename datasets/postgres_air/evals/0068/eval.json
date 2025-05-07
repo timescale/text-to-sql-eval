@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Which passengers have flown on all aircraft models in the Postgres Air fleet?",
+    "query": "WITH total_models AS (\n  SELECT COUNT(DISTINCT model) AS cnt\n  FROM postgres_air.aircraft\n)\nSELECT p.passenger_id, p.first_name, p.last_name\nFROM postgres_air.passenger p\nJOIN postgres_air.boarding_pass bp ON p.passenger_id = bp.passenger_id\nJOIN postgres_air.booking_leg bl ON bp.booking_leg_id = bl.booking_leg_id\nJOIN postgres_air.flight f ON bl.flight_id = f.flight_id\nJOIN postgres_air.aircraft a ON f.aircraft_code = a.code\nGROUP BY p.passenger_id, p.first_name, p.last_name\nHAVING COUNT(DISTINCT a.model) = (SELECT cnt FROM total_models);"
+}

@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Which routes have the highest average ticket prices?",
+    "query": "SELECT f.departure_airport, f.arrival_airport, AVG(b.price) AS average_ticket_price\nFROM postgres_air.booking b\nJOIN postgres_air.booking_leg bl ON b.booking_id = bl.booking_id\nJOIN postgres_air.flight f ON bl.flight_id = f.flight_id\nWHERE b.price IS NOT NULL\nGROUP BY f.departure_airport, f.arrival_airport\nORDER BY average_ticket_price DESC;"
+}

@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Which routes have the highest cancellation rates in 2024?",
+    "query": "SELECT departure_airport, \n       arrival_airport,\n       COUNT(*) AS total_flights,\n       SUM(CASE WHEN status = 'Cancelled' THEN 1 ELSE 0 END) AS cancellations,\n       SUM(CASE WHEN status = 'Cancelled' THEN 1 ELSE 0 END)*1.0/COUNT(*) AS cancellation_rate\nFROM postgres_air.flight\nWHERE EXTRACT(YEAR FROM scheduled_departure) = 2024\nGROUP BY departure_airport, arrival_airport\nORDER BY cancellation_rate DESC;"
+}

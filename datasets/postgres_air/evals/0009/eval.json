@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "How many flights were delayed in June 2024?",
+    "query": "SELECT COUNT(*) AS delayed_flights\nFROM postgres_air.flight\nWHERE status = 'Delayed'\n  AND scheduled_departure >= '2024-06-01'::timestamptz\n  AND scheduled_departure < '2024-07-01'::timestamptz;"
+}

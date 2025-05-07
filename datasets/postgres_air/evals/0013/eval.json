@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Which airports are located in Asia?",
+    "query": "SELECT airport_code, airport_name, city, airport_tz, continent, iso_country, iso_region, intnl, update_ts\nFROM postgres_air.airport\nWHERE continent = 'AS';"
+}

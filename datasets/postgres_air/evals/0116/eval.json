@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Which passenger has the longest total flight time in October 2024?",
+    "query": "SELECT p.first_name, p.last_name, SUM(f.scheduled_arrival - f.scheduled_departure) AS total_flight_time\nFROM postgres_air.passenger p\nJOIN postgres_air.boarding_pass bp ON p.passenger_id = bp.passenger_id\nJOIN postgres_air.booking_leg bl ON bp.booking_leg_id = bl.booking_leg_id\nJOIN postgres_air.flight f ON bl.flight_id = f.flight_id\nWHERE f.scheduled_departure >= '2024-10-01' AND f.scheduled_departure < '2024-11-01'\nGROUP BY p.passenger_id, p.first_name, p.last_name\nORDER BY total_flight_time DESC\nLIMIT 1;"
+}

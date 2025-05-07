@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What percentage of bookings are made by frequent flyers versus regular customers?",
+    "query": "\nSELECT \n    ROUND(100.0 * SUM(CASE WHEN a.frequent_flyer_id IS NOT NULL THEN 1 ELSE 0 END) / COUNT(*), 2) AS frequent_flyer_percentage,\n    ROUND(100.0 * SUM(CASE WHEN a.frequent_flyer_id IS NULL THEN 1 ELSE 0 END) / COUNT(*), 2) AS regular_customer_percentage\nFROM postgres_air.booking b\nLEFT JOIN postgres_air.account a ON b.account_id = a.account_id;\n"
+}

@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "How many flights depart from each continent during weekends (Saturday and Sunday) versus weekdays?",
+    "query": "SELECT a.continent,\n       CASE WHEN EXTRACT(DOW FROM f.scheduled_departure) IN (0, 6) THEN 'Weekend' ELSE 'Weekday' END AS day_type,\n       COUNT(*) AS flight_count\nFROM postgres_air.flight f\nJOIN postgres_air.airport a ON f.departure_airport = a.airport_code\nGROUP BY a.continent, day_type\nORDER BY a.continent, day_type;"
+}

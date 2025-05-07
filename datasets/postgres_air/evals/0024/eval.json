@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "How many flights were operated by each aircraft model in Q2 2024?",
+    "query": "SELECT a.model,\n       COUNT(*) AS flight_count\nFROM postgres_air.flight f\nJOIN postgres_air.aircraft a ON f.aircraft_code = a.code\nWHERE f.scheduled_departure >= '2024-04-01' AND f.scheduled_departure < '2024-07-01'\nGROUP BY a.model;"
+}

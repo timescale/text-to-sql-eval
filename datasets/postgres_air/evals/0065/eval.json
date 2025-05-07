@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What is the average age difference between passengers traveling together on the same booking?",
+    "query": "SELECT AVG(diff) AS average_age_difference\nFROM (\n    SELECT ABS(p1.age - p2.age) AS diff\n    FROM postgres_air.passenger p1\n    JOIN postgres_air.passenger p2 ON p1.booking_id = p2.booking_id\n         AND p1.passenger_id < p2.passenger_id\n    WHERE p1.age IS NOT NULL AND p2.age IS NOT NULL\n) AS differences;"
+}

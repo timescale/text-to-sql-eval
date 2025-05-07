@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What are the top 10 cities with the most airports?",
+    "query": "SELECT city, COUNT(*) AS airport_count\nFROM postgres_air.airport\nGROUP BY city\nORDER BY airport_count DESC\nLIMIT 10;"
+}

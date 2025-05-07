@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What is the distribution of aircraft types used for domestic versus international flights?",
+    "query": "SELECT ac.model,\n       CASE WHEN dep.iso_country = arr.iso_country THEN 'Domestic' ELSE 'International' END AS flight_type,\n       COUNT(*) AS flight_count\nFROM postgres_air.flight f\nJOIN postgres_air.aircraft ac ON f.aircraft_code = ac.code\nJOIN postgres_air.airport dep ON f.departure_airport = dep.airport_code\nJOIN postgres_air.airport arr ON f.arrival_airport = arr.airport_code\nGROUP BY ac.model, flight_type\nORDER BY ac.model, flight_type;"
+}

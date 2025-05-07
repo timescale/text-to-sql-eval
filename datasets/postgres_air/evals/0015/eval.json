@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Which passenger has the highest number of award points in the frequent flyer program?",
+    "query": "SELECT first_name, last_name, award_points\nFROM postgres_air.frequent_flyer\nORDER BY award_points DESC\nLIMIT 1;"
+}

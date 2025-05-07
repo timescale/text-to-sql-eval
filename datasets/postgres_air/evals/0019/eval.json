@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What are the flight options from Mexico City (MEX) to New York (JFK) in September 2024?",
+    "query": "\nSELECT flight_id, flight_no, scheduled_departure, scheduled_arrival, status, aircraft_code\nFROM postgres_air.flight\nWHERE departure_airport = 'MEX'\n  AND arrival_airport = 'JFK'\n  AND scheduled_departure >= '2024-09-01'\n  AND scheduled_departure < '2024-10-01';\n"
+}

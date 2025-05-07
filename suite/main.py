@@ -3,6 +3,7 @@ import json
 import os
 import time
 from pathlib import Path
+import subprocess
 from traceback import format_exc
 from typing import Dict, Optional
 
@@ -64,6 +65,12 @@ def generate_matrix() -> None:
     for dataset in datasets_dir.iterdir():
         if not dataset.is_dir():
             continue
+        if (dataset / "databases.json").exists():
+            with (dataset / "databases.json").open("r") as fp:
+                databases = json.load(fp)
+            for db in databases:
+                include.append({"dataset": dataset.name, "database": db})
+            continue
         for database in (dataset / "databases").iterdir():
             if database.suffix != ".sql":
                 continue
@@ -95,17 +102,16 @@ def load(
     Load the datasets into the database.
     """
     datasets = os.listdir(datasets_dir) if dataset == "all" else [dataset]
-    with psycopg.connect(get_psycopg_str()) as root_db:
-        with root_db.cursor() as cur:
-            cur.execute("SELECT * FROM pg_available_extensions WHERE name = 'ai'")
-            pgai = len(cur.fetchall()) > 0
-    print(f"pgai: {pgai}")
     print("Loading datasets...")
     for i in range(len(datasets)):
         if i > 0:
             print()
         dataset = datasets[i]
         print(f"  {dataset}")
+        setup_sh = datasets_dir / dataset / "setup.sh"
+        if setup_sh.exists():
+            print("    Running setup.sh")
+            subprocess.run(f"bash {str(setup_sh)}", shell=True, check=True)
         for entry in (datasets_dir / dataset / "databases").iterdir():
             if entry.suffix != ".sql":
                 continue
@@ -122,18 +128,22 @@ def load(
                 root_db.execute(f"DROP DATABASE IF EXISTS {db_name}")
                 print("      CREATE DATABASE")
                 root_db.execute(f"CREATE DATABASE {db_name}")
+
+            db_url = get_psycopg_str(db_name)
+            def load_sql_file(sql_file: Path) -> None:
+                subprocess.run(["psql", "-q", db_url, "-f", str(sql_file)], check=True)
+
             with psycopg.connect(get_psycopg_str(db_name)) as db:
                 print("      Restoring dump")
                 if ".part" not in entry.name:
-                    with entry.open() as fp:
-                        db.execute(fp.read())
+                    load_sql_file(entry)
                 else:
                     i = 0
                     while True:
                         sql_file = entry.parent / f"{name}.part{str(i).zfill(3)}.sql"
                         if not sql_file.exists():
                             break
-                        db.execute(sql_file.read_text())
+                        load_sql_file(sql_file)
                         i += 1
                 print("      Loading descriptions")
                 with (datasets_dir / dataset / "databases" / f"{name}.yaml").open(
@@ -144,14 +154,16 @@ def load(
                             continue
                         with db.cursor() as cur:
                             cur.execute(
-                                SQL("COMMENT ON TABLE {} IS {}").format(
+                                SQL("COMMENT ON TABLE {}.{} IS {}").format(
+                                    Identifier(doc["schema"]),
                                     Identifier(doc["name"]),
                                     doc["description"],
                                 ),
                             )
                             for column in doc["columns"]:
                                 cur.execute(
-                                    SQL("COMMENT ON COLUMN {}.{} IS {}").format(
+                                    SQL("COMMENT ON COLUMN {}.{}.{} IS {}").format(
+                                        Identifier(doc["schema"]),
                                         Identifier(doc["name"]),
                                         Identifier(column["name"]),
                                         column["description"],
@@ -209,6 +221,7 @@ def setup(
                 with psycopg.connect(get_psycopg_str(db_name)) as db:
                     await agent_setup_fn(
                         db,
+                        dataset,
                         provider,
                         model,
                         dimensions,

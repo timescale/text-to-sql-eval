@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What is the average flight duration for all flights?",
+    "query": "SELECT interval '1 second' * avg(EXTRACT(epoch FROM scheduled_arrival - scheduled_departure)) AS avg_flight_duration\nFROM postgres_air.flight;"
+}

@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Which frequent flyers have reached level 4 status with more than 100,000 award points?",
+    "query": "SELECT first_name, last_name, level, award_points\nFROM postgres_air.frequent_flyer\nWHERE level = 4\n  AND award_points > 100000;"
+}

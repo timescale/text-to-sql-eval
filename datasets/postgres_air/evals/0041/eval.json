@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Which booking had the most passengers in the second quarter of 2024?",
+    "query": "\nSELECT p.booking_id,\n       COUNT(DISTINCT p.passenger_id) AS passenger_count\nFROM postgres_air.boarding_pass bp\nJOIN postgres_air.passenger p ON bp.passenger_id = p.passenger_id\nWHERE bp.boarding_time >= '2024-04-01' \n  AND bp.boarding_time < '2024-07-01'\nGROUP BY p.booking_id\nORDER BY passenger_count DESC\nLIMIT 1;\n"
+}

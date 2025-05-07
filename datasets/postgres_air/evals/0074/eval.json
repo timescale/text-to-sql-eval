@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Identify the passengers who traveled from Delhi to Tokyo in May 2024 with a connection time of less than 3 hours.",
+    "query": "SELECT DISTINCT p.passenger_id\nFROM postgres_air.boarding_pass bp\nJOIN postgres_air.booking_leg bl1 ON bp.booking_leg_id = bl1.booking_leg_id\nJOIN postgres_air.booking_leg bl2 ON bl1.booking_id = bl2.booking_id AND bl1.leg_num = 1 AND bl2.leg_num = 2\nJOIN postgres_air.flight f1 ON bl1.flight_id = f1.flight_id\nJOIN postgres_air.flight f2 ON bl2.flight_id = f2.flight_id\nJOIN postgres_air.passenger p ON bp.passenger_id = p.passenger_id\nWHERE f1.departure_airport = 'DEL'\n  AND f2.arrival_airport = 'HND'\n  AND f1.scheduled_departure >= '2024-05-01' AND f1.scheduled_departure < '2024-06-01'\n  AND f2.scheduled_departure >= '2024-05-01' AND f2.scheduled_departure < '2024-06-01'\n  AND (f2.scheduled_departure - f1.scheduled_arrival) < interval '3 hours';"
+}

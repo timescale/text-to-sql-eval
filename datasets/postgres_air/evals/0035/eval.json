@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What is the average flight delay duration for each airline route in May 2024?",
+    "query": "SELECT departure_airport, arrival_airport, AVG(EXTRACT(EPOCH FROM (actual_arrival - scheduled_arrival))/60) AS average_delay_minutes\nFROM postgres_air.flight\nWHERE scheduled_departure >= '2024-05-01'::timestamptz AND scheduled_departure < '2024-06-01'::timestamptz\nGROUP BY departure_airport, arrival_airport;"
+}

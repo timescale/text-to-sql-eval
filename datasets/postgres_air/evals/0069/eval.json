@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Which airports have the highest percentage of on-time departures in the summer of 2024?",
+    "query": "SELECT postgres_air.airport.airport_code,\n       postgres_air.airport.airport_name,\n       COUNT(*) AS total_departures,\n       COUNT(CASE WHEN postgres_air.flight.status = 'On schedule' THEN 1 END) AS on_time_departures,\n       (COUNT(CASE WHEN postgres_air.flight.status = 'On schedule' THEN 1 END) * 100.0 / COUNT(*)) AS on_time_percentage\nFROM postgres_air.flight\nJOIN postgres_air.airport ON postgres_air.flight.departure_airport = postgres_air.airport.airport_code\nWHERE postgres_air.flight.scheduled_departure >= '2024-06-01'\n  AND postgres_air.flight.scheduled_departure < '2024-09-01'\nGROUP BY postgres_air.airport.airport_code, postgres_air.airport.airport_name\nORDER BY on_time_percentage DESC;"
+}

@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Which route (origin-destination pair) had the most flights in the first half of 2024?",
+    "query": "SELECT departure_airport, arrival_airport, COUNT(*) AS flight_count\nFROM postgres_air.flight\nWHERE scheduled_departure >= '2024-01-01' AND scheduled_departure < '2024-07-01'\nGROUP BY departure_airport, arrival_airport\nORDER BY flight_count DESC\nLIMIT 1;"
+}

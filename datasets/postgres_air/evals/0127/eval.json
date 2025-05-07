@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Which flights had the highest percentage of no-show passengers in August 2024?",
+    "query": "SELECT \n  f.flight_id,\n  f.flight_no,\n  COUNT(DISTINCT p.passenger_id) AS total_passengers,\n  COUNT(DISTINCT bp.passenger_id) AS shown_passengers,\n  ((COUNT(DISTINCT p.passenger_id) - COUNT(DISTINCT bp.passenger_id)) * 100.0 / COUNT(DISTINCT p.passenger_id)) AS no_show_percentage\nFROM postgres_air.flight f\nJOIN postgres_air.booking_leg bl ON f.flight_id = bl.flight_id\nJOIN postgres_air.passenger p ON bl.booking_id = p.booking_id\nLEFT JOIN postgres_air.boarding_pass bp ON bl.booking_leg_id = bp.booking_leg_id AND p.passenger_id = bp.passenger_id\nWHERE f.scheduled_departure >= '2024-08-01' \n  AND f.scheduled_departure < '2024-09-01'\nGROUP BY f.flight_id, f.flight_no\nORDER BY no_show_percentage DESC;"
+}

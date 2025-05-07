@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Which passenger has flown the most miles in the first half of 2024?",
+    "query": "SELECT p.passenger_id,\n       p.first_name,\n       p.last_name,\n       SUM(EXTRACT(EPOCH FROM (f.scheduled_arrival - f.scheduled_departure)) / 3600.0 * a.velocity) AS total_miles\nFROM postgres_air.boarding_pass bp\nJOIN postgres_air.booking_leg bl ON bp.booking_leg_id = bl.booking_leg_id\nJOIN postgres_air.flight f ON bl.flight_id = f.flight_id\nJOIN postgres_air.passenger p ON bp.passenger_id = p.passenger_id\nJOIN postgres_air.aircraft a ON f.aircraft_code = a.code\nWHERE f.scheduled_departure >= '2024-01-01'\n  AND f.scheduled_departure < '2024-07-01'\nGROUP BY p.passenger_id, p.first_name, p.last_name\nORDER BY total_miles DESC\nLIMIT 1;"
+}

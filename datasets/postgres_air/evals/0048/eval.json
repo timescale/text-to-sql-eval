@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "How many passengers have flown on more than three different aircraft types in 2024?",
+    "query": "SELECT COUNT(*) AS num_passengers\nFROM (\n  SELECT bp.passenger_id, COUNT(DISTINCT ac.model) AS aircraft_types\n  FROM postgres_air.boarding_pass bp\n  JOIN postgres_air.booking_leg bl ON bp.booking_leg_id = bl.booking_leg_id\n  JOIN postgres_air.flight f ON bl.flight_id = f.flight_id\n  JOIN postgres_air.aircraft ac ON f.aircraft_code = ac.code\n  WHERE f.scheduled_departure >= '2024-01-01'::timestamp\n    AND f.scheduled_departure < '2025-01-01'::timestamp\n  GROUP BY bp.passenger_id\n  HAVING COUNT(DISTINCT ac.model) > 3\n) sub;"
+}

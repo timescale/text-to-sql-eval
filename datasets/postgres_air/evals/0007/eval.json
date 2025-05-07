@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "List all flights departing from New York's JFK airport in July 2024.",
+    "query": "SELECT flight_id, flight_no, scheduled_departure, scheduled_arrival, departure_airport, arrival_airport, status, aircraft_code, actual_departure, actual_arrival\nFROM postgres_air.flight\nWHERE departure_airport = 'JFK'\n  AND scheduled_departure >= '2024-07-01'\n  AND scheduled_departure < '2024-08-01';"
+}

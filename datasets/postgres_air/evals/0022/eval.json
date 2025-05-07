@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Which flights had the longest delays in August 2024?",
+    "query": "SELECT flight_id, flight_no, scheduled_departure, actual_departure,\n       (actual_departure - scheduled_departure) AS departure_delay\nFROM postgres_air.flight\nWHERE scheduled_departure >= '2024-08-01'\n  AND scheduled_departure < '2024-09-01'\n  AND status = 'Delayed'\nORDER BY departure_delay DESC;"
+}

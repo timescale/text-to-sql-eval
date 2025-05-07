@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Which aircraft model has the best on-time arrival performance?",
+    "query": "SELECT a.model,\n       AVG(EXTRACT(EPOCH FROM (f.actual_arrival - f.scheduled_arrival)))/60 AS avg_delay_minutes\nFROM postgres_air.flight f\nJOIN postgres_air.aircraft a ON f.aircraft_code = a.code\nWHERE f.actual_arrival IS NOT NULL\nGROUP BY a.model\nORDER BY avg_delay_minutes ASC\nLIMIT 1;"
+}

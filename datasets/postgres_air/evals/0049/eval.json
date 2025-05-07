@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What are the most common first names among frequent flyers?",
+    "query": "SELECT first_name, COUNT(*) AS frequency\nFROM postgres_air.frequent_flyer\nGROUP BY first_name\nORDER BY frequency DESC;"
+}

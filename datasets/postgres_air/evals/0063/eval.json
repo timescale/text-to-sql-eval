@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What is the most common departure day of the week for international flights?",
+    "query": "SELECT to_char(f.scheduled_departure, 'FMDay') AS departure_day,\n       COUNT(*) AS total_flights\nFROM postgres_air.flight f\nJOIN postgres_air.airport dep_airport ON f.departure_airport = dep_airport.airport_code\nJOIN postgres_air.airport arr_airport ON f.arrival_airport = arr_airport.airport_code\nWHERE dep_airport.iso_country <> arr_airport.iso_country\nGROUP BY departure_day\nORDER BY total_flights DESC\nLIMIT 1;"
+}

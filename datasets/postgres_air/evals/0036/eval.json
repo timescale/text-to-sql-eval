@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What is the total number of passengers who traveled between London and Paris in July 2024?",
+    "query": "\nSELECT COUNT(DISTINCT bp.passenger_id) AS total_passengers\nFROM postgres_air.boarding_pass bp\nJOIN postgres_air.booking_leg bl ON bp.booking_leg_id = bl.booking_leg_id\nJOIN postgres_air.flight f ON bl.flight_id = f.flight_id\nJOIN postgres_air.airport dep ON f.departure_airport = dep.airport_code\nJOIN postgres_air.airport arr ON f.arrival_airport = arr.airport_code\nWHERE ((dep.city = 'LONDON' AND arr.city = 'PARIS') OR (dep.city = 'PARIS' AND arr.city = 'LONDON'))\n  AND f.scheduled_departure >= '2024-07-01'::timestamp\n  AND f.scheduled_departure < '2024-08-01'::timestamp;\n"
+}

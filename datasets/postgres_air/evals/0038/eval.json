@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What is the average booking price for flights to European destinations?",
+    "query": "SELECT AVG(b.price) AS average_booking_price\nFROM postgres_air.booking AS b\nWHERE b.booking_id IN (\n    SELECT DISTINCT bl.booking_id\n    FROM postgres_air.booking_leg AS bl\n    JOIN postgres_air.flight AS f ON f.flight_id = bl.flight_id\n    JOIN postgres_air.airport AS a ON a.airport_code = f.arrival_airport\n    WHERE a.continent = 'EU'\n) AND b.price IS NOT NULL;"
+}

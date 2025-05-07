@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What is the average age of passengers traveling on international flights?",
+    "query": "\nSELECT AVG(sub.age) AS avg_age\nFROM (\n  SELECT DISTINCT p.passenger_id, p.age\n  FROM postgres_air.passenger p\n  JOIN postgres_air.boarding_pass bp ON p.passenger_id = bp.passenger_id\n  JOIN postgres_air.booking_leg bl ON bp.booking_leg_id = bl.booking_leg_id\n  JOIN postgres_air.flight f ON bl.flight_id = f.flight_id\n  JOIN postgres_air.airport dep ON f.departure_airport = dep.airport_code\n  JOIN postgres_air.airport arr ON f.arrival_airport = arr.airport_code\n  WHERE dep.iso_country != arr.iso_country\n    AND p.age IS NOT NULL\n) AS sub;\n"
+}

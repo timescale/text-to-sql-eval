@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Which airports are located in Tokyo?",
+    "query": "SELECT airport_code, airport_name, city\nFROM postgres_air.airport\nWHERE city = 'TOKYO';"
+}

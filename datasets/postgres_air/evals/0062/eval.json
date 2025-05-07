@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "How many passengers have flown with Postgres Air more than 5 times but are not frequent flyer members?",
+    "query": "SELECT COUNT(*) AS passenger_count\nFROM (\n    SELECT bp.passenger_id\n    FROM postgres_air.boarding_pass bp\n    GROUP BY bp.passenger_id\n    HAVING COUNT(*) > 5\n) AS frequent_flyers\nJOIN postgres_air.passenger p ON p.passenger_id = frequent_flyers.passenger_id\nLEFT JOIN postgres_air.account a ON p.account_id = a.account_id\nWHERE a.frequent_flyer_id IS NULL;"
+}

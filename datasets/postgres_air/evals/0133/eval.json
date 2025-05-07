@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Which frequent flyers have had the most significant increase in award points between January and September 2024?",
+    "query": "WITH jan AS (\n    SELECT frequent_flyer_id, award_points AS jan_award_points\n    FROM postgres_air.frequent_flyer\n    WHERE update_ts >= '2024-01-01' AND update_ts < '2024-02-01'\n),\nsept AS (\n    SELECT frequent_flyer_id, award_points AS sep_award_points\n    FROM postgres_air.frequent_flyer\n    WHERE update_ts >= '2024-09-01' AND update_ts < '2024-10-01'\n)\nSELECT f.frequent_flyer_id,\n       f.first_name,\n       f.last_name,\n       (s.sep_award_points - j.jan_award_points) AS award_points_increase\nFROM jan j\nJOIN sept s USING (frequent_flyer_id)\nJOIN postgres_air.frequent_flyer f ON f.frequent_flyer_id = j.frequent_flyer_id\nWHERE (s.sep_award_points - j.jan_award_points) > 0\nORDER BY award_points_increase DESC;"
+}

@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What is the total number of flights between the top 5 busiest airports in the database?",
+    "query": "WITH busiest AS (\n  SELECT airport_code\n  FROM (\n    SELECT departure_airport AS airport_code FROM postgres_air.flight\n    UNION ALL\n    SELECT arrival_airport AS airport_code FROM postgres_air.flight\n  ) combined\n  GROUP BY airport_code\n  ORDER BY COUNT(*) DESC\n  LIMIT 5\n)\nSELECT COUNT(*) AS total_flights_between_busiest\nFROM postgres_air.flight\nWHERE departure_airport IN (SELECT airport_code FROM busiest)\n  AND arrival_airport IN (SELECT airport_code FROM busiest);"
+}

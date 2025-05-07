@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What is the maximum range of any aircraft in the fleet?",
+    "query": "SELECT MAX(range) AS max_range\nFROM postgres_air.aircraft;"
+}

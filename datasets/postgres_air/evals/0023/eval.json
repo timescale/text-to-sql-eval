@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What percentage of flights arrived on time in the first half of 2024?",
+    "query": "\nSELECT ROUND(100.0 * SUM(CASE WHEN actual_arrival <= scheduled_arrival THEN 1 ELSE 0 END) / COUNT(*), 2) AS on_time_percentage\nFROM postgres_air.flight\nWHERE scheduled_arrival >= '2024-01-01' AND scheduled_arrival < '2024-07-01'\nAND actual_arrival IS NOT NULL;\n"
+}

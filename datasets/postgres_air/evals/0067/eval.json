@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What is the average number of boarding passes issued per flight?",
+    "query": "SELECT AVG(boarding_pass_count) AS avg_boarding_passes_per_flight\nFROM (\n    SELECT f.flight_id, COUNT(bp.pass_id) AS boarding_pass_count\n    FROM postgres_air.flight f\n    JOIN postgres_air.booking_leg bl ON f.flight_id = bl.flight_id\n    JOIN postgres_air.boarding_pass bp ON bl.booking_leg_id = bp.booking_leg_id\n    GROUP BY f.flight_id\n);"
+}

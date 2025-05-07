@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Which passengers have precheck status on their boarding passes?",
+    "query": "SELECT DISTINCT passenger_id\nFROM postgres_air.boarding_pass\nWHERE precheck = TRUE;"
+}

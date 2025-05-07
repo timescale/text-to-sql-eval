@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What is the percentage of children (under 12) traveling on international flights versus domestic flights?",
+    "query": "\nWITH ft AS \n(\n    SELECT\n      bl.booking_leg_id\n    , CASE dep_air.iso_country != arr_air.iso_country WHEN true THEN 'international' ELSE 'domestic' END AS flight_type\n    FROM postgres_air.booking_leg bl\n    INNER JOIN postgres_air.flight f ON (bl.flight_id = f.flight_id)\n    INNER JOIN postgres_air.airport dep_air ON (f.departure_airport = dep_air.airport_code)\n    INNER JOIN postgres_air.airport arr_air ON (f.arrival_airport = arr_air.airport_code)\n)\nSELECT\n  ft.flight_type\n, (count(p.passenger_id) FILTER (WHERE p.age < 12))::float8 / count(p.passenger_id) * 100.0 AS percentage\nFROM ft\nINNER JOIN postgres_air.boarding_pass bp ON (ft.booking_leg_id = bp.booking_leg_id)\nINNER JOIN postgres_air.passenger p ON (bp.passenger_id = p.passenger_id)\nGROUP BY ft.flight_type;\n"
+}

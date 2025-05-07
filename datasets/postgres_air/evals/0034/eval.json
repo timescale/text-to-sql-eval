@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Which frequent flyers have traveled on more than 10 different flights in 2024?",
+    "query": "SELECT ff.frequent_flyer_id,\n       ff.first_name,\n       ff.last_name\nFROM postgres_air.frequent_flyer ff\nJOIN postgres_air.account a ON a.frequent_flyer_id = ff.frequent_flyer_id\nJOIN postgres_air.booking b ON b.account_id = a.account_id\nJOIN postgres_air.booking_leg bl ON bl.booking_id = b.booking_id\nJOIN postgres_air.flight f ON bl.flight_id = f.flight_id\nJOIN postgres_air.passenger p ON p.booking_id = b.booking_id\nWHERE f.actual_arrival >= '2024-01-01'\n  AND f.actual_departure < '2025-01-01'\n  AND p.account_id = a.account_id\nGROUP BY ff.frequent_flyer_id, ff.first_name, ff.last_name\nHAVING COUNT(DISTINCT bl.flight_id) > 10;"
+}

@@ -1,0 +1,240 @@
+---
+type: header
+schema_version: '1'
+...
+---
+schema: postgres_air
+name: booking_leg
+type: table
+description: Each row in booking_leg represents an individual flight segment tied
+  to a booking and flight.
+columns:
+- name: booking_leg_id
+  description: Unique identifier for the booking leg record.
+- name: booking_id
+  description: Identifier of the overall booking that this leg belongs to.
+- name: flight_id
+  description: Identifier of the scheduled flight serving this leg.
+- name: leg_num
+  description: Sequential position of the leg within its booking itinerary.
+- name: is_returning
+  description: Indicates whether this leg is part of the return journey (true) or
+    outbound (false).
+- name: update_ts
+  description: Timestamp of the most recent modification to this leg record.
+...
+---
+schema: postgres_air
+name: boarding_pass
+type: table
+description: boarding_pass stores issued boarding passes for passengers on specific
+  booking legs.
+columns:
+- name: pass_id
+  description: Unique identifier of the boarding pass.
+- name: passenger_id
+  description: Identifier of the passenger to whom the boarding pass is issued.
+- name: booking_leg_id
+  description: Identifier of the booking leg (flight segment) this boarding pass is
+    for.
+- name: seat
+  description: Seat assignment printed on the boarding pass.
+- name: boarding_time
+  description: Scheduled boarding time for the passenger.
+- name: precheck
+  description: Flag indicating if the passenger qualifies for expedited security screening.
+- name: update_ts
+  description: Timestamp of the last update to the boarding pass record.
+...
+---
+schema: postgres_air
+name: passenger
+type: table
+description: passenger lists travelers associated with bookings and optionally with
+  customer accounts.
+columns:
+- name: passenger_id
+  description: Primary key identifying the passenger record.
+- name: booking_id
+  description: ID of the booking that this passenger belongs to.
+- name: booking_ref
+  description: Reference code for the booking, repeated for convenience.
+- name: passenger_no
+  description: Sequence number of the passenger within the booking.
+- name: first_name
+  description: "Passenger\u2019s given name."
+- name: last_name
+  description: "Passenger\u2019s family name."
+- name: account_id
+  description: "Optional link to the customer\u2019s frequent-flyer or user account."
+- name: update_ts
+  description: Timestamp of the last change to the passenger record.
+- name: age
+  description: "Passenger\u2019s age in years, if recorded."
+...
+---
+schema: postgres_air
+name: account
+type: table
+description: account holds login credentials and personal details for users and frequent-flyer
+  members.
+columns:
+- name: account_id
+  description: Primary key identifying the user account.
+- name: login
+  description: Unique login or email address for the account.
+- name: first_name
+  description: "Account holder\u2019s given name."
+- name: last_name
+  description: "Account holder\u2019s family name."
+- name: frequent_flyer_id
+  description: Optional link to a frequent flyer profile tied to this account.
+- name: update_ts
+  description: Timestamp when the account record was last updated.
+...
+---
+schema: postgres_air
+name: phone
+type: table
+description: phone stores phone numbers related to user accounts and their metadata.
+columns:
+- name: phone_id
+  description: Primary key for the phone record.
+- name: account_id
+  description: Account to which this phone number belongs.
+- name: phone
+  description: ''
+- name: phone_type
+  description: ''
+- name: primary_phone
+  description: ''
+- name: update_ts
+  description: ''
+...
+---
+schema: postgres_air
+name: flight
+type: table
+description: Contains one record per flight scheduled or flown, detailing its identifiers,
+  planned and actual times, airports, aircraft and current status.
+columns:
+- name: flight_id
+  description: Unique surrogate key for each flight record.
+- name: flight_no
+  description: Airline flight number assigned to the service.
+- name: scheduled_departure
+  description: "Planned departure timestamp in the airport\u2019s time zone."
+- name: scheduled_arrival
+  description: "Planned arrival timestamp in the airport\u2019s time zone."
+- name: departure_airport
+  description: IATA 3-letter code of the airport the flight leaves from.
+- name: arrival_airport
+  description: IATA 3-letter code of the airport the flight lands at.
+- name: status
+  description: Current operational status of the flight (e.g., Scheduled, Delayed,
+    Departed, Cancelled).
+- name: aircraft_code
+  description: 3-character code identifying the aircraft type used.
+- name: actual_departure
+  description: Timestamp when the flight actually departed, if known.
+- name: actual_arrival
+  description: Timestamp when the flight actually arrived, if known.
+- name: update_ts
+  description: Last time this flight record was updated.
+...
+---
+schema: postgres_air
+name: booking
+type: table
+description: Stores customer booking transactions including reference code, contact
+  details, linked account, price and audit timestamp.
+columns:
+- name: booking_id
+  description: Primary key that uniquely identifies a booking.
+- name: booking_ref
+  description: Human-facing alphanumeric booking reference code, unique per booking.
+- name: booking_name
+  description: Optional descriptive name or title given to the booking.
+- name: account_id
+  description: Identifier of the customer account making the booking.
+- name: email
+  description: Email address associated with the booking.
+- name: phone
+  description: Contact phone number for the booking.
+- name: update_ts
+  description: Timestamp when the booking record was last modified.
+- name: price
+  description: Total price charged for the booking in base currency.
+...
+---
+schema: postgres_air
+name: aircraft
+type: table
+description: Lists aircraft types operated, with performance metrics and a unique
+  code.
+columns:
+- name: model
+  description: Manufacturer and model name of the aircraft.
+- name: range
+  description: Maximum flight range of the aircraft in kilometers or nautical miles.
+- name: class
+  description: Internal numeric category or seating class grouping for the aircraft.
+- name: velocity
+  description: Typical cruise speed of the aircraft.
+- name: code
+  description: 3-character unique aircraft type code serving as the primary key.
+...
+---
+schema: postgres_air
+name: airport
+type: table
+description: Catalog of airports worldwide with codes, names, locations, time zones,
+  region details and whether they handle international flights.
+columns:
+- name: airport_code
+  description: Primary key 3-letter IATA airport code.
+- name: airport_name
+  description: Full name of the airport.
+- name: city
+  description: City served by the airport.
+- name: airport_tz
+  description: Time zone identifier for the airport location.
+- name: continent
+  description: Two-letter code of the continent where the airport lies.
+- name: iso_country
+  description: ISO country code of the airport's nation.
+- name: iso_region
+  description: ISO region or state code where the airport is located.
+- name: intnl
+  description: Boolean flag indicating if the airport handles international flights.
+- name: update_ts
+  description: Timestamp of the last update to the airport record.
+...
+---
+schema: postgres_air
+name: frequent_flyer
+type: table
+description: Holds member details for the frequent flyer loyalty program, including
+  personal info, card, tier and points.
+columns:
+- name: frequent_flyer_id
+  description: Surrogate primary key identifying each frequent flyer.
+- name: first_name
+  description: Member's given name.
+- name: last_name
+  description: Member's surname.
+- name: title
+  description: Personal title or honorific (e.g., Mr, Ms, Dr).
+- name: card_num
+  description: Unique frequent flyer card number.
+- name: level
+  description: Numeric tier level within the loyalty program.
+- name: award_points
+  description: Total loyalty points currently accumulated by the member.
+- name: email
+  description: Email address of the frequent flyer.
+- name: phone
+  description: Contact phone number of the member.
+- name: update_ts
+  description: Timestamp of the most recent update to the frequent flyer record.
+...

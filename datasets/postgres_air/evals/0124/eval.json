@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What percentage of flights arriving in Tokyo have at least one passenger over 60 years old?",
+    "query": "WITH flights_tokyo AS (\n    SELECT f.flight_id\n    FROM postgres_air.flight f\n    JOIN postgres_air.airport a ON f.arrival_airport = a.airport_code\n    WHERE a.city = 'TOKYO'\n),\nflights_over60 AS (\n    SELECT DISTINCT f.flight_id\n    FROM flights_tokyo f\n    JOIN postgres_air.booking_leg bl ON f.flight_id = bl.flight_id\n    JOIN postgres_air.boarding_pass bp ON bl.booking_leg_id = bp.booking_leg_id\n    JOIN postgres_air.passenger p ON bp.passenger_id = p.passenger_id\n    WHERE p.age > 60\n)\nSELECT ROUND(\n           (SELECT COUNT(*) FROM flights_over60)::numeric * 100 \n           / NULLIF((SELECT COUNT(*) FROM flights_tokyo), 0),\n           2\n       ) AS percentage\nFROM flights_tokyo\nLIMIT 1;"
+}

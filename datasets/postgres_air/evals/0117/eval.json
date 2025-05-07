@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "How many passengers traveled with their children (passengers under 18 with same last name) in August 2024?",
+    "query": "SELECT COUNT(DISTINCT p1.passenger_id) AS parent_count\nFROM postgres_air.passenger p1\nJOIN postgres_air.passenger p2\n  ON p1.booking_id = p2.booking_id\n  AND p1.last_name = p2.last_name\nJOIN postgres_air.booking_leg bl\n  ON p1.booking_id = bl.booking_id\nJOIN postgres_air.flight f\n  ON bl.flight_id = f.flight_id\nWHERE p1.age >= 18\n  AND p2.age < 18\n  AND f.scheduled_departure >= '2024-08-01'::timestamp\n  AND f.scheduled_departure < '2024-09-01'::timestamp;"
+}

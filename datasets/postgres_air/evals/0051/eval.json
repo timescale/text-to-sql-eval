@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Which city pairs have the most flights between them in July 2024?",
+    "query": "SELECT dep.city AS departure_city,\n       arr.city AS arrival_city,\n       COUNT(*) AS flight_count\nFROM postgres_air.flight\nJOIN postgres_air.airport dep ON postgres_air.flight.departure_airport = dep.airport_code\nJOIN postgres_air.airport arr ON postgres_air.flight.arrival_airport = arr.airport_code\nWHERE postgres_air.flight.scheduled_departure >= '2024-07-01'\n  AND postgres_air.flight.scheduled_departure < '2024-08-01'\nGROUP BY dep.city, arr.city\nORDER BY flight_count DESC;"
+}

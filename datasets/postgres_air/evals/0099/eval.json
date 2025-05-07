@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Which flight routes have the highest ratio of business class (seats with row less than 10) to economy class passengers for aircraft in class 0 and 1?",
+    "query": "\nSELECT\n  f.departure_airport\n, f.arrival_airport\n, COUNT(DISTINCT bp.passenger_id) FILTER (WHERE bp.seat_class = 'business') AS business_count\n, COUNT(DISTINCT bp.passenger_id) FILTER (WHERE bp.seat_class = 'economy') AS economy_count\n, COUNT(DISTINCT bp.passenger_id) FILTER (WHERE bp.seat_class = 'business')::float8 \n/ NULLIF(COUNT(DISTINCT bp.passenger_id) FILTER (WHERE bp.seat_class = 'economy'), 0) AS ratio\nFROM\n(\n    SELECT \n      bp.booking_leg_id\n    , bp.passenger_id\n    , CASE WHEN regexp_replace(bp.seat, '[^0-9]', '', 'g')::int < 10 THEN 'business' ELSE 'economy' END AS seat_class \n    FROM postgres_air.boarding_pass bp\n) bp\nINNER JOIN postgres_air.booking_leg bl ON (bp.booking_leg_id = bl.booking_leg_id)\nINNER JOIN postgres_air.flight f ON (bl.flight_id = f.flight_id)\nINNER JOIN postgres_air.aircraft a ON (f.aircraft_code = a.code)\nWHERE a.class IN (0, 1)\nGROUP BY 1, 2\nORDER BY ratio DESC NULLS LAST;\n"
+}

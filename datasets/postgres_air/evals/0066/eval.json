@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What is the distribution of flight durations across different aircraft models?",
+    "query": "SELECT a.model,\n       COUNT(*) AS flight_count,\n       MIN(EXTRACT(EPOCH FROM f.scheduled_arrival - f.scheduled_departure)) AS min_duration,\n       MAX(EXTRACT(EPOCH FROM f.scheduled_arrival - f.scheduled_departure)) AS max_duration,\n       AVG(EXTRACT(EPOCH FROM f.scheduled_arrival - f.scheduled_departure)) AS avg_duration,\n       STDDEV(EXTRACT(EPOCH FROM f.scheduled_arrival - f.scheduled_departure)) AS stddev_duration\nFROM postgres_air.flight AS f\nJOIN postgres_air.aircraft AS a\n  ON f.aircraft_code = a.code\nGROUP BY a.model\nORDER BY a.model;"
+}

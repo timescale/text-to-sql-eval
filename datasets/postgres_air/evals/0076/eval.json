@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Which passengers traveled with family members (same last name) on the same flight in June 2024?",
+    "query": "SELECT DISTINCT p1.passenger_id, p1.first_name, p1.last_name, f.flight_no, f.scheduled_departure\nFROM postgres_air.passenger p1\nJOIN postgres_air.boarding_pass bp1 ON p1.passenger_id = bp1.passenger_id\nJOIN postgres_air.booking_leg bl1 ON bp1.booking_leg_id = bl1.booking_leg_id\nJOIN postgres_air.flight f ON bl1.flight_id = f.flight_id\nJOIN postgres_air.passenger p2 ON p1.last_name = p2.last_name AND p1.passenger_id <> p2.passenger_id\nJOIN postgres_air.boarding_pass bp2 ON p2.passenger_id = bp2.passenger_id\nJOIN postgres_air.booking_leg bl2 ON bp2.booking_leg_id = bl2.booking_leg_id AND bl2.flight_id = f.flight_id\nWHERE f.scheduled_departure >= '2024-06-01' AND f.scheduled_departure < '2024-07-01';"
+}

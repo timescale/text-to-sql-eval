@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Which routes have the highest proportion of business travelers (indicated by work phone numbers) in August 2024?",
+    "query": "WITH work_phones AS (\n  SELECT account_id,\n         bool_or(phone_type = 'work') AS is_work\n  FROM postgres_air.phone\n  GROUP BY account_id\n)\nSELECT f.departure_airport,\n       f.arrival_airport,\n       COUNT(CASE WHEN wp.is_work THEN 1 END)::float / COUNT(*) AS business_proportion\nFROM postgres_air.booking AS b\nJOIN postgres_air.booking_leg AS bl ON b.booking_id = bl.booking_id\nJOIN postgres_air.flight AS f ON bl.flight_id = f.flight_id\nLEFT JOIN work_phones AS wp ON b.account_id = wp.account_id\nWHERE f.scheduled_departure >= '2024-08-01'::timestamp\n  AND f.scheduled_departure < '2024-09-01'::timestamp\nGROUP BY f.departure_airport, f.arrival_airport\nORDER BY business_proportion DESC;"
+}

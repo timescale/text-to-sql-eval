@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What is the average delay time for flights to Tokyo compared to flights to New York?",
+    "query": "SELECT a.city,\n       AVG(EXTRACT(EPOCH FROM (f.actual_arrival - f.scheduled_arrival)))/60 AS avg_delay_minutes\nFROM postgres_air.flight f\nJOIN postgres_air.airport a ON f.arrival_airport = a.airport_code\nWHERE a.city IN ('TOKYO', 'NEW YORK')\n  AND f.actual_arrival IS NOT NULL\nGROUP BY a.city;"
+}

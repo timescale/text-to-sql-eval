@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Which flights had the highest percentage of passengers with precheck status in March 2024?",
+    "query": "WITH flight_precheck AS (\n  SELECT f.flight_id,\n         f.flight_no,\n         COUNT(*) AS total_passengers,\n         COUNT(*) FILTER (WHERE bp.precheck = TRUE) AS precheck_count,\n         COUNT(*) FILTER (WHERE bp.precheck = TRUE) * 100.0 / COUNT(*) AS precheck_percentage\n  FROM postgres_air.flight f\n  JOIN postgres_air.booking_leg bl ON f.flight_id = bl.flight_id\n  JOIN postgres_air.boarding_pass bp ON bl.booking_leg_id = bp.booking_leg_id\n  WHERE f.scheduled_departure >= '2024-03-01' AND f.scheduled_departure < '2024-04-01'\n  GROUP BY f.flight_id, f.flight_no\n)\nSELECT flight_id, flight_no, precheck_percentage\nFROM flight_precheck\nWHERE precheck_percentage = (SELECT MAX(precheck_percentage) FROM flight_precheck)\nORDER BY flight_id;"
+}

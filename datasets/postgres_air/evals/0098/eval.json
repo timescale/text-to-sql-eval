@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Which passengers have the longest average flight time in the first half of 2024?",
+    "query": "WITH avg_durations AS (\n    SELECT bp.passenger_id,\n           AVG(f.scheduled_arrival - f.scheduled_departure) AS avg_flight_time\n    FROM postgres_air.boarding_pass bp\n    JOIN postgres_air.booking_leg bl ON bp.booking_leg_id = bl.booking_leg_id\n    JOIN postgres_air.flight f ON bl.flight_id = f.flight_id\n    WHERE f.scheduled_departure >= '2024-01-01'::timestamptz\n      AND f.scheduled_departure < '2024-07-01'::timestamptz\n    GROUP BY bp.passenger_id\n)\nSELECT passenger_id, avg_flight_time\nFROM avg_durations\nWHERE avg_flight_time = (SELECT MAX(avg_flight_time) FROM avg_durations);"
+}

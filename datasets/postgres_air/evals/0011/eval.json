@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What is the average age of passengers who traveled in August 2024?",
+    "query": "SELECT AVG(p.age) AS average_age\nFROM postgres_air.passenger p\nJOIN postgres_air.boarding_pass bp ON p.passenger_id = bp.passenger_id\nWHERE bp.boarding_time >= '2024-08-01' AND bp.boarding_time < '2024-09-01'\n  AND p.age IS NOT NULL;"
+}

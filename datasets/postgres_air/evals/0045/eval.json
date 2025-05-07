@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What is the average number of days between booking and flight departure for international flights?",
+    "query": "SELECT AVG(EXTRACT(epoch FROM (f.scheduled_departure - b.update_ts)) / 86400) AS average_days\nFROM postgres_air.booking AS b\nJOIN postgres_air.booking_leg AS bl ON b.booking_id = bl.booking_id\nJOIN postgres_air.flight AS f ON bl.flight_id = f.flight_id\nJOIN postgres_air.airport AS da ON f.departure_airport = da.airport_code\nJOIN postgres_air.airport AS aa ON f.arrival_airport = aa.airport_code\nWHERE da.iso_country <> aa.iso_country;"
+}

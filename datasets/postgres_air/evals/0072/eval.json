@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What's the most popular seat position (window, middle, aisle) chosen by passengers on long-haul flights?",
+    "query": "WITH long_haul AS (\n  SELECT f.flight_id, f.scheduled_departure, f.scheduled_arrival\n  FROM postgres_air.flight f\n  WHERE f.scheduled_arrival - f.scheduled_departure >= interval '6 hours'\n)\nSELECT seat_position, count(*) AS cnt\nFROM (\n  SELECT bp.pass_id,\n         CASE \n           WHEN seat_letter IN ('A', 'J') THEN 'window'\n           WHEN seat_letter IN ('C', 'D', 'H', 'I') THEN 'aisle'\n           ELSE 'middle'\n         END AS seat_position\n  FROM postgres_air.boarding_pass bp\n  JOIN postgres_air.booking_leg bl ON bp.booking_leg_id = bl.booking_leg_id\n  JOIN long_haul lh ON bl.flight_id = lh.flight_id,\n       LATERAL (SELECT substring(bp.seat from '[A-Z]+$') AS seat_letter) s\n) sub\nGROUP BY seat_position\nORDER BY cnt DESC\nLIMIT 1;"
+}

@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What is the most profitable route based on average booking price in 2024?",
+    "query": "SELECT f.departure_airport || '-' || f.arrival_airport AS route,\n       AVG(b.price) AS avg_price\nFROM postgres_air.booking b\nJOIN postgres_air.booking_leg bl ON b.booking_id = bl.booking_id\nJOIN postgres_air.flight f ON bl.flight_id = f.flight_id\nWHERE b.price IS NOT NULL\n  AND f.scheduled_departure >= '2024-01-01'\n  AND f.scheduled_departure < '2025-01-01'\nGROUP BY f.departure_airport, f.arrival_airport\nORDER BY avg_price DESC\nLIMIT 1;"
+}

@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "How many flights have an actual arrival time earlier than the scheduled arrival time?",
+    "query": "SELECT COUNT(*)\nFROM postgres_air.flight\nWHERE actual_arrival IS NOT NULL\n  AND actual_arrival < scheduled_arrival;"
+}

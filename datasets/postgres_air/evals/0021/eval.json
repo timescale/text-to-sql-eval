@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What is the average delay time in minutes for flights departing from LAX airport in July 2024?",
+    "query": "SELECT AVG(EXTRACT(EPOCH FROM (actual_departure - scheduled_departure)) / 60) AS average_delay_minutes\nFROM postgres_air.flight\nWHERE departure_airport = 'LAX'\n  AND scheduled_departure >= '2024-07-01'::timestamp\n  AND scheduled_departure < '2024-08-01'::timestamp\n  AND actual_departure IS NOT NULL;"
+}

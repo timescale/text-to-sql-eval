@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Find the busiest time of day for departures from each major international airport.",
+    "query": "WITH departure_counts AS (\n    SELECT departure_airport,\n           date_part('hour', scheduled_departure) AS departure_hour,\n           count(*) AS flight_count\n    FROM postgres_air.flight\n    GROUP BY departure_airport, departure_hour\n),\nranked_departures AS (\n    SELECT departure_airport, departure_hour, flight_count,\n           RANK() OVER (PARTITION BY departure_airport ORDER BY flight_count DESC) AS rnk\n    FROM departure_counts\n)\nSELECT a.airport_code, a.airport_name, r.departure_hour, r.flight_count\nFROM ranked_departures r\nJOIN postgres_air.airport a ON r.departure_airport = a.airport_code\nWHERE a.intnl = true\n  AND r.rnk = 1\nORDER BY a.airport_code;"
+}

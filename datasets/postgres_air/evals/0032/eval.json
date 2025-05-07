@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Which aircraft model was most frequently used for transatlantic flights in 2024?",
+    "query": "SELECT a.model, COUNT(*) AS flight_count\nFROM postgres_air.flight f\nJOIN postgres_air.aircraft a ON f.aircraft_code = a.code\nJOIN postgres_air.airport dep ON f.departure_airport = dep.airport_code\nJOIN postgres_air.airport arr ON f.arrival_airport = arr.airport_code\nWHERE f.scheduled_departure >= '2024-01-01'\n  AND f.scheduled_departure < '2025-01-01'\n  AND ((dep.continent IN ('NA', 'SA') AND arr.continent IN ('EU', 'AF')) OR\n      (dep.continent IN ('EU', 'AF') AND arr.continent IN ('NA', 'SA')))\nGROUP BY a.model\nORDER BY flight_count DESC\nLIMIT 1;"
+}

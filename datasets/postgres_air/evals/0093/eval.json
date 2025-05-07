@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Which passengers have experienced the most flight delays in 2024?",
+    "query": "SELECT p.passenger_id, COUNT(*) AS delay_count\nFROM postgres_air.boarding_pass bp\nJOIN postgres_air.booking_leg bl ON bp.booking_leg_id = bl.booking_leg_id\nJOIN postgres_air.flight f ON bl.flight_id = f.flight_id\nJOIN postgres_air.passenger p ON bp.passenger_id = p.passenger_id\nWHERE f.status = 'Delayed'\n  AND EXTRACT(YEAR FROM f.scheduled_departure) = 2024\nGROUP BY p.passenger_id\nORDER BY delay_count DESC;"
+}

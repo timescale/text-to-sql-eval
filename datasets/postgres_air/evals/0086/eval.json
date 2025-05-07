@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What is the average daily revenue from bookings in May 2024?",
+    "query": "WITH days AS (\n  SELECT generate_series('2024-05-01'::date, '2024-05-31'::date, interval '1 day') AS day\n),\n daily_revenue AS (\n  SELECT d.day, COALESCE(SUM(b.price),0) AS revenue\n  FROM days d\n  LEFT JOIN postgres_air.booking b ON date(b.update_ts) = d.day\n  GROUP BY d.day\n)\nSELECT ROUND(AVG(revenue), 2) AS average_daily_revenue\nFROM daily_revenue;\n"
+}

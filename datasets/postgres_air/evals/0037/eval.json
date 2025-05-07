@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Which continents have the most international airports?",
+    "query": "SELECT continent, COUNT(*) AS international_airport_count\nFROM postgres_air.airport\nWHERE intnl\nGROUP BY continent\nORDER BY international_airport_count DESC;"
+}

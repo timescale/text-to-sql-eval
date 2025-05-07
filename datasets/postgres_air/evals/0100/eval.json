@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What is the average age of all passengers who have booked flights with Postgres Air?",
+    "query": "SELECT AVG(age) AS average_age\nFROM postgres_air.passenger\nWHERE age IS NOT NULL;"
+}

@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "How many Boeing aircraft are in the fleet?",
+    "query": "SELECT COUNT(*) AS boeing_count\nFROM postgres_air.aircraft\nWHERE model LIKE 'Boeing%';"
+}

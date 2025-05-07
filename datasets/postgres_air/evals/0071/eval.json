@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What is the total flight distance traveled by each aircraft in the fleet during 2024?",
+    "query": "SELECT f.aircraft_code,\n       SUM((EXTRACT(EPOCH FROM (COALESCE(f.actual_arrival, f.scheduled_arrival) - COALESCE(f.actual_departure, f.scheduled_departure)))/3600) * a.velocity) AS total_distance_traveled\nFROM postgres_air.flight f\nJOIN postgres_air.aircraft a ON f.aircraft_code = a.code\nWHERE f.scheduled_departure >= '2024-01-01'\n  AND f.scheduled_departure < '2025-01-01'\nGROUP BY f.aircraft_code;"
+}

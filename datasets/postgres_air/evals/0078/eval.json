@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Which frequent flyers have the same first name but different last names?",
+    "query": "SELECT DISTINCT ff1.frequent_flyer_id, ff1.first_name, ff1.last_name, ff1.card_num, ff1.level, ff1.award_points, ff1.email, ff1.phone, ff1.update_ts\nFROM postgres_air.frequent_flyer ff1\nJOIN postgres_air.frequent_flyer ff2 ON ff1.first_name = ff2.first_name AND ff1.last_name <> ff2.last_name\nORDER BY ff1.first_name, ff1.last_name;"
+}

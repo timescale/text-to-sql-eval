@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Which airports have the highest number of delayed departures in the first quarter of 2024?",
+    "query": "SELECT departure_airport, COUNT(*) AS delayed_departure_count\nFROM postgres_air.flight\nWHERE status = 'Delayed'\n  AND scheduled_departure >= '2024-01-01'\n  AND scheduled_departure < '2024-04-01'\nGROUP BY departure_airport\nORDER BY delayed_departure_count DESC;"
+}

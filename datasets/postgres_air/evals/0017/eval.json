@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "What is the most common aircraft model used by Postgres Air?",
+    "query": "SELECT a.model, COUNT(*) AS flight_count\nFROM postgres_air.flight f\nJOIN postgres_air.aircraft a ON f.aircraft_code = a.code\nGROUP BY a.model\nORDER BY flight_count DESC\nLIMIT 1;"
+}

@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Which passengers have made bookings but never actually flown?",
+    "query": "SELECT passenger_id, first_name, last_name\nFROM postgres_air.passenger\nWHERE NOT EXISTS (\n    SELECT 1\n    FROM postgres_air.boarding_pass\n    WHERE boarding_pass.passenger_id = passenger.passenger_id\n);"
+}

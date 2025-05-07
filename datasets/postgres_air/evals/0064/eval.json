@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "Who are the top 10 frequent flyers who flew in Q2 2024 that have the most award points?",
+    "query": "\nSELECT DISTINCT ff.frequent_flyer_id, ff.last_name, ff.first_name, ff.award_points\nFROM postgres_air.frequent_flyer ff\nINNER JOIN postgres_air.account a ON (ff.frequent_flyer_id = a.frequent_flyer_id)\nINNER JOIN postgres_air.passenger p ON (a.account_id = p.account_id AND ff.last_name = p.last_name AND ff.first_name = p.first_name)\nINNER JOIN postgres_air.boarding_pass bp ON (p.passenger_id = bp.passenger_id)\nWHERE bp.boarding_time >= '2024-04-01' AND bp.boarding_time < '2024-07-01'\nORDER BY ff.award_points DESC\nLIMIT 10;\n"
+}

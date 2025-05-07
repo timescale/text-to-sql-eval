@@ -1,0 +1,5 @@
+{
+    "database": "postgres_air",
+    "question": "How many flights were canceled due to maintenance issues in the first quarter of 2024?",
+    "query": "SELECT COUNT(*)\nFROM postgres_air.flight\nWHERE scheduled_departure >= '2024-01-01' \n  AND scheduled_departure < '2024-04-01'\n  AND status ILIKE '%canceled%'\n  AND status ILIKE '%maintenance%';"
+}
