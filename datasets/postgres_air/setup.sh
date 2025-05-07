@@ -11,5 +11,5 @@ curl -o /tmp/postgres_air_2024.sql.zip https://popsql-misc.s3.us-east-1.amazonaw
 unzip -d "${SCRIPT_DIR}/databases" /tmp/postgres_air_2024.sql.zip
 mv "${SCRIPT_DIR}/databases/postgres_air_2024.sql" "${SCRIPT_DIR}/databases/postgres_air.sql"
 
-pushd "$SCRIPT_DIR/../.." || exit 1
-uv run python3 scripts/strip_postgres_dump.py "${SCRIPT_DIR}/databases/postgres_air.sql"
+# pushd "$SCRIPT_DIR/../.." || exit 1
+# uv run python3 scripts/strip_postgres_dump.py "${SCRIPT_DIR}/databases/postgres_air.sql"
