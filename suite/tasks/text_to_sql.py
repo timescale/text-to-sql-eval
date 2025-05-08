@@ -1,4 +1,5 @@
 import os
+import time
 
 import polars as pl
 import psycopg
@@ -25,7 +26,9 @@ def compare(actual: pl.DataFrame, expected: pl.DataFrame) -> bool:
                 column_mappings[a_col] = e_col
                 break
 
-    actual_adjusted = actual.select(list(column_mappings.keys())).rename(column_mappings)
+    actual_adjusted = actual.select(list(column_mappings.keys())).rename(
+        column_mappings
+    )
     try:
         assert_frame_equal(
             actual_adjusted, expected, check_column_order=False, check_row_order=False
@@ -56,18 +59,23 @@ async def run(
     if gold_tables:
         parser = Parser(gold_query)
         gold_tables_list = [table.lower() for table in parser.tables]
+    start = time.time()
     try:
         result = await agent_fn(
             conn, inp, provider, model, entire_schema, gold_tables_list
         )
     except Exception as e:
         raise AgentFnError(e) from e
+    duration = round(time.time() - start, 3)
     with open(f"{path}/actual_messages.txt", "w") as fp:
         for i in range(len(result["messages"])):
             if i > 0:
                 fp.write("\n")
             message = result["messages"][i]
-            fp.write(f"{message['role']}:\n{message['content']}")
+            if type(message) == str:
+                fp.write(f"{message}")
+            else:
+                fp.write(f"{message['role']}:\n{message['content']}")
     if "error" in result and result["error"] is not None:
         raise (
             result["error"]
@@ -88,6 +96,8 @@ async def run(
     details = {
         "generated_query": query,
         "expected_query": gold_query,
+        "duration": duration,
+        "usage": result["usage"],
     }
     if gold_tables:
         details["gold_tables"] = gold_tables_list

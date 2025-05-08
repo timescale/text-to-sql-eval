@@ -43,7 +43,7 @@ def get_default_model(provider: str) -> str:
     models = {
         "anthropic": "claude-3-5-haiku-latest",
         "ollama": "smollm:135m",
-        "openai": "gpt-4o-mini",
+        "openai": "gpt-4.1-mini",
     }
     if provider not in models:
         raise ValueError(f"Invalid provider: {provider}")

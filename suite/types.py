@@ -9,7 +9,8 @@ class PromptMessage(TypedDict):
 
 
 class TextToSql(TypedDict):
-    messages: list[PromptMessage]
+    # TODO: improve typing and structure for pgai messages
+    messages: list[PromptMessage | str]
     query: str
 
 

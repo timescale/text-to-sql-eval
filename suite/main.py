@@ -130,6 +130,7 @@ def load(
                 root_db.execute(f"CREATE DATABASE {db_name}")
 
             db_url = get_psycopg_str(db_name)
+
             def load_sql_file(sql_file: Path) -> None:
                 subprocess.run(["psql", "-q", db_url, "-f", str(sql_file)], check=True)
 
@@ -357,12 +358,13 @@ def eval(
                                 "exception_traceback": format_exc(),
                             },
                         }
-                    duration = time.time() - start
+                    duration = round(time.time() - start, 3)
                 result["dataset"] = dataset
                 result["database"] = inp["database"]
                 result["name"] = eval_path.name
                 result["question"] = inp["question"]
-                result["duration"] = duration
+                if "duration" not in result:
+                    result["duration"] = duration
                 result["details"]["question"] = inp["question"]
                 to_print = f"    {result['status'].upper()}"
                 print(to_print, end="")

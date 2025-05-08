@@ -8,8 +8,6 @@ from psycopg.sql import Identifier, SQL
 from ..types import Provider, TextToSql
 from ..utils import get_db_url_from_connection
 
-BASE_DB = "postgres://postgres@localhost:5555"
-
 
 async def setup(
     conn: psycopg.Connection,
@@ -88,7 +86,6 @@ async def text_to_sql(
         await psycopg.AsyncConnection.connect(db_url) as target_con,
         await psycopg.AsyncConnection.connect(catalog_url) as catalog_con,
     ):
-        # get a handle to our "default" semantic catalog
         catalog = await sc.from_name(catalog_con, "default")
         # generate sql
         response = await catalog.generate_sql(
@@ -97,8 +94,16 @@ async def text_to_sql(
             f"{provider}:{model}",
             inp,
         )
+
     return {
         "error": None,
-        "messages": [],  # response.messages,
+        "messages": [str(x) for x in response.messages],
         "query": response.sql_statement,
+        "usage": {
+            "cached_tokens": response.usage.details["cached_tokens"] or 0
+            if response.usage.details is not None
+            else 0,
+            "request_tokens": response.usage.request_tokens or 0,
+            "response_tokens": response.usage.response_tokens or 0,
+        },
     }
