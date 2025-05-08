@@ -309,14 +309,17 @@ def eval(
             failed_evals[dataset] = []
             failed_error_counts[dataset] = {}
             eval_results[dataset] = []
+            total_duration = 0
+            usage = {
+                "cached_tokens": 0,
+                "request_tokens": 0,
+                "response_tokens": 0,
+            }
             passing = 0
             total = 0
             print(f"Evaluating {dataset}...")
             evals_path = datasets_dir / dataset / "evals"
             eval_paths = sorted(list(evals_path.iterdir()))
-
-            def run_eval(eval_path: Path, dataset: str, inp: dict):
-                nonlocal errored_evals, eval_results, failed_evals, passing, total
 
             for eval_path in eval_paths:
                 if eval is not None and eval_path.name != eval:
@@ -366,6 +369,17 @@ def eval(
                 if "duration" not in result:
                     result["duration"] = duration
                 result["details"]["question"] = inp["question"]
+                total_duration += result["duration"]
+                if "usage" in result["details"]:
+                    usage["cached_tokens"] += result["details"]["usage"][
+                        "cached_tokens"
+                    ]
+                    usage["request_tokens"] += result["details"]["usage"][
+                        "request_tokens"
+                    ]
+                    usage["response_tokens"] += result["details"]["usage"][
+                        "response_tokens"
+                    ]
                 to_print = f"    {result['status'].upper()}"
                 print(to_print, end="")
                 if result["status"] == "error":
@@ -401,6 +415,8 @@ def eval(
             results["results"][dataset] = {
                 "passing": passing,
                 "total": total,
+                "total_duration": round(total_duration, 3),
+                "usage": usage,
                 "failed": failed_evals[dataset],
                 "failed_error_counts": failed_error_counts[dataset],
                 "errored": errored_evals[dataset],
@@ -441,6 +457,12 @@ def generate_report():
                 combined_results[dataset] = {
                     "passing": 0,
                     "total": 0,
+                    "total_duration": 0,
+                    "usage": {
+                        "cached_tokens": 0,
+                        "request_tokens": 0,
+                        "response_tokens": 0,
+                    },
                     "failed": [],
                     "failed_error_counts": {},
                     "errored": [],
@@ -449,6 +471,17 @@ def generate_report():
             combined_results[dataset]["passing"] += result["passing"]
             combined_results[dataset]["total"] += result["total"]
             combined_results[dataset]["failed"] += result["failed"]
+            combined_results[dataset]["total_duration"] += result["total_duration"]
+            if "usage" in result:
+                combined_results[dataset]["usage"]["cached_tokens"] += result["usage"][
+                    "cached_tokens"
+                ]
+                combined_results[dataset]["usage"]["request_tokens"] += result["usage"][
+                    "request_tokens"
+                ]
+                combined_results[dataset]["usage"]["response_tokens"] += result[
+                    "usage"
+                ]["response_tokens"]
             for error, count in result["failed_error_counts"].items():
                 if error not in combined_results[dataset]["failed_error_counts"]:
                     combined_results[dataset]["failed_error_counts"][error] = 0
@@ -462,6 +495,11 @@ def generate_report():
         passing += results["passing"]
         total += results["total"]
     print(f"Overall: {passing}/{total} ({round(passing/total, 2)})")
+    print(f"  Total duration: {round(sum([x['total_duration'] for x in combined_results.values()]), 3)}")
+    print(f"  Usage:")
+    print(f"    Request tokens: {round(sum([x['usage']['request_tokens'] for x in combined_results.values()]), 3)}")
+    print(f"    Cached tokens: {round(sum([x['usage']['cached_tokens'] for x in combined_results.values()]), 3)}")
+    print(f"    Response tokens: {round(sum([x['usage']['response_tokens'] for x in combined_results.values()]), 3)}")
     print()
 
     i = 0
@@ -472,6 +510,11 @@ def generate_report():
         print(
             f"{dataset}: {results['passing']}/{results['total']} ({round(results['passing']/results['total'], 2)})"
         )
+        print(f"  Total duration: {round(results['total_duration'], 3)}")
+        print(f"  Usage:")
+        print(f"    Request tokens: {round(results['usage']['request_tokens'], 3)}")
+        print(f"    Cached tokens: {round(results['usage']['cached_tokens'], 3)}")
+        print(f"    Response tokens: {round(results['usage']['response_tokens'], 3)}")
         if len(results["failed"]) > 0:
             print("  Failed error type counts:")
             for error in sorted(results["failed_error_counts"].keys()):
@@ -483,7 +526,7 @@ def generate_report():
         i += 1
 
     # save results if REPORT_POSTGRES_DSN is set
-    if len(os.environ.get("REPORT_POSTGRES_DSN", "")) > 0:
+    if os.environ.get("REPORT_POSTGRES_DSN", ""):
         print("Saving results to database...", end="")
         try:
             with psycopg.connect(os.environ["REPORT_POSTGRES_DSN"]) as conn:
