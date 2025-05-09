@@ -16,24 +16,15 @@ You will need to run a DB to run the eval suite. You can get a simple PG instanc
 in Docker by doing:
 
 ```bash
-docker run -it --name postgres -p 5432:5432 -v t2s_data:/var/lib/postgresql/data postgres:17
+docker run -d --name text-to-sql-eval \
+    -p 127.0.0.1:5555:5432 \
+    -e POSTGRES_HOST_AUTH_METHOD=trust \
+    timescale/timescaledb-ha:pg17
 ```
 
-Though it's suggested to run a DB with `pgai` available, e.g. such as via
-[these instructions](https://github.com/timescale/pgai/blob/main/docs/install_docker.md) for
-Docker. You will want to edit the `.env` file with connection details for your DB.
+You will want to edit the `.env` file with connection details for your DB.
 
 ## Running the suite
-
-### Locally
-
-First, you should do:
-
-```bash
-cp .env.sample .env
-```
-
-and then configure your API keys and other values as necessary.
 
 ```text
 $ uv run python3 -m suite --help
@@ -57,16 +48,11 @@ Commands:
 
 All commands have various options/arguments to configure behavior, use `--help` to see more info.
 
-### Via GH Actions
-
-The suite is setup to be runnable via GH actions via a workflow dispatch. To do so, go to the
-[Run Eval Suite](https://github.com/timescale/text-to-sql-eval/actions/workflows/run.yml) action,
-and use the "Run workflow" to configure various settings and trigger the suite. Each dataset and
-database tuple are split into their own job in the action, and the results are aggregated via the
-`report_results` job that runs at the end, where can view accuracy. Results are also saved to a
-database in Timescale Cloud.
-
 ## Viewing Results
+
+After a run is complete, there is a `results/results.json` file that is generated that has the
+run details. You can use the `generate-report` CLI command to have it be pretty printed out
+to the console.
 
 If the `REPORT_POSTGRES_DSN` value is set, then runs of `eval` are recorded to that database and
 are viewable there, or via the eval site. To run the eval site, do:
@@ -77,6 +63,15 @@ uv run flask --app suite.eval_site run
 
 To setup the eval site database, you must run `python3 scripts/setup_db.py` to create the necessary
 tables.
+
+## Using GH Actions
+
+The suite is setup to be runnable via GH actions via a workflow dispatch. To do so, go to the
+[Run Eval Suite](https://github.com/timescale/text-to-sql-eval/actions/workflows/run.yml) action,
+and use the "Run workflow" to configure various settings and trigger the suite. Each dataset and
+database tuple are split into their own job in the action, and the results are aggregated via the
+`report_results` job that runs at the end, where can view accuracy. Results are also saved to a
+database in Timescale Cloud.
 
 ## Repository Structure
 
