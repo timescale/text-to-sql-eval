@@ -69,19 +69,48 @@ async def text_to_sql(
     inp: str,
     provider: Provider,
     model: str,
-    *args,
+    entire_schema: bool,
+    gold_tables: list[str],
 ) -> TextToSql:
     db_url = get_db_url_from_connection(con)
     async with (
         await psycopg.AsyncConnection.connect(db_url) as target_con,
     ):
-        catalog = await sc.from_name(catalog_con, "default")
-        # generate sql
+        catalog = await sc.from_name(target_con, "default")
+        context_mode = "semantic_search"
+        obj_ids = None
+        sql_ids = None
+        fact_ids = None
+        if entire_schema:
+            context_mode = "entire_catalog"
+        elif len(gold_tables) > 0:
+            context_mode = "specific_ids"
+            sql_ids = [x.id for x in await catalog.list_sql_examples(target_con)]
+            fact_ids = [x.id for x in await catalog.list_facts(target_con)]
+            async with target_con.cursor() as cur:
+                await cur.execute(
+                    SQL("""
+                        SELECT id
+                        FROM ai.{table}
+                        WHERE objtype = 'table'
+                        AND objnames[1] = %s
+                        AND objnames[2] = ANY(%s);
+                    """).format(
+                        table=Identifier(f"semantic_catalog_obj_{catalog.id}"),
+                    ),
+                    ("public", gold_tables),
+                )
+                obj_ids = [x[0] for x in await cur.fetchall()]
+
         response = await catalog.generate_sql(
             target_con,
             target_con,
             f"{provider}:{model}",
             inp,
+            context_mode=context_mode,
+            obj_ids=obj_ids,
+            sql_ids=sql_ids,
+            fact_ids=fact_ids,
         )
 
     return {
