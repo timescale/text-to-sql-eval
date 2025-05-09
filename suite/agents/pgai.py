@@ -20,17 +20,9 @@ async def setup(
     from pgai.semantic_catalog import create
     from pgai.semantic_catalog.vectorizer import embedding_config_from_dict
 
-    semantic_catalog_dbname = f"{conn.info.dbname}_semantic_catalog"
     db_url = get_db_url_from_connection(conn)
-    semantic_db_url = get_db_url_from_connection(conn, semantic_catalog_dbname)
 
-    autocommit = conn.autocommit
-    conn.autocommit = True
-    conn.execute(f"DROP DATABASE IF EXISTS {conn.info.dbname}_semantic_catalog")
-    conn.execute(f"CREATE DATABASE {conn.info.dbname}_semantic_catalog")
-    conn.autocommit = autocommit
-
-    pgai.install(semantic_db_url, strict=False)
+    pgai.install(db_url, strict=False)
 
     api_key = None
     base_url = None
@@ -66,11 +58,10 @@ async def setup(
 
     async with (
         await psycopg.AsyncConnection.connect(db_url) as tcon,
-        await psycopg.AsyncConnection.connect(semantic_db_url) as ccon,
     ):
-        sc = await create(ccon, "default", embedding_name=None, embedding_config=config)
+        sc = await create(tcon, "default", embedding_name=None, embedding_config=config)
         with yaml_file.open("r") as f:
-            await sc.import_catalog(ccon, tcon, f, None)
+            await sc.import_catalog(tcon, tcon, f, None)
 
 
 async def text_to_sql(
@@ -81,15 +72,13 @@ async def text_to_sql(
     *args,
 ) -> TextToSql:
     db_url = get_db_url_from_connection(con)
-    catalog_url = get_db_url_from_connection(con, f"{con.info.dbname}_semantic_catalog")
     async with (
         await psycopg.AsyncConnection.connect(db_url) as target_con,
-        await psycopg.AsyncConnection.connect(catalog_url) as catalog_con,
     ):
         catalog = await sc.from_name(catalog_con, "default")
         # generate sql
         response = await catalog.generate_sql(
-            catalog_con,
+            target_con,
             target_con,
             f"{provider}:{model}",
             inp,
