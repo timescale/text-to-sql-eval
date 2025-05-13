@@ -72,7 +72,7 @@ async def run(
             if i > 0:
                 fp.write("\n")
             message = result["messages"][i]
-            if type(message) == str:
+            if isinstance(message, str):
                 fp.write(f"{message}")
             else:
                 fp.write(f"{message['role']}:\n{message['content']}")

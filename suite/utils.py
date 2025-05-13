@@ -2,7 +2,7 @@ import os
 from typing import Optional
 
 from dotenv import load_dotenv
-from psycopg import Connection, Cursor
+from psycopg import Connection
 
 load_dotenv()
 
@@ -18,57 +18,65 @@ def get_psycopg_str(dbname: str = "postgres") -> str:
     return f"{os.environ['POSTGRES_DSN']}/{dbname}"
 
 
-def validate_embedding_provider(provider: str) -> bool:
-    if provider not in ["ollama", "openai"]:
-        raise ValueError(f"Invalid provider: {provider}")
+OPENAI_EMBEDDING_MODELS = [
+    "text-embedding-ada-002",
+    "text-embedding-3-large",
+    "text-embedding-3-small",
+]
+
+OLLAMA_EMBEDDING_MODELS = [
+    "smollm",
+    "smollm:135m",
+    "smollm:360m",
+    "smollm:1.7b",
+    "smollm2",
+    "smollm2:135m",
+    "smollm2:360m",
+    "smollm2:1.7b",
+]
 
 
-def get_default_embedding_model(provider: str) -> str:
-    models = {
-        "ollama": "smollm:135m",
-        "openai": "text-embedding-3-small",
-        "sentence_transformers": "nomic-ai/nomic-embed-text-v1.5",
-    }
-    if provider not in models:
-        raise ValueError(f"Invalid provider: {provider}")
-    return models[provider]
+def expand_embedding_model(model: str) -> str:
+    if model in OLLAMA_EMBEDDING_MODELS:
+        model = f"ollama:{model}"
+    elif model in OPENAI_EMBEDDING_MODELS:
+        model = f"openai:{model}"
+    elif model.startswith("nomic-ai/"):
+        model = f"sentence_transformers:{model}"
+    return model
 
 
-def validate_provider(provider: str) -> bool:
-    if provider not in ["anthropic", "ollama", "openai"]:
-        raise ValueError(f"Invalid provider: {provider}")
+ANTHROPIC_TASK_MODELS = [
+    "claude-3-7-sonnet",
+    "claude-3-7-sonnet-latest",
+    "claude-3-5-haiku",
+    "claude-3-5-haiku-latest",
+    "claude-3-5-sonnet",
+    "claude-3-5-sonnet-latest",
+    "claude-3-opus-latest",
+]
+
+MISTRAL_TASK_MODELS = [
+    "codestral-latest",
+    "mistral-large-latest",
+    "mistral-moderation-latest",
+    "mistral-small-latest",
+]
+
+OPENAI_TASK_MODELS = [
+    "gpt-4.1",
+    "gpt-4.1-mini",
+    "gpt-4.1-nano",
+    "o3",
+    "o3-mini" "o4-mini",
+]
 
 
-def get_default_model(provider: str) -> str:
-    models = {
-        "anthropic": "claude-3-5-haiku-latest",
-        "ollama": "smollm:135m",
-        "openai": "gpt-4.1-mini",
-    }
-    if provider not in models:
-        raise ValueError(f"Invalid provider: {provider}")
-    return models[provider]
-
-
-def setup_pgai_config(cur: Cursor) -> None:
-    cur.execute(
-        "select set_config('ai.enable_feature_flag_text_to_sql', 'true', false)"
-    )
-    value = os.environ.get("ANTHROPIC_API_KEY", None)
-    if value is not None:
-        cur.execute(
-            "select set_config('ai.anthropic_api_key', %s, false) is not null",
-            (value,),
-        )
-    value = os.environ.get("OLLAMA_HOST", None)
-    if value is not None:
-        cur.execute(
-            "select set_config('ai.ollama_host', %s, false) is not null",
-            (value,),
-        )
-    value = os.environ.get("OPENAI_API_KEY", None)
-    if value is not None:
-        cur.execute(
-            "select set_config('ai.openai_api_key', %s, false) is not null",
-            (value,),
-        )
+def expand_task_model(model: str) -> str:
+    if model in ANTHROPIC_TASK_MODELS:
+        model = f"anthropic:{model}"
+    elif model in MISTRAL_TASK_MODELS:
+        model = f"mistral:{model}"
+    elif model in OPENAI_TASK_MODELS:
+        model = f"openai:{model}"
+    return model

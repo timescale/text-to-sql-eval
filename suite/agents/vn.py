@@ -57,6 +57,8 @@ def get_vanna_client(
                 "model": model,
             }
         )
+    else:
+        raise ValueError(f"Invalid provider: {provider}")
     vn.connect_to_postgres(
         host=conn.info.host,
         port=conn.info.port,

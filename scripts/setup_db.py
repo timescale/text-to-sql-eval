@@ -19,7 +19,6 @@ with psycopg.connect(os.environ["REPORT_POSTGRES_DSN"]) as conn:
                 task TEXT NOT NULL,
                 scores JSON,
                 details JSON
-                -- pgai_version TEXT NOT NULL
             )
         """)
 

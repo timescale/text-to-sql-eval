@@ -1,9 +1,9 @@
 import asyncio
 import json
 import os
+import subprocess
 import time
 from pathlib import Path
-import subprocess
 from traceback import format_exc
 from typing import Dict, Optional
 
@@ -19,11 +19,9 @@ from .tasks.get_tables import run as get_tables
 from .tasks.text_to_sql import run as text_to_sql
 from .types import Results
 from .utils import (
-    get_default_embedding_model,
-    get_default_model,
+    expand_embedding_model,
+    expand_task_model,
     get_psycopg_str,
-    validate_embedding_provider,
-    validate_provider,
 )
 
 load_dotenv()
@@ -36,22 +34,6 @@ results_dir = root_directory / "results"
 @click.group()
 def cli():
     pass
-
-
-@cli.command()
-@click.argument("stage")
-@click.argument("provider")
-@click.argument("model", required=False)
-def get_model(stage: str, provider: str, model: Optional[str]) -> None:
-    """
-    Given a provider, returns the default model for it if no model was provided.
-    """
-    if stage not in ["eval", "load"]:
-        raise ValueError(f"Invalid stage: {stage}")
-    if model is None:
-        fn = get_default_model if stage == "eval" else get_default_embedding_model
-        model = fn(provider)
-    print(model)
 
 
 @cli.command()
@@ -129,22 +111,21 @@ def load(
                 print("      CREATE DATABASE")
                 root_db.execute(f"CREATE DATABASE {db_name}")
 
-            db_url = get_psycopg_str(db_name)
-
-            def load_sql_file(sql_file: Path) -> None:
+            def load_sql_file(db_url, sql_file: Path) -> None:
                 subprocess.run(["psql", "-q", db_url, "-f", str(sql_file)], check=True)
 
-            with psycopg.connect(get_psycopg_str(db_name)) as db:
+            db_url = get_psycopg_str(db_name)
+            with psycopg.connect(db_url) as db:
                 print("      Restoring dump")
                 if ".part" not in entry.name:
-                    load_sql_file(entry)
+                    load_sql_file(db_url, entry)
                 else:
                     i = 0
                     while True:
                         sql_file = entry.parent / f"{name}.part{str(i).zfill(3)}.sql"
                         if not sql_file.exists():
                             break
-                        load_sql_file(sql_file)
+                        load_sql_file(db_url, sql_file)
                         i += 1
                 print("      Loading descriptions")
                 with (datasets_dir / dataset / "databases" / f"{name}.yaml").open(
@@ -175,11 +156,10 @@ def load(
 @cli.command()
 @click.argument("agent")
 @click.option(
-    "--provider",
-    default="openai",
-    help="Provider to use for the embedding [default openai]",
+    "--model",
+    default="openai:text-embedding-3-small",
+    help="Model to use for embedding",
 )
-@click.option("--model", default=None, help="Model to use for embedding")
 @click.option("--dimensions", default=576, help="Number of dimensions for embeddings")
 @click.option(
     "--dataset", default="all", help="Dataset to setup [default all datasets]"
@@ -187,7 +167,6 @@ def load(
 @click.option("--database", default=None, help="Database to setup")
 def setup(
     agent: str,
-    provider: str,
     model: Optional[str],
     dimensions: int,
     dataset: str,
@@ -196,9 +175,10 @@ def setup(
     """
     Setup the agent
     """
-    validate_embedding_provider(provider)
-    if model is None:
-        model = get_default_embedding_model(provider)
+    try:
+        [provider, model] = expand_embedding_model(model).split(":", 1)
+    except ValueError:
+        raise ValueError(f"Invalid model: {model}") from None
     agent_setup_fn = get_agent_setup_fn(agent)
     print(f"Setting up agent {agent}...")
     datasets = sorted(os.listdir(datasets_dir) if dataset == "all" else [dataset])
@@ -236,11 +216,8 @@ def setup(
 @click.argument("agent")
 @click.argument("task")
 @click.option(
-    "--provider",
-    default="anthropic",
-    help="Provider to use for the task [default anthropic]",
+    "--model", default="openai:gpt-4.1-nano", help="Model to use for the task"
 )
-@click.option("--model", default=None, help="Model to use for task")
 @click.option(
     "--dataset", default="all", help="Dataset to evaluate [default eval all datasets]"
 )
@@ -262,8 +239,7 @@ def setup(
 def eval(
     task: str,
     agent: str,
-    provider: str,
-    model: Optional[str],
+    model: str,
     dataset: str,
     database: Optional[str],
     eval: Optional[str],
@@ -277,9 +253,10 @@ def eval(
     The agent can be one of "baseline" or "pgai".
     The task can be one of "get_tables" or "text_to_sql".
     """
-    validate_provider(provider)
-    if model is None:
-        model = get_default_model(provider)
+    try:
+        [provider, model] = expand_task_model(model).split(":", 1)
+    except ValueError:
+        raise ValueError(f"Invalid model: {model}") from None
     if task not in ["get_tables", "text_to_sql"]:
         raise ValueError(f"Invalid task: {task}")
     datasets = sorted(os.listdir(datasets_dir) if dataset == "all" else [dataset])
@@ -495,11 +472,19 @@ def generate_report():
         passing += results["passing"]
         total += results["total"]
     print(f"Overall: {passing}/{total} ({round(passing/total, 2)})")
-    print(f"  Total duration: {round(sum([x['total_duration'] for x in combined_results.values()]), 3)}")
-    print(f"  Usage:")
-    print(f"    Request tokens: {round(sum([x['usage']['request_tokens'] for x in combined_results.values()]), 3)}")
-    print(f"    Cached tokens: {round(sum([x['usage']['cached_tokens'] for x in combined_results.values()]), 3)}")
-    print(f"    Response tokens: {round(sum([x['usage']['response_tokens'] for x in combined_results.values()]), 3)}")
+    print(
+        f"  Total duration: {round(sum([x['total_duration'] for x in combined_results.values()]), 3)}"
+    )
+    print("  Usage:")
+    print(
+        f"    Request tokens: {round(sum([x['usage']['request_tokens'] for x in combined_results.values()]), 3)}"
+    )
+    print(
+        f"    Cached tokens: {round(sum([x['usage']['cached_tokens'] for x in combined_results.values()]), 3)}"
+    )
+    print(
+        f"    Response tokens: {round(sum([x['usage']['response_tokens'] for x in combined_results.values()]), 3)}"
+    )
     print()
 
     i = 0
@@ -511,7 +496,7 @@ def generate_report():
             f"{dataset}: {results['passing']}/{results['total']} ({round(results['passing']/results['total'], 2)})"
         )
         print(f"  Total duration: {round(results['total_duration'], 3)}")
-        print(f"  Usage:")
+        print("  Usage:")
         print(f"    Request tokens: {round(results['usage']['request_tokens'], 3)}")
         print(f"    Cached tokens: {round(results['usage']['cached_tokens'], 3)}")
         print(f"    Response tokens: {round(results['usage']['response_tokens'], 3)}")

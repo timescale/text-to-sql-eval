@@ -25,39 +25,21 @@ on:
           - baseline
           - pgai
           - vanna
-      load_provider:
-        description: What provider to use for loading data
+      setup_model:
+        description: What model to use for embedding data
         required: true
-        type: choice
-        default: 'openai'
-        options:
-          - ollama
-          - openai
-          - sentence_transformers
-      load_model:
-        description: What model to use for loading data
-        required: false
         type: string
-        default: ''
-      load_dimensions:
+        default: 'openai:text-embedding-3-small'
+      setup_dimensions:
         description: Number of dimensions to use for loading data
         required: true
         type: number
         default: 576
-      eval_provider:
-        description: What provider to use for eval
-        required: true
-        type: choice
-        default: 'anthropic'
-        options:
-          - anthropic
-          - ollama
-          - openai
       eval_model:
         description: What model to use for eval
-        required: false
+        required: true
         type: string
-        default: ''
+        default: 'openai:gpt-4.1-nano'
       entire_schema:
         description: Whether to use the entire schema for LLM
         required: true
@@ -74,8 +56,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
-      load_model: ${{ steps.model.outputs.load_model }}
-      eval_model: ${{ steps.model.outputs.eval_model }}
     steps:
       - uses: actions/checkout@v4
 
@@ -98,11 +78,6 @@ jobs:
           REPORT_POSTGRES_DSN=${{ secrets.REPORT_POSTGRES_DSN }}
           SOURCE=github-${{ github.actor }}
           " > .env
-      - name: Get models
-        id: model
-        run: |
-          echo "load_model=$(uv run python3 -m suite get-model load ${{ inputs.load_provider }} ${{ inputs.load_model }})" >> $GITHUB_OUTPUT
-          echo "eval_model=$(uv run python3 -m suite get-model eval ${{ inputs.eval_provider }} ${{ inputs.eval_model }})" >> $GITHUB_OUTPUT
 
       - name: Generate matrix
         id: set-matrix
@@ -110,11 +85,9 @@ jobs:
 
       - name: Diagnostic information
         run: |
-          echo "load_provider=${{ inputs.load_provider }}"
-          echo "load_model=${{ steps.model.outputs.load_model }}"
-          echo "load_dimensions=${{ inputs.load_dimensions }}"
-          echo "eval_provider=${{ inputs.eval_provider }}"
-          echo "eval_model=${{ steps.model.outputs.eval_model }}"
+          echo "setup_model=${{ inputs.setup_model }}"
+          echo "setup_dimensions=${{ inputs.setup_dimensions }}"
+          echo "eval_model=${{ inputs.eval_model }}"
           echo "entire_schema=${{ inputs.entire_schema }}"
           echo "gold_tables=${{ inputs.gold_tables }}"
           echo "matrix="
@@ -130,7 +103,7 @@ jobs:
 
     steps:
       - name: Run ollama container
-        if: ${{ inputs.load_provider == 'ollama' }} || ${{ inputs.eval_provider == 'ollama' }}
+        if: startsWith(inputs.setup_model, 'ollama') || startsWith(inputs.eval_model, 'ollama')
         run: docker run -d --network host --name ollama ollama/ollama:0.5.4
 
       - run: |
@@ -171,20 +144,28 @@ jobs:
           " > .env
 
       - name: Pull ollama model for loading
-        if: ${{ inputs.load_provider == 'ollama' }}
-        run: docker exec ollama ollama pull ${{ needs.generate_matrix.outputs.load_model }}
+        if: startsWith(inputs.setup_model, 'ollama')
+        run: |
+          model_name=${model#ollama:}
+          docker exec ollama ollama pull "${model_name}"
+        env:
+          model: ${{ inputs.setup_model }}
 
       - name: Pull ollama model for eval
-        if: ${{ inputs.eval_provider == 'ollama' }}
-        run: docker exec ollama ollama pull ${{ needs.generate_matrix.outputs.eval_model }}
+        if: startsWith(inputs.eval_model, 'ollama')
+        run: |
+          model_name=${model#ollama:}
+          docker exec ollama ollama pull "${model_name}"
+        env:
+          model: ${{ inputs.eval_model }}
 
       - name: Load dataset ${{ matrix.dataset }} ${{ matrix.database }}
         run: uv run python3 -m suite load --dataset ${{ matrix.dataset }} --database ${{ matrix.database }}
 
       - name: Setup dataset ${{ matrix.dataset }} ${{ matrix.database }}
-        run: uv run python3 -m suite setup --provider ${{ inputs.load_provider }} --model ${{ needs.generate_matrix.outputs.load_model }} --dimensions ${{ inputs.load_dimensions }} --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} ${{ inputs.agent }}
+        run: uv run python3 -m suite setup --model ${{ inputs.setup_model }} --dimensions ${{ inputs.setup_dimensions }} --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} ${{ inputs.agent }}
       - name: Run eval
-        run: uv run python3 -m suite eval --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} --provider ${{ inputs.eval_provider }} --model ${{ needs.generate_matrix.outputs.eval_model }} ${{ inputs.entire_schema && '--entire-schema' || '' }} ${{ inputs.gold_tables && '--gold-tables' || '' }} ${{ inputs.agent }} ${{ inputs.task }}
+        run: uv run python3 -m suite eval --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} --model ${{ inputs.eval_model }} ${{ inputs.entire_schema && '--entire-schema' || '' }} ${{ inputs.gold_tables && '--gold-tables' || '' }} ${{ inputs.agent }} ${{ inputs.task }}
 
       - run: mv results/results.json results-${{ matrix.dataset }}-${{ matrix.database }}.json
 

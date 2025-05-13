@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pgai.semantic_catalog as sc
 import psycopg
-from psycopg.sql import Identifier, SQL
+from psycopg.sql import SQL, Identifier
 
 from ..types import Provider, TextToSql
 from ..utils import get_db_url_from_connection
