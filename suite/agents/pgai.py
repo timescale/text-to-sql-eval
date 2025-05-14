@@ -1,8 +1,10 @@
 import os
 from pathlib import Path
+from time import sleep
 
 import pgai.semantic_catalog as sc
 import psycopg
+import pydantic_ai
 from psycopg.sql import SQL, Identifier
 
 from ..types import Provider, TextToSql
@@ -102,16 +104,25 @@ async def text_to_sql(
                 )
                 obj_ids = [x[0] for x in await cur.fetchall()]
 
-        response = await catalog.generate_sql(
-            target_con,
-            target_con,
-            f"{provider}:{model}",
-            inp,
-            context_mode=context_mode,
-            obj_ids=obj_ids,
-            sql_ids=sql_ids,
-            fact_ids=fact_ids,
-        )
+        while True:
+            try:
+                response = await catalog.generate_sql(
+                    target_con,
+                    target_con,
+                    f"{provider}:{model}",
+                    inp,
+                    context_mode=context_mode,
+                    obj_ids=obj_ids,
+                    sql_ids=sql_ids,
+                    fact_ids=fact_ids,
+                )
+            except pydantic_ai.exceptions.ModelHTTPError as e:
+                if e.status_code == 429:
+                    sleep(60)
+                    continue
+                else:
+                    raise e
+            break
 
     return {
         "error": None,
