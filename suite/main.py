@@ -328,7 +328,7 @@ def eval(
                         )
                     except GetExpectedError:
                         total -= 1
-                        return
+                        continue
                     except Exception as e:
                         result = {
                             "status": "error",
