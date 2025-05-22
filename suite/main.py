@@ -305,7 +305,7 @@ def eval(
                     inp = json.load(fp)
                 if database and inp["database"] != database:
                     continue
-                print(f"  {eval_path.name}:")
+                print(f"  {eval_path.name}:", flush=True)
                 total += 1
                 with psycopg.connect(
                     get_psycopg_str(f"{dataset}_{inp['database']}")
@@ -358,18 +358,18 @@ def eval(
                         "response_tokens"
                     ]
                 to_print = f"    {result['status'].upper()}"
-                print(to_print, end="")
+                print(to_print, end="", flush=True)
                 if result["status"] == "error":
                     class_name = result["details"]["exception_class"]
                     if class_name not in failed_error_counts[dataset]:
                         failed_error_counts[dataset][class_name] = 0
                     failed_error_counts[dataset][class_name] += 1
-                    print(f" ({class_name}: {result['details']['exception']})", end="")
+                    print(f" ({class_name}: {result['details']['exception']})", end="", flush=True)
                     with error_path.open("w") as fp:
                         fp.write(class_name + "\n\n")
                         fp.write(result["details"]["exception_traceback"] + "\n\n")
                         fp.write(result["details"]["exception"])
-                print()
+                print(flush=True)
                 if result["status"] == "pass":
                     passing += 1
                 elif result["status"] == "fail":
