@@ -21,7 +21,6 @@ dependencies = [
     "simplejson>=3.20.1",
     "sql-metadata>=2.17.0",
     "sqlglot>=26.16.4",
-    "timeout-decorator>=0.5.0",
     "vanna[anthropic,openai,pgvector,postgres]>=0.7.9",
 ]
 
