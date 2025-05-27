@@ -310,6 +310,9 @@ def eval(
                 with psycopg.connect(
                     get_psycopg_str(f"{dataset}_{inp['database']}")
                 ) as db:
+                    with db.cursor() as cur:
+                        cur.execute("SET LOCAL statement_timeout = 120000;")
+
                     error_path = eval_path / "error.txt"
                     if error_path.exists():
                         error_path.unlink()

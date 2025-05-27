@@ -4,7 +4,6 @@ import time
 import polars as pl
 import psycopg
 import simplejson as json
-import timeout_decorator
 from polars.testing import assert_frame_equal
 from sql_metadata import Parser
 
@@ -87,23 +86,15 @@ async def run(
     with open(f"{path}/actual_query.sql", "w") as fp:
         fp.write(query)
 
-    @timeout_decorator.timeout(120)
-    def exe_gold():
-        try:
-            return pl.read_database(gold_query, conn)
-        except psycopg.DatabaseError as e:
-            raise GetExpectedError(e) from e
+    try:
+        expected = pl.read_database(gold_query, conn)
+    except (psycopg.DatabaseError, psycopg.errors.QueryCanceled) as e:
+        raise GetExpectedError(e) from e
 
-    expected = exe_gold()
-
-    @timeout_decorator.timeout(120)
-    def exe_actual():
-        try:
-            return pl.read_database(query, conn)
-        except psycopg.DatabaseError as e:
-            raise QueryExecutionError(e) from e
-
-    actual = exe_actual()
+    try:
+        actual = pl.read_database(query, conn)
+    except (psycopg.DatabaseError, psycopg.errors.QueryCanceled) as e:
+        raise QueryExecutionError(e) from e
 
     details = {
         "generated_query": query,

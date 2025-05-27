@@ -4167,7 +4167,6 @@ dependencies = [
     { name = "simplejson" },
     { name = "sql-metadata" },
     { name = "sqlglot" },
-    { name = "timeout-decorator" },
     { name = "vanna", extra = ["anthropic", "openai", "pgvector", "postgres"] },
 ]
 
@@ -4194,7 +4193,6 @@ requires-dist = [
     { name = "simplejson", specifier = ">=3.20.1" },
     { name = "sql-metadata", specifier = ">=2.17.0" },
     { name = "sqlglot", specifier = ">=26.16.4" },
-    { name = "timeout-decorator", specifier = ">=0.5.0" },
     { name = "vanna", extras = ["anthropic", "openai", "pgvector", "postgres"], specifier = ">=0.7.9" },
 ]
 
@@ -4251,12 +4249,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/fa/5c/74e4c137530dd8504e97e3a41729b1103a4ac29036cbfd3250b11fd29451/tiktoken-0.9.0-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:cd69372e8c9dd761f0ab873112aba55a0e3e506332dd9f7522ca466e817b1b7a", size = 1258465, upload-time = "2025-02-14T06:02:45.046Z" },
     { url = "https://files.pythonhosted.org/packages/de/a8/8f499c179ec900783ffe133e9aab10044481679bb9aad78436d239eee716/tiktoken-0.9.0-cp313-cp313-win_amd64.whl", hash = "sha256:5ea0edb6f83dc56d794723286215918c1cde03712cbbafa0348b33448faf5b95", size = 894669, upload-time = "2025-02-14T06:02:47.341Z" },
 ]
-
-[[package]]
-name = "timeout-decorator"
-version = "0.5.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/80/f8/0802dd14c58b5d3d72bb9caa4315535f58787a1dc50b81bbbcaaa15451be/timeout-decorator-0.5.0.tar.gz", hash = "sha256:6a2f2f58db1c5b24a2cc79de6345760377ad8bdc13813f5265f6c3e63d16b3d7", size = 4754, upload-time = "2020-11-15T00:53:06.506Z" }
 
 [[package]]
 name = "tokenizers"
