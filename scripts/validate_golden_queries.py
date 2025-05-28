@@ -1,7 +1,7 @@
 import json
 import os
-from pathlib import Path
 import time
+from pathlib import Path
 
 import psycopg
 from dotenv import load_dotenv

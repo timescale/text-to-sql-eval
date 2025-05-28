@@ -40,6 +40,11 @@ on:
         required: true
         type: string
         default: 'openai:gpt-4.1-nano'
+      fast_mode:
+        description: Whether to run in fast mode (use 50 evals per dataset)
+        required: true
+        type: boolean
+        default: true
       entire_schema:
         description: Whether to use the entire schema for LLM
         required: true
@@ -167,7 +172,7 @@ jobs:
       - name: Setup dataset ${{ matrix.dataset }} ${{ matrix.database }}
         run: uv run python3 -m suite setup --model ${{ inputs.setup_model }} --dimensions ${{ inputs.setup_dimensions }} --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} ${{ inputs.agent }}
       - name: Run eval
-        run: uv run python3 -m suite eval --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} --model ${{ inputs.eval_model }} ${{ inputs.entire_schema && '--entire-schema' || '' }} ${{ inputs.gold_tables && '--gold-tables' || '' }} ${{ inputs.agent }} ${{ inputs.task }}
+        run: uv run python3 -m suite eval --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} ${{ inputs.entire_schema && '--entire-schema' || '' }} --model ${{ inputs.eval_model }} ${{ inputs.fast_mode && '--fast' || '' }} ${{ inputs.gold_tables && '--gold-tables' || '' }} ${{ inputs.agent }} ${{ inputs.task }}
 
       - run: mv results/results.json results-${{ matrix.dataset }}-${{ matrix.database }}.json
 

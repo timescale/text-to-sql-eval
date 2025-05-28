@@ -223,6 +223,7 @@ def setup(
 )
 @click.option("--database", default=None, help="Database to evaluate")
 @click.option("--eval", default=None, help="Eval case to run")
+@click.option("--fast", is_flag=True, default=False, help="Run 50 evals per dataset")
 @click.option(
     "--entire-schema",
     is_flag=True,
@@ -243,6 +244,7 @@ def eval(
     dataset: str,
     database: Optional[str],
     eval: Optional[str],
+    fast: bool,
     entire_schema: bool,
     gold_tables: bool,
     strict: bool,
@@ -294,11 +296,29 @@ def eval(
             }
             passing = 0
             total = 0
-            print(f"Evaluating {dataset}...")
+            print(f"Evaluating {dataset}", end="")
             evals_path = datasets_dir / dataset / "evals"
             eval_paths = sorted(list(evals_path.iterdir()))
-
+            evals_to_run = []
             for eval_path in eval_paths:
+                if eval is not None and eval_path.name != eval:
+                    continue
+                with (eval_path / "eval.json").open() as fp:
+                    inp = json.load(fp)
+                if database and inp["database"] != database:
+                    continue
+                evals_to_run.append(eval_path)
+
+            sample_size = 50
+            if fast and len(evals_to_run) > sample_size:
+                print(f" (sampling {sample_size} evals of {len(evals_to_run)})...")
+                step = (len(evals_to_run) - 1) / (sample_size - 1)
+                indices = [round(i * step) for i in range(sample_size)]
+                evals_to_run = [evals_to_run[i] for i in indices]
+            else:
+                print(f" ({len(evals_to_run)} evals)...")
+
+            for eval_path in evals_to_run:
                 if eval is not None and eval_path.name != eval:
                     continue
                 with (eval_path / "eval.json").open() as fp:
@@ -367,7 +387,11 @@ def eval(
                     if class_name not in failed_error_counts[dataset]:
                         failed_error_counts[dataset][class_name] = 0
                     failed_error_counts[dataset][class_name] += 1
-                    print(f" ({class_name}: {result['details']['exception']})", end="", flush=True)
+                    print(
+                        f" ({class_name}: {result['details']['exception']})",
+                        end="",
+                        flush=True,
+                    )
                     with error_path.open("w") as fp:
                         fp.write(class_name + "\n\n")
                         fp.write(result["details"]["exception_traceback"] + "\n\n")
