@@ -7,7 +7,7 @@ on:
         description: 'Branch of pgai to use'
         required: true
         type: string
-        default: 'jgpruitt/semantic-catalog'
+        default: 'main'
       task:
         description: What task to evaluate
         required: true
