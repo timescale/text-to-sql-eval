@@ -28,6 +28,7 @@ def get_tables(
         )
         tables = cur.fetchall()
         tables = [table[0] for table in tables]
+    tables = "\n".join(tables)
     chat = client.beta.chat.completions.parse(
         messages=[
             {
@@ -36,7 +37,7 @@ def get_tables(
             },
             {
                 "role": "system",
-                "content": f"Here are the tables in the database:\n\n{'\n'.join(tables)}",
+                "content": f"Here are the tables in the database:\n\n{tables}",
             },
             {
                 "role": "user",
@@ -103,6 +104,7 @@ group by relname;
             )
             table_ddl.append(cur.fetchone()[0])
 
+    table_ddls = "\n".join(table_ddl)
     messages = [
         {
             "role": "system",
@@ -110,7 +112,7 @@ group by relname;
         },
         {
             "role": "system",
-            "content": f"Here are some tables that might help you answer the question:\n\n{'\n'.join(table_ddl)}",
+            "content": f"Here are some tables that might help you answer the question:\n\n{table_ddls}",
         },
         {
             "role": "user",

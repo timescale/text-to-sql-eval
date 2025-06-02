@@ -18,7 +18,7 @@ from .pgai import (
 from .vn import setup as vanna_setup
 from .vn import text_to_sql as vanna_text_to_sql
 
-type AgentFn = Callable[
+AgentFn = Callable[
     [Connection, str, Provider, str, bool, list[str]], Awaitable[TextToSql]
 ]
 
