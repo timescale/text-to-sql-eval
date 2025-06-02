@@ -1,4 +1,5 @@
 import os
+import random
 from pathlib import Path
 from time import sleep
 
@@ -118,7 +119,17 @@ async def text_to_sql(
                 )
             except pydantic_ai.exceptions.ModelHTTPError as e:
                 if e.status_code == 429:
-                    sleep(60)
+                    if provider == "mistral":
+                        wait = 5
+                        # mistral has rate limit of 1 request per second
+                        jitter = random.uniform(0, 4)
+                    else:
+                        wait = 60
+                        # other models usually have an input limit of tokens per minute
+                        jitter = random.uniform(-10, 10)
+                    wait -= jitter
+                    print(f"    Rate limit hit, waiting for {wait} seconds...")
+                    sleep(wait)
                     continue
                 else:
                     raise e
