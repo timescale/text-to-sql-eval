@@ -91,6 +91,7 @@ jobs:
 
       - name: Diagnostic information
         run: |
+          echo "branch=${{ inputs.branch }}"
           echo "setup_model=${{ inputs.setup_model }}"
           echo "setup_dimensions=${{ inputs.setup_dimensions }}"
           echo "eval_model=${{ inputs.eval_model }}"
