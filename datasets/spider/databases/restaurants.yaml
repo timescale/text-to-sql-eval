@@ -10,11 +10,11 @@ description: Lists each city along with its corresponding county and broader geo
   region.
 columns:
 - name: city_name
-  description: Name of the city.
+  description: Lowercased name of the city.
 - name: county
-  description: County in which the city is located.
+  description: Lowercased name of the county in which the city is located.
 - name: region
-  description: Larger area or region that the city belongs to.
+  description: Lowercased name of the larger area or region that the city belongs to.
 ...
 ---
 schema: public
@@ -27,9 +27,9 @@ columns:
 - name: house_number
   description: Numeric part of the restaurant's street address.
 - name: street_name
-  description: Name of the street where the restaurant is located.
+  description: Lowercased name of the street where the restaurant is located.
 - name: city_name
-  description: City in which the restaurant address is situated.
+  description: Lowercased name of the city in which the restaurant address is situated.
 ...
 ---
 schema: public
@@ -41,11 +41,30 @@ columns:
 - name: id
   description: Primary key identifier for the restaurant.
 - name: name
-  description: Name of the restaurant.
+  description: Lowercased name of the restaurant.
 - name: food_type
-  description: Type of cuisine or food style offered by the restaurant.
+  description: Lowercased name of the type of cuisine or food style offered by the restaurant.
 - name: city_name
-  description: City where the restaurant is located.
+  description: Lowercased name of the city where the restaurant is located.
 - name: rating
-  description: Numeric rating score assigned to the restaurant.
+  description: Numeric rating score assigned to the restaurant, where higher than 2.5 is considered good.
+...
+---
+type: sql_example
+sql: SELECT city_name FROM geographic WHERE region = 'bay area';
+description: Give me the names of all cities in the Bay Area.
+...
+---
+type: sql_example
+sql: SELECT t2.house_number, t1.name FROM restaurant AS t1 JOIN LOCATION AS t2 ON t1.id = t2.restaurant_id WHERE t2.city_name = 'san francisco' AND t1.food_type = 'french' AND t1.rating = (SELECT MAX(t1.rating) FROM restaurant AS t1 JOIN LOCATION AS t2 ON t1.id = t2.restaurant_id WHERE t2.city_name = 'san francisco' AND t1.food_type = 'french')
+description: Give me the best french restaurant in san francisco ?
+...
+---
+type: sql_example
+sql: SELECT t2.house_number, t1.name FROM LOCATION AS t2 JOIN restaurant AS t1 ON t1.id = t2.restaurant_id WHERE t1.city_name IN (SELECT city_name FROM geographic WHERE region = 'bay area') AND t1.rating > 2.5
+description: give me some good restaurants in the bay area ?
+...
+---
+type: fact
+description: When asking for a restaurant, provide its name (restaurant.name) and its house number (location.house_number).
 ...
