@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 from psycopg.sql import SQL, Identifier
 from yaml import safe_load_all
 
-from .agents import get_agent_fn, get_agent_setup_fn
+from .agents import get_agent_fn, get_agent_setup_fn, get_agent_version
 from .exceptions import GetExpectedError
 from .tasks.get_tables import run as get_tables
 from .tasks.text_to_sql import run as text_to_sql
@@ -271,6 +271,10 @@ def eval(
     results: Dict[str, str | Dict[str, Results]] = {
         "task": task,
         "details": {
+            "agent": {
+                "name": agent,
+                "version": get_agent_version(agent),
+            },
             "provider": provider,
             "model": model,
             "entire_schema": entire_schema,

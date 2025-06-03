@@ -12,6 +12,21 @@ from ..types import Provider, TextToSql
 from ..utils import get_db_url_from_connection
 
 
+def version() -> str:
+    git_dir = Path(__file__).parent.parent.parent.parent / "pgai" / ".git"
+    with open(git_dir / "HEAD", "r") as f:
+        head = f.read().strip()
+    ref = None
+    if head.startswith("ref:"):
+        ref = head.split(" ")[1]
+        with open(git_dir / ref, "r") as f:
+            commit = f.read().strip()
+    else:
+        commit = head
+    branch = ref.split("/", 2)[2] if ref is not None else "??"
+    return f"{branch}-{commit}"
+
+
 async def setup(
     conn: psycopg.Connection,
     dataset: str,
@@ -127,12 +142,14 @@ async def text_to_sql(
                         wait = 60
                         # other models usually have an input limit of tokens per minute
                         jitter = random.uniform(-10, 10)
-                    wait -= jitter
-                    print(f"    Rate limit hit, waiting for {wait} seconds...")
+                    wait = round(wait - jitter, 2)
+                    print(str(e), flush=True)
+                    print(
+                        f"    Rate limit hit, waiting for {wait} seconds...", flush=True
+                    )
                     sleep(wait)
                     continue
-                else:
-                    raise e
+                raise e
             break
 
     return {

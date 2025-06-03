@@ -11,6 +11,10 @@ load_dotenv()
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
 
+def version() -> str:
+    return "1.0.0"
+
+
 class SQLQuery(BaseModel):
     query: str
 

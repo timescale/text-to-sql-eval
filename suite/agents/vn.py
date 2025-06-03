@@ -5,6 +5,8 @@ Vanna agent
 import os
 import sys
 from io import StringIO
+from pathlib import Path
+from tomllib import load as load_toml
 from typing import Union
 
 import psycopg
@@ -17,6 +19,14 @@ from ..types import Provider, TextToSql
 from ..utils import get_db_url_from_connection
 
 load_dotenv()
+
+
+def version() -> str:
+    with Path(__file__).parent.parent.parent.joinpath("uv.lock").open("r") as f:
+        lockfile = load_toml(f)
+    return next((obj for obj in lockfile["package"] if obj["name"] == "vanna"), None)[
+        "version"
+    ]
 
 
 class AnthropicVanna(PG_VectorStore, Anthropic_Chat):

@@ -9,14 +9,27 @@ from .baseline import (
 from .baseline import (
     text_to_sql as baseline_text_to_sql,
 )
+from .baseline import (
+    version as baseline_version,
+)
 from .pgai import (
     setup as pgai_setup,
 )
 from .pgai import (
     text_to_sql as pgai_text_to_sql,
 )
-from .vn import setup as vanna_setup
-from .vn import text_to_sql as vanna_text_to_sql
+from .pgai import (
+    version as pgai_version,
+)
+from .vn import (
+    setup as vanna_setup,
+)
+from .vn import (
+    text_to_sql as vanna_text_to_sql,
+)
+from .vn import (
+    version as vanna_version,
+)
 
 AgentFn = Callable[
     [Connection, str, Provider, str, bool, list[str]], Awaitable[TextToSql]
@@ -50,5 +63,16 @@ def get_agent_setup_fn(
         return pgai_setup
     if agent == "vanna" or agent == "vn":
         return vanna_setup
+    else:
+        raise ValueError(f"Invalid agent: {agent}")
+
+
+def get_agent_version(agent: str) -> str:
+    if agent == "baseline":
+        return baseline_version()
+    elif agent == "pgai":
+        return pgai_version()
+    elif agent == "vanna" or agent == "vn":
+        return vanna_version()
     else:
         raise ValueError(f"Invalid agent: {agent}")
