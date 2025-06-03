@@ -2,6 +2,9 @@
 
 ## Getting Started
 
+First you must checkout the [`pgai`](https://github.com/timescale/pgai/) repo next
+to this one.
+
 Install [`uv`](https://docs.astral.sh/uv/), and then run the following:
 
 ```bash
@@ -42,9 +45,23 @@ Commands:
   setup            Setup the agent
 ```
 
-1. Use the `load` command to load the datasets into your database.
-1. Use the `setup` command to setup your agent for loaded datasets.
-1. Use the `eval` command to run the eval suite.
+1. Use the `load` command to load the datasets into your database:
+
+    ```bash
+    uv run python3 -m suite load
+    ```
+
+1. Use the `setup` command to setup your agent for loaded datasets:
+
+    ```bash
+    uv run python3 -m suite setup pgai
+    ```
+
+1. Use the `eval` command to run the eval suite for a given agent for a given task:
+
+    ```bash
+    uv run python3 -m suite eval pgai text_to_sql
+    ```
 
 All commands have various options/arguments to configure behavior, use `--help` to see more info.
 
