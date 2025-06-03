@@ -37,9 +37,16 @@ def cli():
 
 
 @cli.command()
-def generate_matrix() -> None:
+@click.option(
+    "--filter", default=None, help="Comma separated list of datasets to include"
+)
+def generate_matrix(filter: Optional[str]) -> None:
     """
     Generates a matrix of all datasets and their databases for GitHub actions.
+
+    When using the `--filter` option, for each entry, it will check if for each
+    [dataset, database] pair, if there is a prefix match with an entry in the filter.
+    For example, `--filter=s,bird` will include `spider` and `bird` datasets.
     """
 
     include = []
@@ -66,6 +73,14 @@ def generate_matrix() -> None:
             else:
                 db_name = database.stem
             include.append({"dataset": dataset.name, "database": db_name})
+    if filter is not None:
+        filter_datasets = [x.strip() for x in filter.split(",")]
+        filtered_include = []
+        for entry in include:
+            for dataset in filter_datasets:
+                if f"{entry['dataset']}_{entry['database']}".startswith(dataset):
+                    filtered_include.append(entry)
+        include = filtered_include
     print(json.dumps({"include": include}))
 
 

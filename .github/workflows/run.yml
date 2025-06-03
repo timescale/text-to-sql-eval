@@ -55,6 +55,11 @@ on:
         required: true
         type: boolean
         default: false
+      filter:
+        description: Comma-separated list of datasets to run
+        required: false
+        type: string
+        default: ''
 
 jobs:
   generate_matrix:
@@ -87,7 +92,12 @@ jobs:
 
       - name: Generate matrix
         id: set-matrix
-        run: echo "matrix=$(uv run python3 -m suite generate-matrix)" >> "$GITHUB_OUTPUT"
+        run: |
+          filter_args=""
+          if [ -n "${{ inputs.filter }}" ]; then
+            filter_args="--filter ${{ inputs.filter }}"
+          fi
+          echo "matrix=$(uv run python3 -m suite generate-matrix $filter_args)" >> "$GITHUB_OUTPUT"
 
       - name: Diagnostic information
         run: |
@@ -97,6 +107,7 @@ jobs:
           echo "eval_model=${{ inputs.eval_model }}"
           echo "entire_schema=${{ inputs.entire_schema }}"
           echo "gold_tables=${{ inputs.gold_tables }}"
+          echo "filter=${{ inputs.filter }}"
           echo "matrix="
           echo '${{ steps.set-matrix.outputs.matrix }}' | jq '.'
   run:
