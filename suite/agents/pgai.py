@@ -157,7 +157,7 @@ async def text_to_sql(
         "messages": [str(x) for x in response.messages],
         "query": response.sql_statement,
         "usage": {
-            "cached_tokens": response.usage.details["cached_tokens"] or 0
+            "cached_tokens": response.usage.details.get("cached_tokens", 0)
             if response.usage.details is not None
             else 0,
             "request_tokens": response.usage.request_tokens or 0,
