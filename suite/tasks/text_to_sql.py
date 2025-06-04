@@ -4,7 +4,7 @@ import time
 import polars as pl
 import psycopg
 import simplejson as json
-from polars.testing import assert_frame_equal
+from polars.testing import assert_frame_equal, assert_series_equal
 from sql_metadata import Parser
 
 from ..agents import AgentFn
@@ -22,9 +22,12 @@ def compare(actual: pl.DataFrame, expected: pl.DataFrame) -> bool:
         e_values = expected[e_col]
         for a_col in actual.columns:
             # Check if the values match in the same order
-            if e_values.equals(actual[a_col]):
+            try:
+                assert_series_equal(e_values, actual[a_col], check_names=False, check_order=False)
                 column_mappings[a_col] = e_col
                 break
+            except AssertionError:
+                pass
 
     actual_adjusted = actual.select(list(column_mappings.keys())).rename(
         column_mappings

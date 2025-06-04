@@ -24,6 +24,11 @@ from suite.tasks.text_to_sql import compare
         ),
         (
             pl.DataFrame({"a": [1, 2, 3], "b": [4, 5, 6]}),
+            pl.DataFrame({"c": [3, 2, 1], "d": [6, 5, 4]}),
+            True,
+        ),
+        (
+            pl.DataFrame({"a": [1, 2, 3], "b": [4, 5, 6]}),
             pl.DataFrame({"a": [1, 2, 3]}),
             True,
         ),
