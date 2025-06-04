@@ -310,8 +310,11 @@ def eval(
             total_duration = 0
             usage = {
                 "cached_tokens": 0,
+                "cached_tokens_cost": 0.0,
                 "request_tokens": 0,
+                "request_tokens_cost": 0.0,
                 "response_tokens": 0,
+                "response_tokens_cost": 0.0,
             }
             passing = 0
             total = 0
@@ -393,11 +396,20 @@ def eval(
                     usage["cached_tokens"] += result["details"]["usage"][
                         "cached_tokens"
                     ]
+                    usage["cached_tokens_cost"] += result["details"]["usage"][
+                        "cached_tokens_cost"
+                    ]
                     usage["request_tokens"] += result["details"]["usage"][
                         "request_tokens"
                     ]
+                    usage["request_tokens_cost"] += result["details"]["usage"][
+                        "request_tokens_cost"
+                    ]
                     usage["response_tokens"] += result["details"]["usage"][
                         "response_tokens"
+                    ]
+                    usage["response_tokens_cost"] += result["details"]["usage"][
+                        "response_tokens_cost"
                     ]
                 to_print = f"    {result['status'].upper()}"
                 print(to_print, end="", flush=True)
@@ -435,10 +447,21 @@ def eval(
             if len(errored_evals[dataset]) > 0:
                 print(f"Errored evals:\n{sorted(errored_evals[dataset])}")
 
+            total_duration = round(total_duration, 3)
+
+            print(f"  Total duration: {total_duration} seconds")
+            print("  Usage:")
+            print(f"    Request tokens: {usage['request_tokens']}")
+            print(f"    Request tokens cost: ${usage['request_tokens_cost']:.8f}")
+            print(f"    Cached tokens: {usage['cached_tokens']}")
+            print(f"    Cached tokens cost: ${usage['cached_tokens_cost']:.8f}")
+            print(f"    Response tokens: {usage['response_tokens']}")
+            print(f"    Response tokens cost: ${usage['response_tokens_cost']:.8f}")
+
             results["results"][dataset] = {
                 "passing": passing,
                 "total": total,
-                "total_duration": round(total_duration, 3),
+                "total_duration": total_duration,
                 "usage": usage,
                 "failed": failed_evals[dataset],
                 "failed_error_counts": failed_error_counts[dataset],
@@ -483,8 +506,11 @@ def generate_report():
                     "total_duration": 0,
                     "usage": {
                         "cached_tokens": 0,
+                        "cached_tokens_cost": 0.0,
                         "request_tokens": 0,
+                        "request_tokens_cost": 0.0,
                         "response_tokens": 0,
+                        "response_tokens_cost": 0.0,
                     },
                     "failed": [],
                     "failed_error_counts": {},
@@ -499,12 +525,21 @@ def generate_report():
                 combined_results[dataset]["usage"]["cached_tokens"] += result["usage"][
                     "cached_tokens"
                 ]
+                combined_results[dataset]["usage"]["cached_tokens_cost"] += result[
+                    "usage"
+                ]["cached_tokens_cost"]
                 combined_results[dataset]["usage"]["request_tokens"] += result["usage"][
                     "request_tokens"
                 ]
+                combined_results[dataset]["usage"]["request_tokens_cost"] += result[
+                    "usage"
+                ]["request_tokens_cost"]
                 combined_results[dataset]["usage"]["response_tokens"] += result[
                     "usage"
                 ]["response_tokens"]
+                combined_results[dataset]["usage"]["response_tokens_cost"] += result[
+                    "usage"
+                ]["response_tokens_cost"]
             for error, count in result["failed_error_counts"].items():
                 if error not in combined_results[dataset]["failed_error_counts"]:
                     combined_results[dataset]["failed_error_counts"][error] = 0
@@ -523,13 +558,22 @@ def generate_report():
     )
     print("  Usage:")
     print(
-        f"    Request tokens: {round(sum([x['usage']['request_tokens'] for x in combined_results.values()]), 3)}"
+        f"    Request tokens: {sum([x['usage']['request_tokens'] for x in combined_results.values()])}"
     )
     print(
-        f"    Cached tokens: {round(sum([x['usage']['cached_tokens'] for x in combined_results.values()]), 3)}"
+        f"    Request tokens cost: ${sum([x['usage']['request_tokens_cost'] for x in combined_results.values()]):.8f}"
     )
     print(
-        f"    Response tokens: {round(sum([x['usage']['response_tokens'] for x in combined_results.values()]), 3)}"
+        f"    Cached tokens: {sum([x['usage']['cached_tokens'] for x in combined_results.values()])}"
+    )
+    print(
+        f"    Cached tokens cost: ${sum([x['usage']['cached_tokens_cost'] for x in combined_results.values()]):.8f}"
+    )
+    print(
+        f"    Response tokens: {sum([x['usage']['response_tokens'] for x in combined_results.values()])}"
+    )
+    print(
+        f"    Response tokens cost: ${sum([x['usage']['response_tokens_cost'] for x in combined_results.values()]):.8f}"
     )
     print()
 
@@ -543,9 +587,16 @@ def generate_report():
         )
         print(f"  Total duration: {round(results['total_duration'], 3)}")
         print("  Usage:")
-        print(f"    Request tokens: {round(results['usage']['request_tokens'], 3)}")
-        print(f"    Cached tokens: {round(results['usage']['cached_tokens'], 3)}")
-        print(f"    Response tokens: {round(results['usage']['response_tokens'], 3)}")
+        print(f"    Request tokens: {results['usage']['request_tokens']}")
+        print(
+            f"    Request tokens cost: ${results['usage']['request_tokens_cost']:.8f}"
+        )
+        print(f"    Cached tokens: {results['usage']['cached_tokens']}")
+        print(f"    Cached tokens cost: ${results['usage']['cached_tokens_cost']:.8f}")
+        print(f"    Response tokens: {results['usage']['response_tokens']}")
+        print(
+            f"    Response tokens cost: ${results['usage']['response_tokens_cost']:.8f}"
+        )
         if len(results["failed"]) > 0:
             print("  Failed error type counts:")
             for error in sorted(results["failed_error_counts"].keys()):

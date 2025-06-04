@@ -6,6 +6,7 @@ import psycopg
 import simplejson as json
 from polars.testing import assert_frame_equal, assert_series_equal
 from sql_metadata import Parser
+from tokencost import calculate_cost_by_tokens
 
 from ..agents import AgentFn
 from ..exceptions import AgentFnError, GetExpectedError, QueryExecutionError
@@ -23,7 +24,9 @@ def compare(actual: pl.DataFrame, expected: pl.DataFrame) -> bool:
         for a_col in actual.columns:
             # Check if the values match in the same order
             try:
-                assert_series_equal(e_values, actual[a_col], check_names=False, check_order=False)
+                assert_series_equal(
+                    e_values, actual[a_col], check_names=False, check_order=False
+                )
                 column_mappings[a_col] = e_col
                 break
             except AssertionError:
@@ -99,11 +102,33 @@ async def run(
     except (psycopg.DatabaseError, psycopg.errors.QueryCanceled) as e:
         raise QueryExecutionError(e) from e
 
+    usage = result.get(
+        "usage",
+        {
+            "cached_tokens": 0,
+            "cached_tokens_cost": 0,
+            "request_tokens": 0,
+            "request_tokens_cost": 0,
+            "response_tokens": 0,
+            "response_tokens_cost": 0,
+        },
+    )
+
+    usage["cached_tokens_cost"] = float(
+        calculate_cost_by_tokens(usage["cached_tokens"], model, "cached")
+    )
+    usage["request_tokens_cost"] = float(
+        calculate_cost_by_tokens(usage["request_tokens"], model, "input")
+    )
+    usage["response_tokens_cost"] = float(
+        calculate_cost_by_tokens(usage["response_tokens"], model, "output")
+    )
+
     details = {
         "generated_query": query,
         "expected_query": gold_query,
         "duration": duration,
-        "usage": result["usage"],
+        "usage": usage,
     }
     if gold_tables:
         details["gold_tables"] = gold_tables_list
