@@ -238,3 +238,123 @@ columns:
 - name: update_ts
   description: Timestamp of the most recent update to the frequent flyer record.
 ...
+---
+type: sql_example
+sql: SELECT COUNT(*) as total_aircraft FROM postgres_air.aircraft
+description: Fleet size analysis - counting total number of aircraft in the airline's fleet for inventory management and capacity planning
+...
+---
+type: sql_example
+sql: SELECT airport_name FROM postgres_air.airport WHERE city ILIKE '%Tokyo%'
+description: Airport location search - finding all airports within a specific city or metropolitan area for route planning and destination analysis
+...
+---
+type: sql_example
+sql: SELECT f.flight_no, f.scheduled_departure FROM postgres_air.flight f INNER JOIN postgres_air.airport a ON f.departure_airport = a.airport_code WHERE a.airport_code = 'JFK' AND f.scheduled_departure >= '2024-07-01' AND f.scheduled_departure < '2024-08-01'
+description: Flight schedule analysis by airport and time period - tracking departures from specific airports within date ranges for operational planning
+...
+---
+type: sql_example
+sql: SELECT city, COUNT(*) as airport_count FROM postgres_air.airport GROUP BY city ORDER BY airport_count DESC LIMIT 10
+description: Market presence analysis - identifying cities with the most airports to understand market coverage and competition density
+...
+---
+type: sql_example
+sql: SELECT EXTRACT(EPOCH FROM (f.scheduled_arrival - f.scheduled_departure))/3600 as duration_hours FROM postgres_air.flight f WHERE f.scheduled_departure IS NOT NULL AND f.scheduled_arrival IS NOT NULL
+description: Flight duration calculation - determining actual flight times for schedule optimization, crew planning, and customer information
+...
+---
+type: sql_example
+sql: SELECT ff.first_name, ff.last_name, ff.award_points FROM postgres_air.frequent_flyer ff WHERE ff.level = 4 AND ff.award_points > 100000 ORDER BY ff.award_points DESC
+description: High-value customer identification - finding elite frequent flyers with premium status for targeted marketing and VIP services
+...
+---
+type: sql_example
+sql: SELECT AVG(p.age) as avg_age FROM postgres_air.passenger p INNER JOIN postgres_air.booking_leg bl ON p.booking_id = bl.booking_id INNER JOIN postgres_air.flight f ON bl.flight_id = f.flight_id INNER JOIN postgres_air.airport dep ON f.departure_airport = dep.airport_code INNER JOIN postgres_air.airport arr ON f.arrival_airport = arr.airport_code WHERE dep.intnl = true OR arr.intnl = true
+description: International passenger demographics - analyzing age characteristics of passengers on international flights for service customization and market research
+...
+---
+type: sql_example
+sql: SELECT f.departure_airport, f.arrival_airport, COUNT(*) as flight_count, RANK() OVER (ORDER BY COUNT(*) DESC) as route_rank FROM postgres_air.flight f WHERE f.scheduled_departure >= '2024-01-01' AND f.scheduled_departure < '2024-07-01' GROUP BY f.departure_airport, f.arrival_airport
+description: Route popularity ranking - identifying the busiest flight routes to optimize scheduling, pricing, and resource allocation
+...
+---
+type: sql_example
+sql: SELECT CASE WHEN f.actual_departure > f.scheduled_departure THEN EXTRACT(EPOCH FROM (f.actual_departure - f.scheduled_departure))/60 ELSE 0 END as delay_minutes FROM postgres_air.flight f WHERE f.actual_departure IS NOT NULL
+description: Flight delay measurement - calculating departure delays to monitor operational performance and identify improvement opportunities
+...
+---
+type: sql_example
+sql: SELECT continent, AVG(CASE WHEN f.actual_departure > f.scheduled_departure THEN EXTRACT(EPOCH FROM (f.actual_departure - f.scheduled_departure))/60 ELSE 0 END) as avg_delay_minutes FROM postgres_air.flight f INNER JOIN postgres_air.airport a ON f.departure_airport = a.airport_code WHERE f.actual_departure IS NOT NULL GROUP BY continent
+description: Regional performance comparison - analyzing average flight delays by continent to identify geographic patterns in operational efficiency
+...
+---
+type: sql_example
+sql: SELECT p.first_name, p.last_name, COUNT(DISTINCT bl.flight_id) as flight_count FROM postgres_air.passenger p INNER JOIN postgres_air.booking_leg bl ON p.booking_id = bl.booking_id INNER JOIN postgres_air.flight f ON bl.flight_id = f.flight_id WHERE f.scheduled_departure >= '2024-01-01' AND f.scheduled_departure < '2024-07-01' GROUP BY p.passenger_id, p.first_name, p.last_name HAVING COUNT(DISTINCT bl.flight_id) > 10
+description: Frequent traveler identification - finding passengers who fly frequently but may not be enrolled in loyalty programs for targeted recruitment
+...
+---
+type: sql_example
+sql: SELECT b.booking_id, COUNT(p.passenger_id) as passenger_count FROM postgres_air.booking b INNER JOIN postgres_air.passenger p ON b.booking_id = p.booking_id GROUP BY b.booking_id ORDER BY passenger_count DESC LIMIT 1
+description: Group booking analysis - identifying the largest group reservations for understanding corporate travel patterns and event-driven demand
+...
+---
+type: sql_example
+sql: SELECT COUNT(*) FILTER (WHERE p.age < 12) * 100.0 / COUNT(*) as children_percentage FROM postgres_air.passenger p INNER JOIN postgres_air.booking_leg bl ON p.booking_id = bl.booking_id INNER JOIN postgres_air.flight f ON bl.flight_id = f.flight_id INNER JOIN postgres_air.airport dep ON f.departure_airport = dep.airport_code WHERE dep.intnl = true
+description: Child passenger demographics - calculating percentage of children on international flights for family-friendly service planning and safety requirements
+...
+---
+type: sql_example
+sql: SELECT p1.first_name, p1.last_name, p2.first_name, p2.last_name FROM postgres_air.passenger p1 INNER JOIN postgres_air.passenger p2 ON p1.booking_id = p2.booking_id AND p1.passenger_id < p2.passenger_id WHERE p1.last_name = p2.last_name AND p1.first_name != p2.first_name
+description: Family travel identification - detecting passengers with the same last name traveling together to understand family travel patterns and offer appropriate services
+...
+---
+type: sql_example
+sql: WITH flight_distances AS (SELECT f.flight_id, f.aircraft_code, EXTRACT(EPOCH FROM (f.scheduled_arrival - f.scheduled_departure))/3600 * a.velocity as distance_miles FROM postgres_air.flight f INNER JOIN postgres_air.aircraft a ON f.aircraft_code = a.code) SELECT aircraft_code, SUM(distance_miles) as total_distance FROM flight_distances GROUP BY aircraft_code ORDER BY total_distance DESC
+description: Aircraft utilization tracking - measuring total miles flown by each aircraft type for maintenance scheduling, fuel efficiency analysis, and fleet optimization
+...
+---
+type: sql_example
+sql: WITH departure_counts AS (SELECT departure_airport, date_part('hour', scheduled_departure) AS departure_hour, count(*) AS flight_count FROM postgres_air.flight GROUP BY departure_airport, departure_hour), ranked_departures AS (SELECT departure_airport, departure_hour, flight_count, RANK() OVER (PARTITION BY departure_airport ORDER BY flight_count DESC) AS rnk FROM departure_counts) SELECT a.airport_code, a.airport_name, r.departure_hour, r.flight_count FROM ranked_departures r JOIN postgres_air.airport a ON r.departure_airport = a.airport_code WHERE a.intnl = true AND r.rnk = 1
+description: Peak operational hours analysis - identifying busiest departure times at each airport for resource allocation, staffing optimization, and capacity management
+...
+---
+type: sql_example
+sql: SELECT COUNT(*) FILTER (WHERE dep.iso_country != arr.iso_country) * 100.0 / COUNT(*) as international_percentage FROM postgres_air.flight f JOIN postgres_air.airport dep ON f.departure_airport = dep.airport_code JOIN postgres_air.airport arr ON f.arrival_airport = arr.airport_code
+description: Market segmentation analysis - calculating proportion of international versus domestic flights using aggregate filters for business strategy and regulatory compliance
+...
+---
+type: sql_example
+sql: SELECT passenger_id, first_name, last_name FROM postgres_air.passenger WHERE NOT EXISTS (SELECT 1 FROM postgres_air.boarding_pass WHERE boarding_pass.passenger_id = passenger.passenger_id)
+description: Customer engagement analysis - identifying passengers who booked but never flew to understand booking abandonment and improve conversion rates
+...
+---
+type: sql_example
+sql: SELECT percentile_cont(0.5) WITHIN GROUP (ORDER BY age) AS median_age FROM (SELECT DISTINCT p.passenger_id, p.age FROM postgres_air.passenger p JOIN postgres_air.boarding_pass bp ON p.passenger_id = bp.passenger_id WHERE p.age IS NOT NULL) AS sub
+description: Demographic statistics - calculating median passenger age using statistical functions for market research and service design decisions
+...
+---
+type: sql_example
+sql: WITH days AS (SELECT generate_series('2024-05-01'::date, '2024-05-31'::date, interval '1 day') AS day), daily_revenue AS (SELECT d.day, COALESCE(SUM(b.price),0) AS revenue FROM days d LEFT JOIN postgres_air.booking b ON date(b.update_ts) = d.day GROUP BY d.day) SELECT ROUND(AVG(revenue), 2) AS average_daily_revenue FROM daily_revenue
+description: Revenue trend analysis - generating complete date series to calculate average daily revenue including zero-revenue days for accurate financial reporting
+...
+---
+type: sql_example
+sql: SELECT p1.passenger_id, p1.first_name, p1.last_name, p2.passenger_id, p2.first_name, p2.last_name FROM postgres_air.passenger p1 JOIN postgres_air.passenger p2 ON p1.booking_id = p2.booking_id AND p1.passenger_id < p2.passenger_id WHERE p1.last_name = p2.last_name
+description: Family travel pattern analysis - detecting related passengers traveling together using self-joins to offer family packages and targeted marketing
+...
+---
+type: sql_example
+sql: SELECT AVG(EXTRACT(EPOCH FROM (f2.scheduled_departure - f1.scheduled_arrival))/60) AS avg_connection_time FROM postgres_air.booking_leg bl1 JOIN postgres_air.booking_leg bl2 ON bl1.booking_id = bl2.booking_id AND bl2.leg_num = bl1.leg_num + 1 JOIN postgres_air.flight f1 ON bl1.flight_id = f1.flight_id JOIN postgres_air.flight f2 ON bl2.flight_id = f2.flight_id WHERE f1.arrival_airport = f2.departure_airport
+description: Connection time optimization - analyzing layover durations between connecting flights to improve schedule efficiency and passenger experience
+...
+---
+type: sql_example
+sql: SELECT COUNT(DISTINCT bp.passenger_id) AS total_passengers, COUNT(DISTINCT bp.passenger_id) FILTER (WHERE bp.precheck = true) AS precheck_passengers FROM postgres_air.boarding_pass bp JOIN postgres_air.booking_leg bl ON bp.booking_leg_id = bl.booking_leg_id JOIN postgres_air.flight f ON bl.flight_id = f.flight_id WHERE f.scheduled_departure >= '2024-01-01'
+description: Security processing efficiency - measuring precheck adoption rates to optimize airport security operations and passenger flow management
+...
+---
+type: sql_example
+sql: WITH monthly_travelers AS (SELECT p.passenger_id, date_trunc('month', f.scheduled_departure) AS travel_month, CASE WHEN dep.iso_country = arr.iso_country THEN 'domestic' ELSE 'international' END AS flight_type FROM postgres_air.passenger p JOIN postgres_air.boarding_pass bp ON p.passenger_id = bp.passenger_id JOIN postgres_air.booking_leg bl ON bp.booking_leg_id = bl.booking_leg_id JOIN postgres_air.flight f ON bl.flight_id = f.flight_id JOIN postgres_air.airport dep ON f.departure_airport = dep.airport_code JOIN postgres_air.airport arr ON f.arrival_airport = arr.airport_code) SELECT passenger_id, travel_month FROM monthly_travelers GROUP BY passenger_id, travel_month HAVING COUNT(DISTINCT flight_type) > 1
+description: Travel behavior segmentation - identifying passengers who use both domestic and international services within the same period for cross-selling opportunities
+...
