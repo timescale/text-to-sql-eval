@@ -138,3 +138,89 @@ columns:
 - name: race
   description: Textual description of the character race.
 ...
+---
+type: sql_example
+sql: SELECT s.superhero_name FROM superhero s INNER JOIN hero_attribute ha ON s.id
+  = ha.hero_id INNER JOIN attribute a ON ha.attribute_id = a.id WHERE a.attribute_name
+  = 'Strength' AND ha.attribute_value = (SELECT MAX(attribute_value) FROM hero_attribute
+  WHERE attribute_id = (SELECT id FROM attribute WHERE attribute_name = 'Strength'))
+description: Find the superheroes who have the maximum recorded value for the 'Strength'
+  attribute. This uses a correlated subquery to get the highest strength value and
+  shows heroes matching that score, demonstrating subquery usage to find max attribute
+  holders.
+...
+---
+type: sql_example
+sql: SELECT p.publisher_name, COUNT(s.id) AS hero_count FROM superhero s INNER JOIN
+  publisher p ON s.publisher_id = p.id GROUP BY p.publisher_name HAVING COUNT(s.id)
+  > 10 ORDER BY hero_count DESC
+description: List all publishers who have published more than 10 superheroes and show
+  the count per publisher, ordered descending by count. This demonstrates GROUP BY,
+  HAVING for aggregate filtering, and JOINs to get publisher info.
+...
+---
+type: sql_example
+sql: SELECT s.superhero_name, c1.colour AS eye_colour, c2.colour AS hair_colour FROM
+  superhero s INNER JOIN colour c1 ON s.eye_colour_id = c1.id INNER JOIN colour c2
+  ON s.hair_colour_id = c2.id WHERE c1.colour = 'Blue' AND c2.colour = 'Blond'
+description: List superhero names with blue eyes and blond hair, demonstrating multi-join
+  usage and how to filter for multiple color-related attributes based on the colour
+  reference table.
+...
+---
+type: sql_example
+sql: SELECT sp.power_name, COUNT(DISTINCT hp.hero_id) AS num_heroes FROM hero_power
+  hp INNER JOIN superpower sp ON hp.power_id = sp.id GROUP BY sp.power_name ORDER
+  BY num_heroes DESC LIMIT 5
+description: Show the five most common superpowers and how many heroes possess each,
+  using GROUP BY, COUNT DISTINCT, and ORDER BY with LIMIT for 'top-k' queries.
+...
+---
+type: sql_example
+sql: SELECT s.superhero_name FROM superhero s INNER JOIN hero_power hp ON s.id = hp.hero_id
+  INNER JOIN superpower sp ON hp.power_id = sp.id WHERE sp.power_name = 'Flight' AND
+  EXISTS (SELECT 1 FROM publisher p WHERE p.id = s.publisher_id AND p.publisher_name
+  = 'DC Comics')
+description: Find superhero names that have the 'Flight' power and are published by
+  DC Comics, demonstrating the use of EXISTS for multi-criteria filtering involving
+  joins.
+...
+---
+type: sql_example
+sql: SELECT gender.gender, AVG(superhero.height_cm) AS avg_height FROM superhero INNER
+  JOIN gender ON superhero.gender_id = gender.id GROUP BY gender.gender
+description: Show the average height for each gender, demonstrating aggregation (AVG),
+  JOINs for categorical attributes, and GROUP BY to partition by gender.
+...
+---
+type: sql_example
+sql: SELECT s.superhero_name FROM superhero s INNER JOIN hero_power hp ON s.id = hp.hero_id
+  INNER JOIN superpower sp ON hp.power_id = sp.id WHERE sp.power_name LIKE '%Invisibility%'
+  ORDER BY s.superhero_name
+description: Find the names of superheroes whose powers include 'Invisibility' (even
+  partial matches), demonstrating the use of LIKE for pattern matching in filter conditions.
+...
+---
+type: sql_example
+sql: SELECT s.superhero_name, COUNT(hp.power_id) AS power_count FROM superhero s INNER
+  JOIN hero_power hp ON s.id = hp.hero_id GROUP BY s.superhero_name HAVING COUNT(hp.power_id)
+  > 5 ORDER BY power_count DESC
+description: List superheroes with more than five powers, showing aggregate filtering
+  with HAVING after joining hero-power associations and grouping by superhero.
+...
+---
+type: sql_example
+sql: SELECT c.race, COUNT(s.id) AS total FROM superhero s INNER JOIN race c ON s.race_id
+  = c.id GROUP BY c.race ORDER BY total DESC
+description: Display the distribution of races among superheroes, demonstrating multi-table
+  joins and aggregate counts, grouped and ordered by race occurrence.
+...
+---
+type: sql_example
+sql: SELECT s.superhero_name, a.attribute_name, ha.attribute_value FROM superhero
+  s JOIN hero_attribute ha ON s.id = ha.hero_id JOIN attribute a ON ha.attribute_id
+  = a.id WHERE s.superhero_name = 'Abomination'
+description: List all attribute values (such as Strength, Intelligence, etc.) for
+  the superhero Abomination, showing multi-table joins and filtering on a particular
+  hero.
+...
