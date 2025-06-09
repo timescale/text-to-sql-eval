@@ -122,3 +122,53 @@ columns:
   description: Population density of the state, calculated as population per unit
     area.
 ...
+---
+type: sql_example
+sql: SELECT state_name FROM state WHERE population = (SELECT MAX(population) FROM state)
+description: Superlative queries with subqueries - finding records with maximum or minimum values using nested SELECT statements to identify extremes like most populous state, largest area, highest elevation
+...
+---
+type: sql_example
+sql: SELECT city_name FROM city WHERE population = (SELECT MAX(population) FROM city WHERE state_name = 'texas') AND state_name = 'texas'
+description: Conditional superlatives with filtered subqueries - finding the maximum value within a specific subset, such as the largest city within a particular state, requiring both subquery filtering and main query conditions
+...
+---
+type: sql_example
+sql: SELECT river_name FROM river WHERE traverse IN (SELECT border FROM border_info WHERE state_name = 'texas')
+description: Multi-table relationship queries using IN clauses - connecting geographic entities through intermediate relationships, like finding rivers in states that border a specific state, demonstrating geographic connectivity patterns
+...
+---
+type: sql_example
+sql: SELECT t2.capital FROM state AS t2 JOIN border_info AS t1 ON t2.state_name = t1.border WHERE t1.state_name = 'texas'
+description: JOIN operations for related geographic data - combining tables to find attributes of related entities, such as capitals of states that border a given state, showing explicit relationship traversal
+...
+---
+type: sql_example
+sql: SELECT state_name FROM city WHERE population > 150000 GROUP BY state_name ORDER BY COUNT(city_name) DESC NULLS LAST LIMIT 1
+description: Aggregation with grouping for geographic analysis - using GROUP BY and aggregate functions to analyze patterns like which state has the most major cities, demonstrating data summarization techniques
+...
+---
+type: sql_example
+sql: SELECT river_name FROM river GROUP BY river_name ORDER BY COUNT(DISTINCT traverse) DESC NULLS LAST LIMIT 1
+description: Cross-state geographic feature analysis - identifying features that span multiple states using grouping and counting distinct values, such as rivers that flow through the most states
+...
+---
+type: sql_example
+sql: SELECT state_name FROM state WHERE area = (SELECT MAX(area) FROM state WHERE state_name IN (SELECT traverse FROM river WHERE river_name = 'mississippi')) AND state_name IN (SELECT traverse FROM river WHERE river_name = 'mississippi')
+description: Complex nested filtering with multiple subqueries - finding superlatives within geographically constrained sets, like the largest state through which a specific river flows, combining multiple filtering criteria
+...
+---
+type: sql_example
+sql: SELECT COUNT(city_name) FROM city WHERE population > 150000 AND state_name IN (SELECT border FROM border_info WHERE state_name = 'nebraska')
+description: Counting with geographic relationships - calculating quantities of features in related geographic areas, such as counting major cities in states that border a specific state, useful for regional analysis
+...
+---
+type: sql_example
+sql: SELECT state_name FROM highlow WHERE highest_elevation > (SELECT highest_elevation FROM highlow WHERE state_name = 'colorado')
+description: Comparative geographic queries - finding entities that exceed specific benchmarks by comparing against reference values, such as states with higher elevations than a reference state
+...
+---
+type: sql_example
+sql: SELECT border FROM border_info WHERE state_name IN (SELECT traverse FROM river WHERE river_name = 'mississippi')
+description: Indirect geographic relationships - finding entities related to other entities through intermediate geographic features, like states that border states through which a river flows, showing complex spatial relationships
+...
