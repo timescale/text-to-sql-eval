@@ -1,0 +1,72 @@
+---
+type: sql_example
+sql: SELECT COUNT(client_id) FROM client WHERE TO_CHAR(CAST(birth_date AS TIMESTAMP),
+  'YYYY') < '1960' AND gender = 'M'
+description: Counts the number of male clients born before 1960. Demonstrates use
+  of date filtering with TO_CHAR and conditions on demographic attributes.
+...
+---
+type: sql_example
+sql: SELECT A3, AVG(A11) FROM district WHERE A11 IS NOT NULL GROUP BY A3 ORDER BY
+  AVG(A11) DESC
+description: Finds the average salary in each region, sorted from highest to lowest,
+  ignoring districts with missing salary data. This highlights aggregation, grouping,
+  and sorting by computed fields.
+...
+---
+type: sql_example
+sql: SELECT T1.account_id, MAX(T2.amount) AS max_loan FROM account AS T1 INNER JOIN
+  loan AS T2 ON T1.account_id = T2.account_id GROUP BY T1.account_id HAVING COUNT(T2.loan_id)
+  > 1
+description: Lists account IDs with more than one loan and shows their maximum loan
+  amount. Demonstrates joins, grouping, and HAVING to filter aggregated results.
+...
+---
+type: sql_example
+sql: SELECT T2.A2, COUNT(DISTINCT T1.client_id) FROM client AS T1 INNER JOIN district
+  AS T2 ON T1.district_id = T2.district_id GROUP BY T2.district_id, T2.A2
+description: Counts the number of clients per district, showing how joins and groupings
+  are used for demographic summaries.
+...
+---
+type: sql_example
+sql: SELECT account_id FROM account WHERE frequency = 'POPLATEK PO OBRATU' AND date
+  < '1995-01-01'
+description: Returns account IDs for accounts opened before 1995 that opted for issuance
+  after each transaction. Demonstrates combined filtering on dates and text values.
+...
+---
+type: sql_example
+sql: SELECT T1.account_id, T2.type, T2.issued FROM account AS T1 INNER JOIN disp AS
+  T3 ON T1.account_id = T3.account_id INNER JOIN card AS T2 ON T3.disp_id = T2.disp_id
+  WHERE T2.type = 'gold'
+description: Finds accounts with an associated issued gold card. Illustrates multi-table
+  joins through associative (relationship) tables and usage of lookup columns.
+...
+---
+type: sql_example
+sql: SELECT T3.k_symbol, SUM(T3.amount) AS total_ordered FROM account AS T1 INNER
+  JOIN "order" AS T3 ON T1.account_id = T3.account_id WHERE TO_CHAR(CAST(T1.date AS
+  TIMESTAMP), 'YYYY') = '1996' GROUP BY T3.k_symbol ORDER BY total_ordered DESC
+description: Shows total payment order amounts by payment purpose for accounts opened
+  in 1996, grouped and sorted by order purpose. Demonstrates join, group by, date
+  filtering, and aggregation.
+...
+---
+type: sql_example
+sql: SELECT T1.account_id, AVG(T2.amount) AS average_withdrawal FROM account AS T1
+  INNER JOIN trans AS T2 ON T1.account_id = T2.account_id WHERE T2.type = 'VYDAJ'
+  GROUP BY T1.account_id ORDER BY average_withdrawal DESC LIMIT 10
+description: Finds top 10 accounts by their average outgoing transaction amount (withdrawal).
+  Uses aggregation, filtering by transaction type, and ordering with LIMIT.
+...
+---
+type: sql_example
+sql: SELECT T3.a2, (CAST(SUM(CASE WHEN T2.type = 'OWNER' THEN 1 ELSE 0 END) AS REAL)
+  / NULLIF(COUNT(T2.client_id), 0)) * 100 AS pct_owner FROM disp AS T2 INNER JOIN
+  client AS T1 ON T2.client_id = T1.client_id INNER JOIN district AS T3 ON T1.district_id
+  = T3.district_id GROUP BY T3.a2
+description: Finds the percentage of clients who are owners per district. Shows calculation
+  of percentages by role across groupings, using CASE and NULLIF for zero-division
+  safety.
+...

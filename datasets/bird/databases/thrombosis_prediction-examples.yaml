@@ -1,0 +1,74 @@
+---
+type: sql_example
+sql: SELECT COUNT(*) FROM Patient WHERE SEX = 'F' AND Diagnosis = 'APS'
+description: Calculates the number of female patients who have been diagnosed with
+  APS, demonstrating the use of simple filtering with WHERE clauses on categorical
+  information.
+...
+---
+type: sql_example
+sql: SELECT AVG(T2.ALB) FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID =
+  T2.ID WHERE T2.PLT > 400 AND T1.Diagnosis = 'SLE' AND T1.SEX = 'F'
+description: Computes the average albumin level for female SLE patients with high
+  platelet counts, showing aggregate functions (AVG) in combination with filtering
+  and JOIN.
+...
+---
+type: sql_example
+sql: SELECT DISTINCT T1.ID, T1.SEX, T1.Birthday FROM Patient AS T1 INNER JOIN Laboratory
+  AS T2 ON T1.ID = T2.ID WHERE T2.LDH > 500
+description: Selects demographic data for patients with lab test values beyond a clinical
+  threshold, illustrating use of DISTINCT and numeric filters across joined tables.
+...
+---
+type: sql_example
+sql: SELECT SUM(CASE WHEN Admission = '+' THEN 1 ELSE 0 END) AS inpatients, SUM(CASE
+  WHEN Admission = '-' THEN 1 ELSE 0 END) AS outpatients FROM Patient WHERE SEX =
+  'M'
+description: Provides a count comparison of male in-patients vs outpatients using
+  conditional aggregation (CASE WHEN) for grouped logic inside aggregate functions.
+...
+---
+type: sql_example
+sql: SELECT T1.ID, EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM T1.Birthday)
+  AS Age FROM Patient AS T1 INNER JOIN Examination AS T2 ON T1.ID = T2.ID WHERE T2.RVVT
+  = '+'
+description: Returns IDs and computed ages of patients with a specific positive lab
+  test, showing use of date extraction for age calculation and use of lab findings
+  as filters.
+...
+---
+type: sql_example
+sql: SELECT COUNT(*) FROM Examination WHERE "Thrombosis" = 2 AND "ANA Pattern" = 'S'
+  AND "aCL IgM" > (SELECT AVG("aCL IgM") * 1.2 FROM Examination WHERE "Thrombosis"
+  = 2 AND "ANA Pattern" = 'S')
+description: Counts patients who exceed a dynamically-computed threshold (120% of
+  group average) for a lab measurement, illustrating subqueries and aggregate calculations
+  for complex clinical logic.
+...
+---
+type: sql_example
+sql: SELECT COUNT(DISTINCT T1.ID) FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON
+  T1.ID = T2.ID WHERE T2.IGG >= 2000
+description: Determines how many unique patients have Immunoglobulin G levels above
+  a specified clinical high, using COUNT(DISTINCT ...) and an INNER JOIN to enforce
+  uniqueness and combine demographic/lab data.
+...
+---
+type: sql_example
+sql: SELECT EXTRACT(YEAR FROM T2.Date) - EXTRACT(YEAR FROM T1.Birthday) AS AgeAtLab,
+  T2.HGB FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID WHERE T2.HGB
+  IS NOT NULL ORDER BY T2.HGB DESC LIMIT 1
+description: Finds the age and lab value at the time of the highest hemoglobin count,
+  specifying order and LIMIT to extract only the most extreme case. Demonstrates sorting
+  and cross-table calculations.
+...
+---
+type: sql_example
+sql: SELECT COUNT(DISTINCT T1.ID) FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON
+  T1.ID = T2.ID WHERE T2.FG <= 150 OR T2.FG >= 450 AND T2.WBC > 3.5 AND T2.WBC < 9.0
+  AND T1.SEX = 'M'
+description: Counts distinct male patients with normal white blood cell and abnormal
+  fibrinogen, demonstrating combined conditions and precedence issues in WHERE clauses
+  (logical operator order).
+...
