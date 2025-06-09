@@ -101,13 +101,7 @@ jobs:
 
       - name: Diagnostic information
         run: |
-          echo "branch=${{ inputs.branch }}"
-          echo "setup_model=${{ inputs.setup_model }}"
-          echo "setup_dimensions=${{ inputs.setup_dimensions }}"
-          echo "eval_model=${{ inputs.eval_model }}"
-          echo "entire_schema=${{ inputs.entire_schema }}"
-          echo "gold_tables=${{ inputs.gold_tables }}"
-          echo "filter=${{ inputs.filter }}"
+          echo "${{ toJSON(inputs) }}" | jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]'
           echo "matrix="
           echo '${{ steps.set-matrix.outputs.matrix }}' | jq '.'
   run:

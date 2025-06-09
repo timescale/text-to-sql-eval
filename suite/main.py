@@ -292,6 +292,7 @@ def eval(
             },
             "provider": provider,
             "model": model,
+            "fast": fast,
             "entire_schema": entire_schema,
             "gold_tables": gold_tables,
         },
