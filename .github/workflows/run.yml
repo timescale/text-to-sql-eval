@@ -98,11 +98,11 @@ jobs:
       - name: Generate matrix
         id: set-matrix
         run: |
-          filter_args=""
+          filter_args=()
           if [ -n "${{ inputs.filter }}" ]; then
-            filter_args="--filter ${{ inputs.filter }}"
+            filter_args=(--filter ${{ inputs.filter }})
           fi
-          MATRIX=$(uv run python3 -m suite generate-matrix $filter_args)"
+          MATRIX=$(uv run python3 -m suite generate-matrix "${filter_args[@]}")
           echo "${MATRIX}" | jq '.'
           echo "matrix=${MATRIX}" >> "$GITHUB_OUTPUT"
 
