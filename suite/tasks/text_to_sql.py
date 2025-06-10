@@ -1,6 +1,6 @@
 import os
-from textwrap import dedent
 import time
+from textwrap import dedent
 
 import polars as pl
 import psycopg
@@ -11,7 +11,7 @@ from pydantic_ai.messages import ModelRequest
 from pydantic_ai.models import ModelRequestParameters
 from pydantic_ai.tools import ToolDefinition
 from sql_metadata import Parser
-from tokencost import calculate_cost_by_tokens, TOKEN_COSTS
+from tokencost import TOKEN_COSTS, calculate_cost_by_tokens
 
 from ..agents import AgentFn
 from ..exceptions import AgentFnError, GetExpectedError, QueryExecutionError
@@ -147,6 +147,7 @@ async def run(
     if llm_judge != "none":
         if status == "fail" or llm_judge == "always":
             from tabulate import tabulate
+
             parts = [
                 dedent(f"""
                     Is the following query equivalent to the expected query for the given question?
@@ -161,7 +162,12 @@ async def run(
 
                     Subset of expected results:
                 """),
-                tabulate(expected.head(10).to_pandas(), headers="keys", tablefmt="github", showindex=False),
+                tabulate(
+                    expected.head(10).to_pandas(),
+                    headers="keys",
+                    tablefmt="github",
+                    showindex=False,
+                ),
                 dedent(f"""
 
                     Actual Query:
@@ -171,7 +177,12 @@ async def run(
 
                     Subset of actual results:
                 """),
-                tabulate(actual.head(10).to_pandas(), headers="keys", tablefmt="github", showindex=False),
+                tabulate(
+                    actual.head(10).to_pandas(),
+                    headers="keys",
+                    tablefmt="github",
+                    showindex=False,
+                ),
             ]
             messages = [
                 ModelRequest.user_text_prompt("".join(parts)),
@@ -205,10 +216,10 @@ async def run(
                                     "judgement",
                                     "explanation",
                                 ],
-                            }
+                            },
                         )
                     ]
-                )
+                ),
             )
             part = model_response.parts[0]
             if part.part_kind != "tool-call":

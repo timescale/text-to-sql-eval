@@ -21,6 +21,7 @@ from .types import Results
 from .utils import (
     expand_embedding_model,
     expand_task_model,
+    get_git_info,
     get_psycopg_str,
 )
 
@@ -292,12 +293,17 @@ def eval(
     failed_evals = {}  # type: dict[str, list[str]]
     failed_error_counts = {}  # type: dict[str, dict[str, int]]
     eval_results = {}  # type: dict[str, Any]
+    git_info = get_git_info(root_directory)
     results: Dict[str, str | Dict[str, Results]] = {
         "task": task,
         "details": {
             "agent": {
                 "name": agent,
                 "version": get_agent_version(agent),
+            },
+            "eval_suite": {
+                "branch": git_info.branch,
+                "commit": git_info.commit,
             },
             "provider": provider,
             "model": model,

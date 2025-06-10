@@ -9,22 +9,12 @@ import pydantic_ai
 from psycopg.sql import SQL, Identifier
 
 from ..types import Provider, TextToSql
-from ..utils import get_db_url_from_connection
+from ..utils import get_db_url_from_connection, get_git_info
 
 
 def version() -> str:
-    git_dir = Path(__file__).parent.parent.parent.parent / "pgai" / ".git"
-    with open(git_dir / "HEAD", "r") as f:
-        head = f.read().strip()
-    ref = None
-    if head.startswith("ref:"):
-        ref = head.split(" ")[1]
-        with open(git_dir / ref, "r") as f:
-            commit = f.read().strip()
-    else:
-        commit = head
-    branch = ref.split("/", 2)[2] if ref is not None else "??"
-    return f"{branch}-{commit}"
+    git_info = get_git_info(Path(__file__).parent.parent.parent.parent / "pgai")
+    return f"{git_info.branch}-{git_info.commit}"
 
 
 async def setup(

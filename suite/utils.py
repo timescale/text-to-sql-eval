@@ -1,4 +1,6 @@
 import os
+from dataclasses import dataclass
+from pathlib import Path
 from typing import Optional
 
 from dotenv import load_dotenv
@@ -80,3 +82,35 @@ def expand_task_model(model: str) -> str:
     elif model in OPENAI_TASK_MODELS:
         model = f"openai:{model}"
     return model
+
+
+@dataclass
+class GitInfo:
+    branch: str
+    commit: str
+
+
+def get_git_info(path: Path) -> GitInfo:
+    """
+    Get the git information from a given path.
+
+    Returns:
+        A dictionary containing the branch and commit information.
+    """
+    git_info = GitInfo(branch="??", commit="??")
+    git_dir = path / ".git"
+    with (git_dir / "HEAD").open("r") as f:
+        head = f.read().strip()
+    if head.startswith("ref:"):
+        ref = head.split(" ")[1]
+        with (git_dir / ref).open("r") as f:
+            commit = f.read().strip()
+        branch = ref.split("/", 2)[2]
+    else:
+        commit = head
+        branch = "??"
+
+    git_info.branch = branch
+    git_info.commit = commit
+
+    return git_info
