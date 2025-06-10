@@ -70,7 +70,7 @@ jobs:
     steps:
       - name: Input diagnostic information
         run: |
-          echo "${{ toJSON(inputs) }}" | jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]'
+          echo '${{ toJSON(inputs) }}' | jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]'
 
       - uses: actions/checkout@v4
 
