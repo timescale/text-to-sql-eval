@@ -1,7 +1,7 @@
+import asyncio
 import os
 import random
 from pathlib import Path
-from time import sleep
 
 import pgai.semantic_catalog as sc
 import psycopg
@@ -147,7 +147,7 @@ async def text_to_sql(
                     print(
                         f"    Rate limit hit, waiting for {wait} seconds...", flush=True
                     )
-                    sleep(wait)
+                    await asyncio.sleep(wait)
                     continue
                 raise e
             break

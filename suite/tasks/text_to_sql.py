@@ -1,12 +1,17 @@
 import os
+from textwrap import dedent
 import time
 
 import polars as pl
 import psycopg
 import simplejson as json
 from polars.testing import assert_frame_equal, assert_series_equal
+from pydantic_ai.direct import model_request
+from pydantic_ai.messages import ModelRequest
+from pydantic_ai.models import ModelRequestParameters
+from pydantic_ai.tools import ToolDefinition
 from sql_metadata import Parser
-from tokencost import calculate_cost_by_tokens
+from tokencost import calculate_cost_by_tokens, TOKEN_COSTS
 
 from ..agents import AgentFn
 from ..exceptions import AgentFnError, GetExpectedError, QueryExecutionError
@@ -53,12 +58,15 @@ async def run(
     model: str,
     entire_schema: bool,
     gold_tables: bool,
+    llm_judge: str,
     *args,
 ) -> bool:
     if os.path.exists(f"{path}/actual_query.sql"):
         os.unlink(f"{path}/actual_query.sql")
     if os.path.exists(f"{path}/actual_messages.txt"):
         os.unlink(f"{path}/actual_messages.txt")
+    if os.path.exists(f"{path}/details.json"):
+        os.unlink(f"{path}/details.json")
     with open(f"{path}/eval.json", "r") as fp:
         gold_query = json.load(fp).get("query")
     gold_tables_list = []
@@ -114,15 +122,101 @@ async def run(
         },
     )
 
-    usage["cached_tokens_cost"] = float(
-        calculate_cost_by_tokens(usage["cached_tokens"], model, "cached")
-    )
-    usage["request_tokens_cost"] = float(
-        calculate_cost_by_tokens(usage["request_tokens"], model, "input")
-    )
-    usage["response_tokens_cost"] = float(
-        calculate_cost_by_tokens(usage["response_tokens"], model, "output")
-    )
+    cost_model = model
+    if cost_model not in TOKEN_COSTS:
+        cost_model = f"{provider}/{model}"
+
+    try:
+        usage["cached_tokens_cost"] = float(
+            calculate_cost_by_tokens(usage["cached_tokens"], cost_model, "cached")
+        )
+        usage["request_tokens_cost"] = float(
+            calculate_cost_by_tokens(usage["request_tokens"], cost_model, "input")
+        )
+        usage["response_tokens_cost"] = float(
+            calculate_cost_by_tokens(usage["response_tokens"], cost_model, "output")
+        )
+    except KeyError:
+        # model not supported by tokencost
+        usage["cached_tokens_cost"] = 0.0
+        usage["request_tokens_cost"] = 0.0
+        usage["response_tokens_cost"] = 0.0
+
+    status = "pass" if compare(actual, expected) else "fail"
+    llm_judgement = None
+    if llm_judge != "none":
+        if status == "fail" or llm_judge == "always":
+            from tabulate import tabulate
+            parts = [
+                dedent(f"""
+                    Is the following query equivalent to the expected query for the given question?
+                    You MUST answer using the `sql_judge` tool call.
+
+                    Question: {inp}
+
+                    Expected Query:
+                    ```sql
+                    {gold_query}
+                    ```
+
+                    Subset of expected results:
+                """),
+                tabulate(expected.head(10).to_pandas(), headers="keys", tablefmt="github", showindex=False),
+                dedent(f"""
+
+                    Actual Query:
+                    ```sql
+                    {query}
+                    ```
+
+                    Subset of actual results:
+                """),
+                tabulate(actual.head(10).to_pandas(), headers="keys", tablefmt="github", showindex=False),
+            ]
+            messages = [
+                ModelRequest.user_text_prompt("".join(parts)),
+            ]
+            # print(messages[0].parts[0].content)
+            model_response = await model_request(
+                "openai:gpt-4.1-nano",
+                messages,
+                model_request_parameters=ModelRequestParameters(
+                    output_tools=[
+                        ToolDefinition(
+                            name="sql_judge",
+                            description="Provide a yes or no answer to whether the actual query is equivalent to the expected query for the given question along with reasoning on why.",
+                            parameters_json_schema={
+                                "type": "object",
+                                "properties": {
+                                    "judgement": {
+                                        "type": "boolean",
+                                        "description": (
+                                            "Indicate whether the actual query is equivalent to the expected query"
+                                        ),
+                                    },
+                                    "explanation": {
+                                        "type": "string",
+                                        "description": (
+                                            "Concise explanation of the judgement if queries were equivalent or not"
+                                        ),
+                                    },
+                                },
+                                "required": [
+                                    "judgement",
+                                    "explanation",
+                                ],
+                            }
+                        )
+                    ]
+                )
+            )
+            part = model_response.parts[0]
+            if part.part_kind != "tool-call":
+                print("    Unexpected response from LLM judge, expected tool call")
+            else:
+                args = part.args_as_dict()
+                llm_judgement = args.get("judgement", None)
+                llm_explanation = args.get("explanation", "")
 
     details = {
         "generated_query": query,
@@ -130,9 +224,19 @@ async def run(
         "duration": duration,
         "usage": usage,
     }
+
     if gold_tables:
         details["gold_tables"] = gold_tables_list
-    return {
-        "status": "pass" if compare(actual, expected) else "fail",
+    if llm_judgement is not None:
+        details["llm_judge"] = llm_judgement
+        details["llm_explanation"] = llm_explanation
+
+    return_obj = {
+        "status": status,
         "details": details,
     }
+
+    with open(f"{path}/details.json", "w") as fp:
+        json.dump(return_obj, fp, indent=2, ignore_nan=True, use_decimal=True)
+
+    return return_obj

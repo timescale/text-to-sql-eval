@@ -251,6 +251,12 @@ def setup(
     default=False,
     help="Agent should only use gold tables in LLM prompt",
 )
+@click.option(
+    "--llm-judge",
+    default="none",
+    help="Use LLM to judge evals (allowed values: 'all', 'fail', 'none')",
+    callback=lambda ctx, param, value: value.lower() if value else "none",
+)
 @click.option("--strict", is_flag=True, default=False, help="Use strict evaluation")
 def eval(
     task: str,
@@ -262,6 +268,7 @@ def eval(
     fast: bool,
     entire_schema: bool,
     gold_tables: bool,
+    llm_judge: str,
     strict: bool,
 ) -> None:
     """
@@ -276,6 +283,8 @@ def eval(
         raise ValueError(f"Invalid model: {model}") from None
     if task not in ["get_tables", "text_to_sql"]:
         raise ValueError(f"Invalid task: {task}")
+    if llm_judge not in ["all", "fail", "none"]:
+        raise ValueError(f"Invalid llm judge: {llm_judge}")
     datasets = sorted(os.listdir(datasets_dir) if dataset == "all" else [dataset])
     task_fn = get_tables if task == "get_tables" else text_to_sql
     agent_fn = get_agent_fn(agent, task)
@@ -370,6 +379,7 @@ def eval(
                             model,
                             entire_schema,
                             gold_tables,
+                            llm_judge,
                             strict,
                         )
                     except GetExpectedError:
@@ -413,6 +423,8 @@ def eval(
                         "response_tokens_cost"
                     ]
                 to_print = f"    {result['status'].upper()}"
+                if result["details"].get("llm_judge", None) is not None:
+                    to_print += f" (LLM judge: {result['details']['llm_judge']})"
                 print(to_print, end="", flush=True)
                 if result["status"] == "error":
                     class_name = result["details"]["exception_class"]
