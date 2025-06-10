@@ -145,7 +145,7 @@ async def run(
     status = "pass" if compare(actual, expected) else "fail"
     llm_judgement = None
     if llm_judge != "none":
-        if status == "fail" or llm_judge == "always":
+        if status == "fail" or llm_judge == "all":
             from tabulate import tabulate
 
             parts = [
