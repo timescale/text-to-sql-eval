@@ -8,14 +8,6 @@ on:
         required: true
         type: string
         default: 'main'
-      task:
-        description: What task to evaluate
-        required: true
-        type: choice
-        default: 'text_to_sql'
-        options:
-          - get_tables
-          - text_to_sql
       agent:
         description: What agent to use
         required: true
@@ -45,6 +37,15 @@ on:
         required: true
         type: boolean
         default: true
+      llm_judge:
+        description: Whether to use LLM to judge results
+        required: true
+        type: choice
+        options:
+          - none
+          - fail
+          - all
+        default: 'none'
       entire_schema:
         description: Whether to use the entire schema for LLM
         required: true
@@ -67,6 +68,10 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
+      - name: Input diagnostic information
+        run: |
+          echo '${{ toJSON(inputs) }}' | jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]'
+
       - uses: actions/checkout@v4
 
       - uses: ./.github/actions/setup-pgai
@@ -93,17 +98,15 @@ jobs:
       - name: Generate matrix
         id: set-matrix
         run: |
-          filter_args=""
+          filter_args=()
           if [ -n "${{ inputs.filter }}" ]; then
-            filter_args="--filter ${{ inputs.filter }}"
+            filter_args=(--filter ${{ inputs.filter }})
           fi
-          echo "matrix=$(uv run python3 -m suite generate-matrix $filter_args)" >> "$GITHUB_OUTPUT"
+          MATRIX=$(uv run python3 -m suite generate-matrix "${filter_args[@]}")
+          echo "${MATRIX}" | jq '.'
+          echo "matrix=${MATRIX}" >> "$GITHUB_OUTPUT"
 
-      - name: Diagnostic information
-        run: |
-          echo "${{ toJSON(inputs) }}" | jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]'
-          echo "matrix="
-          echo '${{ steps.set-matrix.outputs.matrix }}' | jq '.'
+
   run:
     needs: generate_matrix
     runs-on: ubuntu-latest
@@ -178,7 +181,7 @@ jobs:
       - name: Setup dataset ${{ matrix.dataset }} ${{ matrix.database }}
         run: uv run python3 -m suite setup --model ${{ inputs.setup_model }} --dimensions ${{ inputs.setup_dimensions }} --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} ${{ inputs.agent }}
       - name: Run eval
-        run: uv run python3 -m suite eval --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} ${{ inputs.entire_schema && '--entire-schema' || '' }} --model ${{ inputs.eval_model }} ${{ inputs.fast_mode && '--fast' || '' }} ${{ inputs.gold_tables && '--gold-tables' || '' }} ${{ inputs.agent }} ${{ inputs.task }}
+        run: uv run python3 -m suite eval --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} ${{ inputs.entire_schema && '--entire-schema' || '' }} --model ${{ inputs.eval_model }} ${{ inputs.fast_mode && '--fast' || '' }} ${{ inputs.gold_tables && '--gold-tables' || '' }} --llm-judge ${{ inputs.llm_judge }} ${{ inputs.agent }} text_to_sql
 
       - run: mv results/results.json results-${{ matrix.dataset }}-${{ matrix.database }}.json
 
