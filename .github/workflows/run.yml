@@ -8,14 +8,6 @@ on:
         required: true
         type: string
         default: 'main'
-      task:
-        description: What task to evaluate
-        required: true
-        type: choice
-        default: 'text_to_sql'
-        options:
-          - get_tables
-          - text_to_sql
       agent:
         description: What agent to use
         required: true
@@ -189,7 +181,7 @@ jobs:
       - name: Setup dataset ${{ matrix.dataset }} ${{ matrix.database }}
         run: uv run python3 -m suite setup --model ${{ inputs.setup_model }} --dimensions ${{ inputs.setup_dimensions }} --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} ${{ inputs.agent }}
       - name: Run eval
-        run: uv run python3 -m suite eval --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} ${{ inputs.entire_schema && '--entire-schema' || '' }} --model ${{ inputs.eval_model }} ${{ inputs.fast_mode && '--fast' || '' }} ${{ inputs.gold_tables && '--gold-tables' || '' }} --llm-judge ${{ inputs.llm_judge }} ${{ inputs.agent }} ${{ inputs.task }}
+        run: uv run python3 -m suite eval --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} ${{ inputs.entire_schema && '--entire-schema' || '' }} --model ${{ inputs.eval_model }} ${{ inputs.fast_mode && '--fast' || '' }} ${{ inputs.gold_tables && '--gold-tables' || '' }} --llm-judge ${{ inputs.llm_judge }} ${{ inputs.agent }} text_to_sql
 
       - run: mv results/results.json results-${{ matrix.dataset }}-${{ matrix.database }}.json
 
