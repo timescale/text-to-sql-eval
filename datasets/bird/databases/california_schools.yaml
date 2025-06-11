@@ -11,7 +11,7 @@ description: Contains annual counts and percentages of enrollment, free meals, a
   with basic school and charter characteristics.
 columns:
 - name: cdscode
-  description: Unique 14-digit California Department of Education school identifier.
+  description: Unique 14-digit California Department of Education school identifier. Use this field to join with schools.cdscode and satscores.cds.
 - name: Academic Year
   description: School year the FRPM data pertain to.
 - name: County Code
@@ -33,9 +33,9 @@ columns:
 - name: Educational Option Type
   description: Designation of instructional option (e.g., Traditional, Alternative).
 - name: NSLP Provision Status
-  description: National School Lunch Program provision designation, if any.
+  description: National School Lunch Program provision designation. Value "Multiple Provision Types" indicates schools offering multiple meal program provisions.
 - name: Charter School (Y/N)
-  description: Flag indicating whether the school is a charter (1) or not (0).
+  description: Flag indicating whether the school is a charter (1) or not (0). Non-chartered schools have value 0.
 - name: Charter School Number
   description: Charter authorization number if applicable.
 - name: Charter Funding Type
@@ -43,29 +43,29 @@ columns:
 - name: irc
   description: Indicator for independent reporting charter (1=yes).
 - name: Low Grade
-  description: Lowest grade level served at the school during the year.
+  description: Lowest grade level served at the school during the year. This defines the grade span served, not a filter for calculations.
 - name: High Grade
-  description: Highest grade level served at the school during the year.
+  description: Highest grade level served at the school during the year. This defines the grade span served, not a filter for calculations.
 - name: Enrollment (K-12)
-  description: Total K-12 student enrollment count.
+  description: Total K-12 student enrollment count. This is the pre-calculated total for kindergarten through 12th grade students. Use this field when questions refer to "K-12", "grades 1 through 12", or similar grade span terminology.
 - name: Free Meal Count (K-12)
-  description: Number of K-12 students eligible for free meals.
+  description: Number of K-12 students eligible for free meals. This is a subset of students who qualify for completely free meals.
 - name: Percent (%) Eligible Free (K-12)
-  description: Proportion of K-12 enrollment eligible for free meals.
+  description: Proportion of K-12 enrollment eligible for free meals. This is pre-calculated as a percentage.
 - name: FRPM Count (K-12)
-  description: Number of K-12 students eligible for free or reduced-price meals.
+  description: Number of K-12 students eligible for free or reduced-price meals. FRPM stands for "Free and Reduced Price Meals" and includes both free and reduced-price meal recipients.
 - name: Percent (%) Eligible FRPM (K-12)
   description: Percentage of K-12 students eligible for free or reduced-price meals.
 - name: Enrollment (Ages 5-17)
-  description: "Enrollment count limited to students aged 5\u201317."
+  description: "Enrollment count limited to students aged 5–17."
 - name: Free Meal Count (Ages 5-17)
-  description: "Number of 5\u201317 year olds eligible for free meals."
+  description: "Number of 5–17 year olds eligible for free meals."
 - name: Percent (%) Eligible Free (Ages 5-17)
-  description: "Percentage of 5\u201317 enrollment eligible for free meals."
+  description: "Percentage of 5–17 enrollment eligible for free meals."
 - name: FRPM Count (Ages 5-17)
-  description: "Number of 5\u201317 year olds eligible for free or reduced meals."
+  description: "Number of 5–17 year olds eligible for free or reduced meals."
 - name: Percent (%) Eligible FRPM (Ages 5-17)
-  description: "Proportion of 5\u201317 enrollment eligible for free or reduced meals."
+  description: "Proportion of 5–17 enrollment eligible for free or reduced meals."
 - name: 2013-14 CALPADS Fall 1 Certification Status
   description: Indicator whether 2013-14 CALPADS Fall 1 data were certified.
 ...
@@ -77,8 +77,7 @@ description: Stores SAT performance metrics, participation, and senior enrollmen
   for each California school, district, or county.
 columns:
 - name: cds
-  description: 14-digit California school, district, or county code serving as primary
-    key.
+  description: 14-digit California school, district, or county code serving as primary key. Use this field to join with schools.cdscode and frpm.cdscode.
 - name: rtype
   description: 'Reporting level: S=school, D=district, C=county, or other aggregate.'
 - name: sname
@@ -90,7 +89,7 @@ columns:
 - name: enroll12
   description: Number of 12th-grade students enrolled.
 - name: numtsttakr
-  description: Count of students who took the SAT.
+  description: Count of students who took the SAT. Use this as the denominator when calculating rates or percentages involving SAT test takers.
 - name: avgscrread
   description: Average SAT critical reading score.
 - name: avgscrmath
@@ -98,7 +97,7 @@ columns:
 - name: avgscrwrite
   description: Average SAT writing score.
 - name: numge1500
-  description: Number of SAT test takers scoring 1500 or higher combined.
+  description: Number of SAT test takers scoring 1500 or higher combined. This field represents students with high SAT performance. Use this when questions refer to "students scoring 1500 or more", "test score greater than or equal to 1500", or similar high-performance criteria.
 ...
 ---
 schema: public
@@ -108,13 +107,13 @@ description: Provides master directory information and attributes for every Cali
   public school, including location, status, grades, contacts, and charter details.
 columns:
 - name: cdscode
-  description: 14-digit unique CDE code for the school, primary key.
+  description: 14-digit unique CDE code for the school, primary key. Use this field to join with frpm.cdscode and satscores.cds.
 - name: ncesdist
   description: NCES district identifier.
 - name: ncesschool
   description: NCES school identifier.
 - name: statustype
-  description: Operational status of the school (e.g., Active, Closed).
+  description: Operational status of the school (e.g., Active, Closed). Schools with StatusType='Merged' have been merged with other institutions.
 - name: county
   description: Name of the county where the school is located.
 - name: district
@@ -132,7 +131,7 @@ columns:
 - name: state
   description: State abbreviation, always 'CA'.
 - name: mailstreet
-  description: Mailing street address.
+  description: Mailing street address. This is the "postal street address" referenced in questions about mailing addresses.
 - name: mailstrabr
   description: Abbreviated mailing street address.
 - name: mailcity
@@ -152,17 +151,17 @@ columns:
 - name: closeddate
   description: Date the school closed, if applicable.
 - name: charter
-  description: Indicator whether the school operates as a charter (1=yes).
+  description: Indicator whether the school operates as a charter (1=yes, 0=no). Non-chartered schools have value 0.
 - name: charternum
   description: Assigned charter number.
 - name: fundingtype
   description: Denotes whether the charter is directly or locally funded.
 - name: doc
-  description: District of Charter code when school is a charter.
+  description: District of Charter code. DOC=31 indicates "State Special Schools", DOC=52 indicates "Elementary School District", DOC=54 indicates "Unified School District".
 - name: doctype
   description: Type description for district of charter (e.g., COE, Unified).
 - name: soc
-  description: School of Charter code if applicable.
+  description: School of Charter code. SOC=62 indicates "Intermediate/Middle Schools".
 - name: soctype
   description: Type description for school of charter.
 - name: edopscode
@@ -174,19 +173,19 @@ columns:
 - name: eilname
   description: Economic Impact Aid program name.
 - name: gsoffered
-  description: Grade span offered by the school.
+  description: Grade span offered by the school (e.g., "K-8" for Kindergarten to 8th grade).
 - name: gsserved
   description: Grade span currently served.
 - name: virtual
   description: Indicates whether the school is virtual (Y/N/P).
 - name: magnet
-  description: Flag for magnet school status (1=yes).
+  description: Flag for magnet school status (1=yes, 0=no). Schools offering magnet programs have value 1.
 - name: latitude
   description: Latitude coordinate of the school location.
 - name: longitude
   description: Longitude coordinate of the school location.
 - name: admfname1
-  description: First name of primary administrator contact.
+  description: First name of primary administrator contact. Schools can have up to 3 administrators.
 - name: admlname1
   description: Last name of primary administrator contact.
 - name: admemail1
@@ -205,4 +204,73 @@ columns:
   description: Email of additional administrator.
 - name: lastupdate
   description: Date the record was last updated.
+...
+---
+type: sql_example
+sql: |
+  SELECT T1.column1, T2.column2, T3.column3
+  FROM satscores AS T1 
+  INNER JOIN schools AS T2 ON T1.cds = T2.cdscode
+  INNER JOIN frpm AS T3 ON T2.cdscode = T3.cdscode
+  WHERE condition
+description: Standard three-table join pattern for queries involving SAT scores, school information, and meal program data.
+...
+---
+type: sql_example
+sql: |
+  SELECT school_field
+  FROM schools 
+  ORDER BY numeric_field DESC NULLS LAST 
+  LIMIT 1 OFFSET n-1
+description: Get the nth highest/lowest value using LIMIT and OFFSET. For the 7th highest, use OFFSET 6.
+...
+---
+type: sql_example
+sql: |
+  SELECT CAST(numerator_field AS REAL) / NULLIF(denominator_field, 0) AS rate
+  FROM table_name
+description: Calculate rates and percentages safely by casting to REAL and using NULLIF to prevent division by zero errors.
+...
+---
+type: sql_example
+sql: |
+  SELECT T2.AdmFName1, T2.AdmLName1, T2.AdmFName2, T2.AdmLName2, T2.AdmFName3, T2.AdmLName3
+  FROM schools AS T2
+  WHERE condition
+description: Select all administrator names when questions ask about school administration or administrators.
+...
+---
+type: fact
+description: |
+  "K-12" and "grades 1 through 12" refer to the same concept - students from kindergarten through 12th grade. Use the pre-calculated "Enrollment (K-12)" field rather than filtering by grade ranges when these terms appear in questions.
+...
+---
+type: fact
+description: |
+  "Complete address" includes Street, City, State, and Zip code fields from the schools table.
+...
+---
+type: fact
+description: |
+  "Postal street address" and "mailing street" both refer to the mailstreet field in the schools table.
+...
+---
+type: fact
+description: |
+  Each school can have up to 3 administrators with separate name and email fields (admfname1/admlname1/admemail1, admfname2/admlname2/admemail2, admfname3/admlname3/admemail3). When questions ask about "administrators" or "administration", include all relevant administrator fields.
+...
+---
+type: fact
+description: |
+  "Excellence rate" is calculated as numge1500 / numtsttakr (number of students scoring 1500+ divided by total test takers).
+...
+---
+type: fact
+description: |
+  "Eligible free rate" or "percent eligible for free meals" should be calculated as "Free Meal Count (K-12)" / "Enrollment (K-12)" when not using a pre-calculated percentage field.
+...
+---
+type: fact
+description: |
+  When questions mention both enrollment/meal data AND SAT scores, you typically need to join all three tables (schools, frpm, satscores) using the relationship schools.cdscode = frpm.cdscode = satscores.cds.
 ...
