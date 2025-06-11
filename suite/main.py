@@ -310,6 +310,7 @@ def eval(
             },
             "provider": provider,
             "model": model,
+            "llm_judge": llm_judge,
             "fast": fast,
             "entire_schema": entire_schema,
             "gold_tables": gold_tables,
