@@ -3,6 +3,7 @@ import json
 import os
 import subprocess
 import time
+from datetime import UTC, datetime
 from pathlib import Path
 from traceback import format_exc
 from typing import Dict, Optional
@@ -296,6 +297,8 @@ def eval(
     git_info = get_git_info(root_directory)
     results: Dict[str, str | Dict[str, Results]] = {
         "task": task,
+        "start_time": datetime.now(UTC).isoformat(),
+        "end_time": None,
         "details": {
             "agent": {
                 "name": agent,
@@ -489,6 +492,8 @@ def eval(
             }
 
     asyncio.run(run())
+
+    results["end_time"] = datetime.now(UTC).isoformat()
     with (results_dir / "results.json").open("w") as fp:
         json.dump(
             results,
@@ -502,6 +507,9 @@ def generate_report():
     if not results_dir.exists() or not results_dir.is_dir():
         print("No results direcotry found. Please run the eval command first.")
         return
+
+    start_time = None  # type: Optional[datetime]
+    end_time = None  # type: Optional[datetime]
 
     for results_file in results_dir.iterdir():
         if not results_file.is_file() or not results_file.name.endswith(".json"):
@@ -517,6 +525,16 @@ def generate_report():
                 print("Skipping file...")
                 continue
         results = results_obj["results"]
+
+        results_start = results_obj.get("start_time", None)
+        if results_start is not None:
+            results_start = datetime.fromisoformat(results_start)
+            start_time = min(start_time, results_start) if start_time else results_start
+        results_end = results_obj.get("end_time", None)
+        if results_end is not None:
+            results_end = datetime.fromisoformat(results_end)
+            end_time = max(end_time, results_end) if end_time else results_end
+
         for dataset, result in results.items():
             if dataset not in combined_results:
                 combined_results[dataset] = {
@@ -641,11 +659,13 @@ def generate_report():
                     cursor.execute(
                         """
                         INSERT INTO runs (source, start_time, end_time, scores, task, details)
-                        VALUES (%s, now(), now(), %s, %s, %s)
+                        VALUES (%s, %s, %s, %s, %s, %s)
                         RETURNING id
                         """,
                         (
                             os.environ.get("SOURCE", "local"),
+                            start_time if start_time else datetime.now(UTC),
+                            end_time if end_time else datetime.now(UTC),
                             json.dumps(scores),
                             results_obj["task"],
                             json.dumps(results_obj["details"]),
