@@ -14,8 +14,8 @@ with psycopg.connect(os.environ["REPORT_POSTGRES_DSN"]) as conn:
             CREATE TABLE runs (
                 id SERIAL PRIMARY KEY,
                 source TEXT NOT NULL,
-                start_time TIMESTAMP NOT NULL,
-                end_time TIMESTAMP,
+                start_time TIMESTAMPTZ NOT NULL,
+                end_time TIMESTAMPTZ,
                 task TEXT NOT NULL,
                 scores JSON,
                 details JSON
