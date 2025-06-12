@@ -161,3 +161,65 @@ columns:
 - name: short_state
   description: Two-letter USPS abbreviation for the state.
 ...
+---
+type: sql_example
+sql: SELECT T1.first_name, T1.last_name, T2.major_name FROM member AS T1 INNER JOIN
+  major AS T2 ON T1.link_to_major = T2.major_id WHERE T2.college = 'Engineering'
+description: Demonstrates multi-table joins to find members of a certain college by
+  joining the member and major tables and filtering on the college name.
+...
+---
+type: sql_example
+sql: SELECT event_name, COUNT(*) AS attendance_count FROM event INNER JOIN attendance
+  ON event.event_id = attendance.link_to_event GROUP BY event_name HAVING COUNT(*)
+  > 15
+description: Uses JOIN, GROUP BY, and HAVING to find events with attendance greater
+  than 15, illustrating event-attendance aggregation.
+...
+---
+type: sql_example
+sql: SELECT first_name, last_name FROM member WHERE t_shirt_size = 'Large' OR t_shirt_size
+  = 'Small'
+description: Filters members with a specific t-shirt size using a WHERE clause with
+  multiple conditions, highlighting simple attribute filtering.
+...
+---
+type: sql_example
+sql: SELECT SUM(cost) AS total_approved_expenses FROM expense WHERE approved = TRUE
+description: Calculates the total approved expenses, demonstrating summation with
+  a boolean filter.
+...
+---
+type: sql_example
+sql: SELECT event_name, MAX(cost) AS max_expense FROM event INNER JOIN budget ON event.event_id
+  = budget.link_to_event INNER JOIN expense ON budget.budget_id = expense.link_to_budget
+  GROUP BY event_name
+description: Computes the largest individual expense for each event, demonstrating
+  the use of aggregation with GROUP BY and multi-table joins.
+...
+---
+type: sql_example
+sql: SELECT department, COUNT(*) FROM major GROUP BY department
+description: Counts the number of majors for each department, showing GROUP BY and
+  aggregation over a categorical attribute.
+...
+---
+type: sql_example
+sql: SELECT T1.event_name, T2.category FROM event AS T1 INNER JOIN budget AS T2 ON
+  T1.event_id = T2.link_to_event WHERE T2.spent > T2.amount
+description: Finds events and their budget categories that went over budget, using
+  a join and a comparison between columns.
+...
+---
+type: sql_example
+sql: SELECT first_name, last_name FROM member WHERE phone LIKE '435%'
+description: Returns members whose phone number begins with 435, illustrating pattern
+  matching with the LIKE operator.
+...
+---
+type: sql_example
+sql: SELECT city, COUNT(DISTINCT zip_code) FROM zip_code GROUP BY city ORDER BY COUNT(DISTINCT
+  zip_code) DESC LIMIT 5
+description: Finds the top 5 cities with the most zip codes, demonstrating GROUP BY,
+  ORDER BY, and LIMIT in geographic data analysis.
+...

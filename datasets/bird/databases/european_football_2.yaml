@@ -452,3 +452,125 @@ columns:
 - name: defencedefenderlineclass
   description: Class label describing the defensive line approach (e.g., offside trap).
 ...
+---
+type: sql_example
+sql: "SELECT t1.name, COUNT(t2.id) AS matches_played\nFROM League AS t1 \nINNER JOIN\
+  \ Match AS t2 ON t1.id = t2.league_id\nWHERE t2.season = '2014/2015'\nGROUP BY t1.name\n\
+  ORDER BY matches_played DESC\nLIMIT 3;"
+description: Find the top 3 leagues with the most matches in the 2014/2015 season.
+  This demonstrates aggregation, filtering by season, joining League and Match, and
+  ordering by an aggregate.
+...
+---
+type: sql_example
+sql: "SELECT t1.player_name, CAST(SUM(t2.finishing) AS REAL) / NULLIF(COUNT(*), 0)\
+  \ AS avg_finishing\nFROM Player AS t1 \nINNER JOIN Player_Attributes AS t2 ON t1.player_api_id\
+  \ = t2.player_api_id \nWHERE t1.height > 185 \nGROUP BY t1.id, t1.player_name\n\
+  ORDER BY avg_finishing DESC \nLIMIT 1;"
+description: Get the player with the highest average finishing among players taller
+  than 185 cm. This uses filtering, aggregation with AVG, and ordering by an aggregate.
+...
+---
+type: sql_example
+sql: 'SELECT t2.team_long_name, MAX(t1.chancecreationpassing) AS max_passing
+
+  FROM Team_Attributes AS t1
+
+  INNER JOIN Team AS t2 ON t1.team_api_id = t2.team_api_id
+
+  WHERE t1.buildupplayspeed > 60
+
+  GROUP BY t2.team_long_name
+
+  ORDER BY max_passing DESC
+
+  LIMIT 5;'
+description: Find the top 5 teams (by long name) with the highest maximum 'chance
+  creation passing' score where build up play speed is above 60. Shows use of MAX
+  in a GROUP BY, a WHERE condition on a different feature, and joining attributes
+  with team info.
+...
+---
+type: sql_example
+sql: 'SELECT t1.league_id, t2.name, COUNT(*) FILTER (WHERE t1.home_team_goal = t1.away_team_goal)
+  AS draws
+
+  FROM Match AS t1
+
+  INNER JOIN League AS t2 ON t1.league_id = t2.id
+
+  WHERE t1.season = ''2011/2012''
+
+  GROUP BY t1.league_id, t2.name
+
+  ORDER BY draws DESC
+
+  LIMIT 1;'
+description: Return the league with the most draws in the 2011/2012 season. Demonstrates
+  conditional aggregation using FILTER in COUNT.
+...
+---
+type: sql_example
+sql: "SELECT t1.player_name, t2.short_passing, t2.date\nFROM Player AS t1\nINNER JOIN\
+  \ Player_Attributes AS t2 ON t1.player_api_id = t2.player_api_id\nWHERE t1.player_name\
+  \ = 'Luka Modri\u0107' AND t2.short_passing = (SELECT MAX(short_passing) FROM Player_Attributes\
+  \ WHERE player_api_id = t1.player_api_id)\nORDER BY t2.date ASC\nLIMIT 1;"
+description: "Find the date and value when 'Luka Modri\u0107' achieved his highest\
+  \ short passing. Shows use of a correlated subquery within a WHERE for row-wise\
+  \ max selection."
+...
+---
+type: sql_example
+sql: 'SELECT DISTINCT t1.team_long_name
+
+  FROM Team AS t1
+
+  JOIN Team_Attributes AS t2 ON t1.team_api_id = t2.team_api_id
+
+  WHERE t2.buildupplaydribblingclass = ''Little'';'
+description: List all team long names that have ever been classified in the 'Little'
+  build-up play dribbling class. Demonstrates use of DISTINCT with a categorical filter.
+...
+---
+type: sql_example
+sql: 'SELECT COUNT(*)
+
+  FROM Player
+
+  WHERE EXTRACT(YEAR FROM birthday) BETWEEN 1995 AND 2000 AND player_name ILIKE ''%Raul%'';'
+description: Count all players named Raul (case-insensitive match) born between the
+  years 1995 and 2000. This one shows filtering with date extraction and partial string
+  matching using ILIKE.
+...
+---
+type: sql_example
+sql: "SELECT t2.name, \n  CAST(SUM(t1.home_team_goal) AS REAL)/COUNT(DISTINCT t1.id)\
+  \ AS avg_home, \n  CAST(SUM(t1.away_team_goal) AS REAL)/COUNT(DISTINCT t1.id) AS\
+  \ avg_away\nFROM Match AS t1 \nINNER JOIN League AS t2 ON t1.league_id = t2.id \n\
+  WHERE t1.season = '2012/2013'\nGROUP BY t2.name\nHAVING AVG(t1.home_team_goal) >\
+  \ AVG(t1.away_team_goal);"
+description: Lists leagues in the 2012/2013 season where the average home team goals
+  exceeded away team goals. Shows GROUP BY with HAVING, calculation of averages and
+  use of aggregates in HAVING clause.
+...
+---
+type: sql_example
+sql: "SELECT t1.player_name, t2.ball_control, t2.date\nFROM Player AS t1 \nJOIN Player_Attributes\
+  \ AS t2 ON t1.player_api_id = t2.player_api_id\nWHERE t1.player_name = 'Mohamed\
+  \ Salah' AND t2.date BETWEEN '2015-01-01' AND '2017-12-31'\nORDER BY t2.date DESC;"
+description: Showcase of retrieving all ball control ratings and corresponding dates
+  for Mohamed Salah between 2015 and 2017, useful for viewing time-series changes
+  for a specific player.
+...
+---
+type: sql_example
+sql: 'SELECT player_name
+
+  FROM Player
+
+  WHERE height = (SELECT MAX(height) FROM Player)
+
+  ORDER BY player_name ASC;'
+description: Find the name(s) of the tallest player(s) in the Player table. Illustrates
+  using a scalar subquery to filter based on the value of an aggregate (MAX).
+...

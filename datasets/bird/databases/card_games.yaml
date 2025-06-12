@@ -264,3 +264,128 @@ columns:
 - name: type
   description: Classification of the set (core, expansion, masters, etc.).
 ...
+---
+type: sql_example
+sql: '-- 1. Finding cards with foreign translations in a specific language (e.g.,
+  French)
+
+  SELECT T1.id, T1.name, T2.language, T2.name AS foreign_name
+
+  FROM cards AS T1
+
+  INNER JOIN foreign_data AS T2 ON T1.uuid = T2.uuid
+
+  WHERE T2.language = ''French'';'
+description: This query finds all cards and their French names using a join between
+  cards and foreign_data. It demonstrates how to retrieve foreign language versions
+  of cards.
+...
+---
+type: sql_example
+sql: "-- 2. Calculating the percentage of cards with a specific property (e.g., borderless)\n\
+  SELECT\n  CAST(SUM(CASE WHEN borderColor = 'borderless' THEN 1 ELSE 0 END) AS REAL)\
+  \ * 100 / NULLIF(COUNT(id), 0) AS percent_borderless\nFROM cards;"
+description: This query calculates what percentage of all cards have a borderless
+  borderColor. It shows how to use conditional aggregation to compute percentages.
+...
+---
+type: sql_example
+sql: '-- 3. Determining legality status of a card in a specific format
+
+  SELECT T1.name, T2.format, T2.status
+
+  FROM cards AS T1
+
+  JOIN legalities AS T2 ON T1.uuid = T2.uuid
+
+  WHERE T1.name = ''Serra Angel'' AND T2.format = ''commander'';'
+description: This retrieves the legality status of 'Serra Angel' for the commander
+  format by joining the cards and legalities tables.
+...
+---
+type: sql_example
+sql: '-- 4. Counting cards with unknown or variable power
+
+  SELECT COUNT(*) FROM cards WHERE power IS NULL OR power = ''*'';'
+description: This counts how many cards have unknown or variable power (missing or
+  using an asterisk symbol).
+...
+---
+type: sql_example
+sql: '-- 5. Listing sets with translations in more than one language
+
+  SELECT T1.code, T1.name, COUNT(DISTINCT T2.language) AS num_languages
+
+  FROM sets AS T1
+
+  JOIN set_translations AS T2 ON T1.code = T2.setCode
+
+  GROUP BY T1.code, T1.name
+
+  HAVING COUNT(DISTINCT T2.language) > 1;'
+description: This lists sets that are available in more than one foreign language,
+  showing the use of grouping and counting distinct values.
+...
+---
+type: sql_example
+sql: '-- 6. Finding which card of two costs more mana
+
+  SELECT name, convertedManaCost FROM cards WHERE name IN (''Serra Angel'', ''Shrine
+  Keeper'')
+
+  ORDER BY convertedManaCost DESC NULLS LAST LIMIT 1;'
+description: This compares 'Serra Angel' and 'Shrine Keeper' to see which has the
+  higher converted mana cost, using ORDER BY and LIMIT.
+...
+---
+type: sql_example
+sql: '-- 7. Calculating percentage of cards in a foreign language among Story Spotlight
+  cards
+
+  SELECT CAST(SUM(CASE WHEN T2.language = ''French'' THEN 1 ELSE 0 END) AS REAL) *
+  100 / NULLIF(COUNT(T1.id),0) AS pct_french_story_spotlight
+
+  FROM cards AS T1 INNER JOIN foreign_data AS T2 ON T1.uuid = T2.uuid
+
+  WHERE T1.isStorySpotlight = 1;'
+description: This finds the percentage of Story Spotlight cards that have a French
+  translation.
+...
+---
+type: sql_example
+sql: '-- 8. List banned mythic rarity cards for a format (e.g., gladiator)
+
+  SELECT DISTINCT T1.id, T1.name
+
+  FROM cards AS T1
+
+  JOIN legalities AS T2 ON T1.uuid = T2.uuid
+
+  WHERE T1.rarity = ''mythic'' AND T2.format = ''gladiator'' AND T2.status = ''Banned'';'
+description: This shows how to combine multiple table conditions (rarity, format,
+  legality) to find special subsets of cards.
+...
+---
+type: sql_example
+sql: '-- 9. Listing artists in a set who designed cards, filtering by a list of artists
+
+  SELECT DISTINCT T1.artist
+
+  FROM cards AS T1
+
+  JOIN sets AS T2 ON T1.setCode = T2.code
+
+  WHERE T2.name = ''Coldsnap'' AND T1.artist IN (''Jeremy Jarvis'', ''Aaron Miller'',
+  ''Chippy'');'
+description: This demonstrates filtering using lists (IN clause) and joining to relate
+  cards to their set and artist.
+...
+---
+type: sql_example
+sql: "-- 10. Checking if a set has translations into both Korean and not Japanese\n\
+  SELECT s.name\nFROM sets s\nWHERE s.code IN (\n  SELECT setCode\n  FROM set_translations\n\
+  \  WHERE language = 'Korean'\n    AND setCode NOT IN (SELECT setCode FROM set_translations\
+  \ WHERE language LIKE '%Japanese%')\n);"
+description: This demonstrates nested queries to find sets translated into Korean
+  but not Japanese, highlighting use of subqueries and NOT IN.
+...

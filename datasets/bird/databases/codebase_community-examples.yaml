@@ -1,0 +1,77 @@
+---
+type: sql_example
+sql: SELECT DisplayName, Reputation FROM users WHERE Reputation = (SELECT MAX(Reputation)
+  FROM users);
+description: This query finds the user(s) with the highest reputation score by using
+  a subquery to select the maximum reputation and filtering the users table for this
+  value. It demonstrates aggregation with MAX and filtering with a correlated subquery.
+...
+---
+type: sql_example
+sql: SELECT DisplayName, COUNT(*) AS PostCount FROM users INNER JOIN posts ON users.Id
+  = posts.OwnerUserId GROUP BY users.Id, users.DisplayName HAVING COUNT(*) > 10;
+description: This query lists each user who has authored more than 10 posts. It joins
+  the users and posts tables, groups by user, and filters with the HAVING clause.
+...
+---
+type: sql_example
+sql: SELECT AVG(p.Score) AS AvgScore FROM posts p INNER JOIN users u ON p.OwnerUserId
+  = u.Id WHERE u.Age > 65;
+description: This example calculates the average post score for posts owned by users
+  older than 65, demonstrating a join and the use of the AVG aggregate function with
+  a WHERE condition referring to joined table columns.
+...
+---
+type: sql_example
+sql: SELECT b.Name, COUNT(*) AS AwardedCount FROM badges b WHERE TO_CHAR(CAST(b.Date
+  AS TIMESTAMP), 'YYYY') = '2011' GROUP BY b.Name ORDER BY AwardedCount DESC;
+description: This query counts how many times each badge was awarded in 2011. It features
+  date extraction and formatting, aggregation, grouping, and ordering.
+...
+---
+type: sql_example
+sql: SELECT p.Title, p.ViewCount, u.DisplayName FROM posts p INNER JOIN users u ON
+  p.OwnerUserId = u.Id WHERE p.ViewCount = (SELECT MAX(ViewCount) FROM posts);
+description: This retrieves the most-viewed post, its title, view count, and the author,
+  combining join logic and MAX aggregation as a filter (often for leaderboard or 'top-N'
+  type questions).
+...
+---
+type: sql_example
+sql: SELECT t.TagName, COUNT(DISTINCT p.Id) AS PostCount FROM posts p, unnest(string_to_array(replace(p.Tags,
+  '><', ','), ',')) AS tag JOIN tags t ON ltrim(rtrim(tag, '>'), '<') = t.TagName
+  GROUP BY t.TagName ORDER BY PostCount DESC LIMIT 10;
+description: This query counts posts per tag by extracting each individual tag from
+  the Posts table's 'Tags' field (which is a concatenated string), joining to the
+  Tags table, and using GROUP BY and ordering. It demonstrates advanced string manipulation
+  and row-wise expansion.
+...
+---
+type: sql_example
+sql: SELECT c.Text, u.DisplayName FROM comments c INNER JOIN users u ON c.UserId =
+  u.Id WHERE c.Score = (SELECT MAX(Score) FROM comments);
+description: This retrieves the text and author display name of the highest-scored
+  comment, demonstrating scalar subqueries in WHERE and multi-table join logic.
+...
+---
+type: sql_example
+sql: SELECT t.TagName, COUNT(*) FROM tags t INNER JOIN posts p ON t.ExcerptPostId
+  = p.Id WHERE p.Score > 10 GROUP BY t.TagName;
+description: This computes how many high-scored posts (score > 10) serve as excerpts
+  for tags, leveraging a join, a condition on the joined table, and GROUP BY.
+...
+---
+type: sql_example
+sql: SELECT COUNT(*) FROM (SELECT u.Id FROM users u INNER JOIN badges b ON u.Id =
+  b.UserId WHERE b.Name = 'Student' GROUP BY u.Id HAVING COUNT(*) > 2) AS sub;
+description: This query finds the number of users who have received more than two
+  'Student' badges, using grouping, having, and subqueries.
+...
+---
+type: sql_example
+sql: SELECT p.Title, COUNT(c.Id) AS CommentCount FROM posts p LEFT JOIN comments c
+  ON p.Id = c.PostId WHERE p.CreaionDate >= '2020-01-01' GROUP BY p.Title;
+description: This gives the count of comments for every post created since 2020-01-01,
+  whether or not a post has comments, by using a LEFT JOIN and GROUP BY. It demonstrates
+  inclusive joins for situations where 'no comments' is a relevant outcome.
+...

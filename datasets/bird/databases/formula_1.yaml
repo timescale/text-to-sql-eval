@@ -296,3 +296,170 @@ columns:
 - name: status
   description: text describing the race outcome, such as 'Finished' or 'Accident'.
 ...
+---
+type: sql_example
+sql: '-- Example 1: Calculating a Conditional Percentage Using CASE (Race Completion
+  Rate)
+
+  SELECT CAST(COUNT(CASE WHEN NOT r.time IS NULL THEN r.driverId END) AS REAL) * 100
+  / NULLIF(COUNT(r.driverId), 0) AS completion_percentage
+
+  FROM races ra
+
+  INNER JOIN results r ON r.raceId = ra.raceId
+
+  WHERE ra.date = ''1983-07-16'';'
+description: This query calculates the percentage of drivers who completed a race
+  (have a non-null finish time) for a specific date, using CASE inside an aggregate
+  and NULLIF to avoid division by zero. This is a common technique for conditional
+  ratios in SQL.
+...
+---
+type: sql_example
+sql: '-- Example 2: Ranking and Ordering with NULLS Handling (Identifying Youngest/Oldest
+  Driver)
+
+  SELECT forename, surname, dob FROM drivers ORDER BY dob DESC NULLS LAST LIMIT 1;'
+description: This query finds the youngest driver by ordering dates of birth in descending
+  order, with nulls treated as oldest (to the end). Sorting with NULLS FIRST/LAST
+  is important when dealing with missing data in age calculations.
+...
+---
+type: sql_example
+sql: '-- Example 3: Grouping and Aggregate Functions (Top Winning Driver)
+
+  SELECT d.forename, d.surname, d.nationality, MAX(ds.points) as max_points
+
+  FROM drivers d
+
+  JOIN driverstandings ds ON ds.driverId = d.driverId
+
+  WHERE ds.wins >= 1
+
+  GROUP BY d.forename, d.surname, d.nationality
+
+  ORDER BY COUNT(ds.wins) DESC LIMIT 1;'
+description: This query uses GROUP BY to collate driver records, aggregates for maximum
+  points, and ORDER BY COUNT to determine the driver with the most race wins. Combining
+  aggregate and grouping functions is essential for leaderboard/statistics queries.
+...
+---
+type: sql_example
+sql: "-- Example 4: Parsing and Calculations on Time Strings (Best Lap Time in Seconds)\n\
+  WITH lap_times_in_seconds AS (\n  SELECT driverId, \n         (\n           CASE\
+  \ WHEN SPLIT_PART(time, ':', 1) <> '' THEN CAST(SPLIT_PART(time, ':', 1) AS float)\
+  \ * 60 ELSE 0 END +\n           CASE WHEN SPLIT_PART(SPLIT_PART(time, ':', 2), '.',\
+  \ 1) <> '' THEN CAST(SPLIT_PART(SPLIT_PART(time, ':', 2), '.', 1) AS float) ELSE\
+  \ 0 END +\n           CASE WHEN SPLIT_PART(SPLIT_PART(time, ':', 2), '.', 2) <>\
+  \ '' THEN CAST(SPLIT_PART(SPLIT_PART(time, ':', 2), '.', 2) AS float) / 1000 ELSE\
+  \ 0 END\n         ) AS time_in_seconds\n  FROM laptimes\n)\nSELECT driverId, MIN(time_in_seconds)\
+  \ as best_lap\nFROM lap_times_in_seconds\nGROUP BY driverId\nORDER BY best_lap ASC\
+  \ LIMIT 1;"
+description: This query demonstrates advanced string manipulation and interval calculation
+  by converting a formatted lap time string into total seconds and returning the driver
+  with the shortest lap. Such time parsing is common in sports analytics.
+...
+---
+type: sql_example
+sql: '-- Example 5: Multi-table JOINs with Filtering (Constructor Points in a Range)
+
+  SELECT c.name, SUM(cr.points) as total_points
+
+  FROM constructors c
+
+  JOIN constructorresults cr ON cr.constructorId = c.constructorId
+
+  JOIN races r ON r.raceId = cr.raceId
+
+  WHERE r.year BETWEEN 2010 AND 2020
+
+  GROUP BY c.name
+
+  ORDER BY total_points DESC;'
+description: This example shows multi-table joins with filtering conditions and aggregation.
+  It's used to calculate how many points each constructor has scored over a specific
+  range of years, demonstrating common analytics across relationships.
+...
+---
+type: sql_example
+sql: '-- Example 6: Handling Nested Subqueries for Percentage Calculation (German-hosted
+  European Grands Prix)
+
+  SELECT CAST(COUNT(CASE WHEN c.country = ''Germany'' THEN r.circuitId END) AS REAL)
+  * 100 / NULLIF(COUNT(r.circuitId), 0) as percent_in_germany
+
+  FROM circuits c
+
+  JOIN races r ON r.circuitId = c.circuitId
+
+  WHERE r.name = ''European Grand Prix'';'
+description: "This shows how to use CASE inside aggregates plus NULLIF to compute\
+  \ what fraction of all European Grand Prix races were hosted in Germany\u2014useful\
+  \ for proportion calculations with joins and conditional filtering."
+...
+---
+type: sql_example
+sql: '-- Example 7: Finding the Fastest/Best/Minimum Value with JOINs and ORDER (Best
+  Q2 Qualifying Time in a Race)
+
+  SELECT d.surname, q.q2
+
+  FROM qualifying q
+
+  JOIN drivers d ON d.driverId = q.driverId
+
+  WHERE q.raceId = 19
+
+  ORDER BY q.q2 ASC NULLS FIRST LIMIT 1;'
+description: This query identifies the driver with the fastest (minimum) Q2 qualifying
+  time in a specific race by sorting times. Such ordering of performance metrics is
+  very common in race data queries.
+...
+---
+type: sql_example
+sql: '-- Example 8: Filtering and Pattern Matching (Driver Finish Time Format)
+
+  SELECT d.forename, d.surname, r.time
+
+  FROM results r
+
+  JOIN drivers d ON d.driverId = r.driverId
+
+  WHERE r.time LIKE ''_:%:__.___'' AND r.raceId = 100;'
+description: "This demonstrates using LIKE with wildcards and underscores to filter\
+  \ results by a specific time format, which distinguishes winners\u2019 race completion\
+  \ formats. Pattern matching on data fields is useful for parsing semi-structured\
+  \ results."
+...
+---
+type: sql_example
+sql: '-- Example 9: Reporting From Aggregated Subsets with HAVING (Constructors With
+  No Points in Race)
+
+  SELECT c.name
+
+  FROM constructorstandings cs
+
+  JOIN constructors c ON cs.constructorId = c.constructorId
+
+  WHERE cs.points = 0 and cs.raceId = 291;'
+description: This example finds all constructors with zero points in a specific race.
+  Filtering for aggregated values or exact matches across related tables is fundamental
+  for detailed event breakdowns in racing analytics.
+...
+---
+type: sql_example
+sql: '-- Example 10: Calculating Age Using Date Arithmetic (Youngest Japanese Driver)
+
+  SELECT EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM dob) AS age, forename,
+  surname
+
+  FROM drivers
+
+  WHERE nationality = ''Japanese''
+
+  ORDER BY dob DESC LIMIT 1;'
+description: This query computes the age of the youngest Japanese driver by extracting
+  years from dates. Such date math is essential for demographic and career-span analyses
+  in sports databases.
+...
