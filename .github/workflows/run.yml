@@ -37,6 +37,15 @@ on:
         required: true
         type: boolean
         default: true
+      context_mode:
+        description: Context mode for eval
+        required: true
+        type: choice
+        options:
+          - semantic_search
+          - entire_schema
+          - specific_ids
+        default: 'semantic_search'
       llm_judge:
         description: Whether to use LLM to judge results
         required: true
@@ -46,16 +55,6 @@ on:
           - fail
           - all
         default: 'none'
-      entire_schema:
-        description: Whether to use the entire schema for LLM
-        required: true
-        type: boolean
-        default: false
-      gold_tables:
-        description: Whether to only use gold tables for LLM
-        required: true
-        type: boolean
-        default: false
       filter:
         description: Comma-separated list of datasets to run
         required: false
@@ -181,7 +180,7 @@ jobs:
       - name: Setup dataset ${{ matrix.dataset }} ${{ matrix.database }}
         run: uv run python3 -m suite setup --model ${{ inputs.setup_model }} --dimensions ${{ inputs.setup_dimensions }} --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} ${{ inputs.agent }}
       - name: Run eval
-        run: uv run python3 -m suite eval --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} ${{ inputs.entire_schema && '--entire-schema' || '' }} --model ${{ inputs.eval_model }} ${{ inputs.fast_mode && '--fast' || '' }} ${{ inputs.gold_tables && '--gold-tables' || '' }} --llm-judge ${{ inputs.llm_judge }} ${{ inputs.agent }} text_to_sql
+        run: uv run python3 -m suite eval --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} --model ${{ inputs.eval_model }} ${{ inputs.fast_mode && '--fast' || '' }} --context-mode ${{ inputs.context_mode }} --llm-judge ${{ inputs.llm_judge }} ${{ inputs.agent }} text_to_sql
 
       - run: mv results/results.json results-${{ matrix.dataset }}-${{ matrix.database }}.json
 

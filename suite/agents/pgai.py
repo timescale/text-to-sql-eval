@@ -8,7 +8,7 @@ import psycopg
 import pydantic_ai
 from psycopg.sql import SQL, Identifier
 
-from ..types import Provider, TextToSql
+from ..types import ContextMode, Provider, TextToSql
 from ..utils import get_db_url_from_connection, get_git_info
 
 
@@ -77,7 +77,7 @@ async def text_to_sql(
     inp: str,
     provider: Provider,
     model: str,
-    entire_schema: bool,
+    context_mode: ContextMode,
     gold_tables: list[str],
 ) -> TextToSql:
     db_url = get_db_url_from_connection(con)
@@ -85,14 +85,10 @@ async def text_to_sql(
         await psycopg.AsyncConnection.connect(db_url) as target_con,
     ):
         catalog = await sc.from_name(target_con, "default")
-        context_mode = "semantic_search"
         obj_ids = None
         sql_ids = None
         fact_ids = None
-        if entire_schema:
-            context_mode = "entire_catalog"
-        elif len(gold_tables) > 0:
-            context_mode = "specific_ids"
+        if context_mode == "specific_ids":
             sql_ids = [x.id for x in await catalog.list_sql_examples(target_con)]
             fact_ids = [x.id for x in await catalog.list_facts(target_con)]
             async with target_con.cursor() as cur:

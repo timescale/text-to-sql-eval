@@ -31,3 +31,6 @@ class Results(TypedDict):
     failed_error_counts: dict[str, int]
     errored: list[str]
     evals: list[EvalResult]
+
+
+ContextMode = Literal["semantic_search", "entire_catalog", "specific_ids"]

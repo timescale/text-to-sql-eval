@@ -18,7 +18,7 @@ from .agents import get_agent_fn, get_agent_setup_fn, get_agent_version
 from .exceptions import GetExpectedError
 from .tasks.get_tables import run as get_tables
 from .tasks.text_to_sql import run as text_to_sql
-from .types import Results
+from .types import ContextMode, Results
 from .utils import (
     expand_embedding_model,
     expand_task_model,
@@ -242,22 +242,16 @@ def setup(
 @click.option("--eval", default=None, help="Eval case to run")
 @click.option("--fast", is_flag=True, default=False, help="Run 50 evals per dataset")
 @click.option(
-    "--entire-schema",
-    is_flag=True,
-    default=False,
-    help="Agent should always use entire schema in LLM prompt",
-)
-@click.option(
-    "--gold-tables",
-    is_flag=True,
-    default=False,
-    help="Agent should only use gold tables in LLM prompt",
+    "--context-mode",
+    default="semantic_search",
+    type=click.Choice(["semantic_search", "entire_catalog", "specific_ids"]),
+    help="Context mode for the agent (allowed values: 'semantic_search', 'entire_catalog', 'specific_ids')",
 )
 @click.option(
     "--llm-judge",
     default="none",
+    type=click.Choice(["all", "fail", "none"]),
     help="Use LLM to judge evals (allowed values: 'all', 'fail', 'none')",
-    callback=lambda ctx, param, value: value.lower() if value else "none",
 )
 @click.option("--strict", is_flag=True, default=False, help="Use strict evaluation")
 def eval(
@@ -268,8 +262,7 @@ def eval(
     database: Optional[str],
     eval: Optional[str],
     fast: bool,
-    entire_schema: bool,
-    gold_tables: bool,
+    context_mode: ContextMode,
     llm_judge: str,
     strict: bool,
 ) -> None:
@@ -312,8 +305,9 @@ def eval(
             "model": model,
             "llm_judge": llm_judge,
             "fast": fast,
-            "entire_schema": entire_schema,
-            "gold_tables": gold_tables,
+            "context_mode": context_mode,
+            "entire_schema": context_mode == "entire_catalog",
+            "gold_tables": context_mode == "specific_ids",
         },
         "results": {},
     }
@@ -387,8 +381,7 @@ def eval(
                             agent_fn,
                             provider,
                             model,
-                            entire_schema,
-                            gold_tables,
+                            context_mode,
                             llm_judge,
                             strict,
                         )

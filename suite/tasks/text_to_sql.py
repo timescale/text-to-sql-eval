@@ -1,5 +1,6 @@
 import os
 import time
+from collections import Counter
 from textwrap import dedent
 
 import polars as pl
@@ -15,7 +16,29 @@ from tokencost import TOKEN_COSTS, calculate_cost_by_tokens
 
 from ..agents import AgentFn
 from ..exceptions import AgentFnError, GetExpectedError, QueryExecutionError
-from ..types import Provider
+from ..types import ContextMode, Provider
+
+
+def get_dataframe(query: str, conn: psycopg.Connection) -> pl.DataFrame:
+    """
+    Execute a SQL query and return the results as a Polars DataFrame.
+
+    This function is a workaround for pl.read_database which does not support
+    multiple columns with the same name. It executes the query using a cursor,
+    fetches all results, and constructs a Polars DataFrame while ensuring unique
+    column names by appending an index to duplicate names. It then relies on
+    the `compare` function to handle mapping of columns between actual and expected
+    DataFrames with whatever column names we end up with.
+    """
+    with conn.cursor() as cur:
+        cur.execute(query)
+        data = cur.fetchall()
+        colnames = [desc.name for desc in cur.description]
+        counter = Counter(colnames)
+        for i, colname in enumerate(colnames):
+            if counter[colname] > 1:
+                colnames[i] = f"{colname}_{i}"
+        return pl.DataFrame(data, schema=colnames, orient="row")
 
 
 def compare(actual: pl.DataFrame, expected: pl.DataFrame) -> bool:
@@ -56,8 +79,7 @@ async def run(
     agent_fn: AgentFn,
     provider: Provider,
     model: str,
-    entire_schema: bool,
-    gold_tables: bool,
+    context_mode: ContextMode,
     llm_judge: str,
     *args,
 ) -> bool:
@@ -70,13 +92,13 @@ async def run(
     with open(f"{path}/eval.json", "r") as fp:
         gold_query = json.load(fp).get("query")
     gold_tables_list = []
-    if gold_tables:
+    if context_mode == "specific_ids":
         parser = Parser(gold_query)
         gold_tables_list = [table.lower() for table in parser.tables]
     start = time.time()
     try:
         result = await agent_fn(
-            conn, inp, provider, model, entire_schema, gold_tables_list
+            conn, inp, provider, model, context_mode, gold_tables_list
         )
     except Exception as e:
         raise AgentFnError(e) from e
@@ -101,12 +123,12 @@ async def run(
         fp.write(query)
 
     try:
-        expected = pl.read_database(gold_query, conn)
+        expected = get_dataframe(gold_query, conn)
     except (psycopg.DatabaseError, psycopg.errors.QueryCanceled) as e:
         raise GetExpectedError(e) from e
 
     try:
-        actual = pl.read_database(query, conn)
+        actual = get_dataframe(query, conn)
     except (psycopg.DatabaseError, psycopg.errors.QueryCanceled) as e:
         raise QueryExecutionError(e) from e
 
@@ -236,7 +258,7 @@ async def run(
         "usage": usage,
     }
 
-    if gold_tables:
+    if context_mode == "specific_ids":
         details["gold_tables"] = gold_tables_list
     if llm_judgement is not None:
         details["llm_judge"] = llm_judgement
