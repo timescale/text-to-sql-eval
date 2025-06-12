@@ -19,6 +19,7 @@ def version() -> str:
 
 async def setup(
     conn: psycopg.Connection,
+    catalog: str,
     dataset: str,
     provider: Provider,
     model: str,
@@ -60,7 +61,8 @@ async def setup(
         Path(__file__).parent.parent.parent
         / "datasets"
         / dataset
-        / "databases"
+        / "catalogs"
+        / catalog
         / f"{database}.yaml"
     )
 

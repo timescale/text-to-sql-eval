@@ -88,18 +88,27 @@ def generate_matrix(filter: Optional[str]) -> None:
 
 @cli.command()
 @click.option(
+    "--catalog",
+    default="default",
+    help="Catalog to use for the datasets [default: default]",
+)
+@click.option(
     "--dataset", default="all", help="Dataset to load [defaults to all datasets]"
 )
 @click.option(
     "--database", default="all", help="Database to load [defaults to all databases]"
 )
 def load(
+    catalog: str,
     dataset: str,
     database: str,
 ) -> None:
     """
     Load the datasets into the database.
     """
+    if not (datasets_dir / "spider" / "catalogs" / catalog).exists():
+        raise ValueError(f"Catalog {catalog} not found")
+
     datasets = os.listdir(datasets_dir) if dataset == "all" else [dataset]
     print("Loading datasets...")
     for i in range(len(datasets)):
@@ -145,9 +154,9 @@ def load(
                         load_sql_file(db_url, sql_file)
                         i += 1
                 print("      Loading descriptions")
-                with (datasets_dir / dataset / "databases" / f"{name}.yaml").open(
-                    "r"
-                ) as fp:
+                with (
+                    datasets_dir / dataset / "catalogs" / catalog / f"{name}.yaml"
+                ).open("r") as fp:
                     for doc in safe_load_all(fp):
                         if doc["type"] != "table":
                             continue
@@ -173,6 +182,11 @@ def load(
 @cli.command()
 @click.argument("agent")
 @click.option(
+    "--catalog",
+    default="default",
+    help="Catalog to use for the agent [default: default]",
+)
+@click.option(
     "--model",
     default="openai:text-embedding-3-small",
     help="Model to use for embedding",
@@ -184,6 +198,7 @@ def load(
 @click.option("--database", default=None, help="Database to setup")
 def setup(
     agent: str,
+    catalog: str,
     model: Optional[str],
     dimensions: int,
     dataset: str,
@@ -196,6 +211,10 @@ def setup(
         [provider, model] = expand_embedding_model(model).split(":", 1)
     except ValueError:
         raise ValueError(f"Invalid model: {model}") from None
+
+    if not (datasets_dir / "spider" / "catalogs" / catalog).exists():
+        raise ValueError(f"Catalog {catalog} not found")
+
     agent_setup_fn = get_agent_setup_fn(agent)
     print(f"Setting up agent {agent}...")
     datasets = sorted(os.listdir(datasets_dir) if dataset == "all" else [dataset])
@@ -219,6 +238,7 @@ def setup(
                 with psycopg.connect(get_psycopg_str(db_name)) as db:
                     await agent_setup_fn(
                         db,
+                        catalog,
                         dataset,
                         provider,
                         model,

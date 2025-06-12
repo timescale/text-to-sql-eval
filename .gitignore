@@ -10,6 +10,7 @@ datasets/*/evals/*/details.json
 datasets/*/evals/*/error.txt
 datasets/postgres_air/databases/*
 !datasets/postgres_air/databases/*.yaml
+!datasets/**/*/.gitkeep
 results/*
 !results/.gitkeep
 results.json
