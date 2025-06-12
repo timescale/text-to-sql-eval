@@ -22,6 +22,7 @@ from .types import ContextMode, Results
 from .utils import (
     expand_embedding_model,
     expand_task_model,
+    get_catalog,
     get_git_info,
     get_psycopg_str,
 )
@@ -88,18 +89,27 @@ def generate_matrix(filter: Optional[str]) -> None:
 
 @cli.command()
 @click.option(
+    "--catalog",
+    default="default",
+    help="Catalog to use for the datasets [default: default]",
+)
+@click.option(
     "--dataset", default="all", help="Dataset to load [defaults to all datasets]"
 )
 @click.option(
     "--database", default="all", help="Database to load [defaults to all databases]"
 )
 def load(
+    catalog: str,
     dataset: str,
     database: str,
 ) -> None:
     """
     Load the datasets into the database.
     """
+    if not (datasets_dir / "spider" / "catalogs" / catalog).exists():
+        raise ValueError(f"Catalog {catalog} not found")
+
     datasets = os.listdir(datasets_dir) if dataset == "all" else [dataset]
     print("Loading datasets...")
     for i in range(len(datasets)):
@@ -145,9 +155,9 @@ def load(
                         load_sql_file(db_url, sql_file)
                         i += 1
                 print("      Loading descriptions")
-                with (datasets_dir / dataset / "databases" / f"{name}.yaml").open(
-                    "r"
-                ) as fp:
+                with (
+                    datasets_dir / dataset / "catalogs" / catalog / f"{name}.yaml"
+                ).open("r") as fp:
                     for doc in safe_load_all(fp):
                         if doc["type"] != "table":
                             continue
@@ -168,6 +178,16 @@ def load(
                                         column["description"],
                                     ),
                                 )
+                print("      Saving config")
+                with db.cursor() as cur:
+                    cur.execute("CREATE SCHEMA text2sql")
+                    cur.execute("""
+                        CREATE TABLE text2sql.config (
+                                name varchar NOT NULL PRIMARY KEY,
+                                value varchar NOT NULL
+                        )
+                    """)
+                    cur.execute("INSERT INTO text2sql.config VALUES ('catalog', %s)", (catalog,))
 
 
 @cli.command()
@@ -196,6 +216,7 @@ def setup(
         [provider, model] = expand_embedding_model(model).split(":", 1)
     except ValueError:
         raise ValueError(f"Invalid model: {model}") from None
+
     agent_setup_fn = get_agent_setup_fn(agent)
     print(f"Setting up agent {agent}...")
     datasets = sorted(os.listdir(datasets_dir) if dataset == "all" else [dataset])
@@ -219,6 +240,7 @@ def setup(
                 with psycopg.connect(get_psycopg_str(db_name)) as db:
                     await agent_setup_fn(
                         db,
+                        get_catalog(db),
                         dataset,
                         provider,
                         model,
@@ -398,6 +420,7 @@ def eval(
                             },
                         }
                     duration = round(time.time() - start, 3)
+                    result["details"]["catalog"] = get_catalog(db)
                 result["dataset"] = dataset
                 result["database"] = inp["database"]
                 result["name"] = eval_path.name

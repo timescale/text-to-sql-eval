@@ -17,6 +17,11 @@ on:
           - baseline
           - pgai
           - vanna
+      catalog:
+        description: What semantic catalog folder to use
+        required: true
+        type: string
+        default: 'default'
       setup_model:
         description: What model to use for embedding data
         required: true
@@ -175,10 +180,11 @@ jobs:
           model: ${{ inputs.eval_model }}
 
       - name: Load dataset ${{ matrix.dataset }} ${{ matrix.database }}
-        run: uv run python3 -m suite load --dataset ${{ matrix.dataset }} --database ${{ matrix.database }}
+        run: uv run python3 -m suite load --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} --catalog ${{ inputs.catalog }}
 
       - name: Setup dataset ${{ matrix.dataset }} ${{ matrix.database }}
         run: uv run python3 -m suite setup --model ${{ inputs.setup_model }} --dimensions ${{ inputs.setup_dimensions }} --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} ${{ inputs.agent }}
+
       - name: Run eval
         run: uv run python3 -m suite eval --dataset ${{ matrix.dataset }} --database ${{ matrix.database }} --model ${{ inputs.eval_model }} ${{ inputs.fast_mode && '--fast' || '' }} --context-mode ${{ inputs.context_mode }} --llm-judge ${{ inputs.llm_judge }} ${{ inputs.agent }} text_to_sql
 

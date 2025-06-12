@@ -114,3 +114,10 @@ def get_git_info(path: Path) -> GitInfo:
     git_info.commit = commit
 
     return git_info
+
+
+def get_catalog(con: Connection) -> str:
+    with con.cursor() as cur:
+        cur.execute("SELECT value FROM text2sql.config WHERE name = 'catalog'")
+        row = cur.fetchone()
+        return row[0]

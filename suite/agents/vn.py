@@ -81,6 +81,7 @@ def get_vanna_client(
 
 async def setup(
     conn: psycopg.Connection,
+    catalog: str,
     dataset: str,
     provider: Provider,
     model: str,
