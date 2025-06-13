@@ -187,7 +187,9 @@ def load(
                                 value varchar NOT NULL
                         )
                     """)
-                    cur.execute("INSERT INTO text2sql.config VALUES ('catalog', %s)", (catalog,))
+                    cur.execute(
+                        "INSERT INTO text2sql.config VALUES ('catalog', %s)", (catalog,)
+                    )
 
 
 @cli.command()
@@ -391,6 +393,8 @@ def eval(
                     with db.cursor() as cur:
                         cur.execute("SET LOCAL statement_timeout = 120000;")
 
+                    catalog = get_catalog(db)
+
                     error_path = eval_path / "error.txt"
                     if error_path.exists():
                         error_path.unlink()
@@ -420,7 +424,8 @@ def eval(
                             },
                         }
                     duration = round(time.time() - start, 3)
-                    result["details"]["catalog"] = get_catalog(db)
+                    result["details"]["catalog"] = catalog
+
                 result["dataset"] = dataset
                 result["database"] = inp["database"]
                 result["name"] = eval_path.name

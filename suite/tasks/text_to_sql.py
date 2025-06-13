@@ -166,7 +166,7 @@ async def run(
         usage["response_tokens_cost"] = float(
             calculate_cost_by_tokens(usage["response_tokens"], cost_model, "output")
         )
-    except KeyError as e:
+    except KeyError:
         usage["response_tokens_cost"] = 0.0
 
     status = "pass" if compare(actual, expected) else "fail"
