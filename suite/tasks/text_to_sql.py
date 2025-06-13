@@ -136,11 +136,11 @@ async def run(
         "usage",
         {
             "cached_tokens": 0,
-            "cached_tokens_cost": 0,
+            "cached_tokens_cost": 0.0,
             "request_tokens": 0,
-            "request_tokens_cost": 0,
+            "request_tokens_cost": 0.0,
             "response_tokens": 0,
-            "response_tokens_cost": 0,
+            "response_tokens_cost": 0.0,
         },
     )
 
@@ -152,16 +152,21 @@ async def run(
         usage["cached_tokens_cost"] = float(
             calculate_cost_by_tokens(usage["cached_tokens"], cost_model, "cached")
         )
+    except KeyError:
+        usage["cached_tokens_cost"] = 0.0
+
+    try:
         usage["request_tokens_cost"] = float(
             calculate_cost_by_tokens(usage["request_tokens"], cost_model, "input")
         )
+    except KeyError:
+        usage["request_tokens_cost"] = 0.0
+
+    try:
         usage["response_tokens_cost"] = float(
             calculate_cost_by_tokens(usage["response_tokens"], cost_model, "output")
         )
-    except KeyError:
-        # model not supported by tokencost
-        usage["cached_tokens_cost"] = 0.0
-        usage["request_tokens_cost"] = 0.0
+    except KeyError as e:
         usage["response_tokens_cost"] = 0.0
 
     status = "pass" if compare(actual, expected) else "fail"
