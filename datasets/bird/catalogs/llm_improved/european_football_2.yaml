@@ -1,0 +1,500 @@
+---
+type: header
+schema_version: '1'
+...
+---
+schema: public
+name: country
+type: table
+description: List of football countries appearing in the dataset.
+columns:
+- name: id
+  description: Surrogate primary key for the country record.
+- name: name
+  description: Unique country name.
+...
+---
+schema: public
+name: league
+type: table
+description: Football leagues with their names and associated country.
+columns:
+- name: id
+  description: Surrogate primary key for the league.
+- name: country_id
+  description: Reference to the country where the league is played.
+- name: name
+  description: Unique name of the football league.
+...
+---
+schema: public
+name: match
+type: table
+description: Detailed match records including participants, players, scores, positional
+  coordinates, in-game events and betting odds.
+facts:
+  - Season field uses format like '2008/2009' for season identification
+  - Join with league table using match.league_id = league.id
+  - For counting matches per league, GROUP BY league_id and use COUNT(*)
+sql_examples:
+  - description: Count matches per league in a season
+    sql: "SELECT league_id, COUNT(*) as match_count FROM match WHERE season = '2008/2009' GROUP BY league_id"
+  - description: Get league with most matches in season
+    sql: "SELECT l.name FROM league l JOIN match m ON l.id = m.league_id WHERE m.season = '2008/2009' GROUP BY l.name HAVING COUNT(m.id) = (SELECT MAX(match_count) FROM (SELECT COUNT(m2.id) AS match_count FROM match m2 WHERE m2.season = '2008/2009' GROUP BY m2.league_id))"
+columns:
+- name: id
+  description: Surrogate primary key for the match row.
+- name: country_id
+  description: Country where the match took place.
+- name: league_id
+  description: League in which the match was played.
+- name: season
+  description: Season label (e.g., 2008/2009) for the match.
+- name: stage
+  description: Round or week number within the season.
+- name: date
+  description: Kick-off date and time.
+- name: match_api_id
+  description: External unique identifier of the match (also unique index).
+- name: home_team_api_id
+  description: Identifier of the home team (FK to team).
+- name: away_team_api_id
+  description: Identifier of the away team (FK to team).
+- name: home_team_goal
+  description: Number of goals scored by the home team.
+- name: away_team_goal
+  description: Number of goals scored by the away team.
+- name: home_player_x1
+  description: X coordinate on the pitch for the first listed home player.
+- name: home_player_x2
+  description: X coordinate on the pitch for the second listed home player.
+- name: home_player_x3
+  description: X coordinate on the pitch for the third listed home player.
+- name: home_player_x4
+  description: X coordinate on the pitch for the fourth listed home player.
+- name: home_player_x5
+  description: X coordinate on the pitch for the fifth listed home player.
+- name: home_player_x6
+  description: X coordinate on the pitch for the sixth listed home player.
+- name: home_player_x7
+  description: X coordinate on the pitch for the seventh listed home player.
+- name: home_player_x8
+  description: X coordinate on the pitch for the eighth listed home player.
+- name: home_player_x9
+  description: X coordinate on the pitch for the ninth listed home player.
+- name: home_player_x10
+  description: X coordinate on the pitch for the tenth listed home player.
+- name: home_player_x11
+  description: X coordinate on the pitch for the eleventh listed home player.
+- name: away_player_x1
+  description: X coordinate on the pitch for the first listed away player.
+- name: away_player_x2
+  description: X coordinate on the pitch for the second listed away player.
+- name: away_player_x3
+  description: X coordinate on the pitch for the third listed away player.
+- name: away_player_x4
+  description: X coordinate on the pitch for the fourth listed away player.
+- name: away_player_x5
+  description: X coordinate on the pitch for the fifth listed away player.
+- name: away_player_x6
+  description: X coordinate on the pitch for the sixth listed away player.
+- name: away_player_x7
+  description: X coordinate on the pitch for the seventh listed away player.
+- name: away_player_x8
+  description: X coordinate on the pitch for the eighth listed away player.
+- name: away_player_x9
+  description: X coordinate on the pitch for the ninth listed away player.
+- name: away_player_x10
+  description: X coordinate on the pitch for the tenth listed away player.
+- name: away_player_x11
+  description: X coordinate on the pitch for the eleventh listed away player.
+- name: home_player_y1
+  description: Y coordinate on the pitch for the first listed home player.
+- name: home_player_y2
+  description: Y coordinate on the pitch for the second listed home player.
+- name: home_player_y3
+  description: Y coordinate on the pitch for the third listed home player.
+- name: home_player_y4
+  description: Y coordinate on the pitch for the fourth listed home player.
+- name: home_player_y5
+  description: Y coordinate on the pitch for the fifth listed home player.
+- name: home_player_y6
+  description: Y coordinate on the pitch for the sixth listed home player.
+- name: home_player_y7
+  description: Y coordinate on the pitch for the seventh listed home player.
+- name: home_player_y8
+  description: Y coordinate on the pitch for the eighth listed home player.
+- name: home_player_y9
+  description: Y coordinate on the pitch for the ninth listed home player.
+- name: home_player_y10
+  description: Y coordinate on the pitch for the tenth listed home player.
+- name: home_player_y11
+  description: Y coordinate on the pitch for the eleventh listed home player.
+- name: away_player_y1
+  description: Y coordinate on the pitch for the first listed away player.
+- name: away_player_y2
+  description: Y coordinate on the pitch for the second listed away player.
+- name: away_player_y3
+  description: Y coordinate on the pitch for the third listed away player.
+- name: away_player_y4
+  description: Y coordinate on the pitch for the fourth listed away player.
+- name: away_player_y5
+  description: Y coordinate on the pitch for the fifth listed away player.
+- name: away_player_y6
+  description: Y coordinate on the pitch for the sixth listed away player.
+- name: away_player_y7
+  description: Y coordinate on the pitch for the seventh listed away player.
+- name: away_player_y8
+  description: Y coordinate on the pitch for the eighth listed away player.
+- name: away_player_y9
+  description: Y coordinate on the pitch for the ninth listed away player.
+- name: away_player_y10
+  description: Y coordinate on the pitch for the tenth listed away player.
+- name: away_player_y11
+  description: Y coordinate on the pitch for the eleventh listed away player.
+- name: home_player_1
+  description: API id of the first home player (FK to player).
+- name: home_player_2
+  description: API id of the second home player.
+- name: home_player_3
+  description: API id of the third home player.
+- name: home_player_4
+  description: API id of the fourth home player.
+- name: home_player_5
+  description: API id of the fifth home player.
+- name: home_player_6
+  description: API id of the sixth home player.
+- name: home_player_7
+  description: API id of the seventh home player.
+- name: home_player_8
+  description: API id of the eighth home player.
+- name: home_player_9
+  description: API id of the ninth home player.
+- name: home_player_10
+  description: API id of the tenth home player.
+- name: home_player_11
+  description: API id of the eleventh home player.
+- name: away_player_1
+  description: API id of the first away player (FK).
+- name: away_player_2
+  description: API id of the second away player.
+- name: away_player_3
+  description: API id of the third away player.
+- name: away_player_4
+  description: API id of the fourth away player.
+- name: away_player_5
+  description: API id of the fifth away player.
+- name: away_player_6
+  description: API id of the sixth away player.
+- name: away_player_7
+  description: API id of the seventh away player.
+- name: away_player_8
+  description: API id of the eighth away player.
+- name: away_player_9
+  description: API id of the ninth away player.
+- name: away_player_10
+  description: API id of the tenth away player.
+- name: away_player_11
+  description: API id of the eleventh away player.
+- name: goal
+  description: JSON/text blob describing timing and scoring events.
+- name: shoton
+  description: JSON/text data listing on-target shots.
+- name: shotoff
+  description: JSON/text data listing off-target shots.
+- name: foulcommit
+  description: JSON/text data of fouls committed during the match.
+- name: card
+  description: JSON/text data for yellow/red cards issued.
+- name: cross
+  description: JSON/text data for crosses made.
+- name: corner
+  description: JSON/text data for corner kicks.
+- name: possession
+  description: JSON/text data describing ball possession over time.
+- name: b365h
+  description: Bet365 odds for a home win.
+- name: b365d
+  description: Bet365 odds for a draw.
+- name: b365a
+  description: Bet365 odds for an away win.
+- name: bwh
+  description: Bet and Win odds for home win.
+- name: bwd
+  description: Bet and Win odds for draw.
+- name: bwa
+  description: Bet and Win odds for away win.
+- name: iwh
+  description: Interwetten odds for home win.
+- name: iwd
+  description: Interwetten odds for draw.
+- name: iwa
+  description: Interwetten odds for away win.
+- name: lbh
+  description: Ladbrokes odds for home win.
+- name: lbd
+  description: Ladbrokes odds for draw.
+- name: lba
+  description: Ladbrokes odds for away win.
+- name: psh
+  description: Pinnacle odds for home win.
+- name: psd
+  description: Pinnacle odds for draw.
+- name: psa
+  description: Pinnacle odds for away win.
+- name: whh
+  description: William Hill odds for home win.
+- name: whd
+  description: William Hill odds for draw.
+- name: wha
+  description: William Hill odds for away win.
+- name: sjh
+  description: SJ odds for home win.
+- name: sjd
+  description: SJ odds for draw.
+- name: sja
+  description: SJ odds for away win.
+- name: vch
+  description: VC Bet odds for home win.
+- name: vcd
+  description: VC Bet odds for draw.
+- name: vca
+  description: VC Bet odds for away win.
+- name: gbh
+  description: Gamebookers odds for home win.
+- name: gbd
+  description: Gamebookers odds for draw.
+- name: gba
+  description: Gamebookers odds for away win.
+- name: bsh
+  description: Betsson odds for home win.
+- name: bsd
+  description: Betsson odds for draw.
+- name: bsa
+  description: Betsson odds for away win.
+...
+---
+schema: public
+name: player
+type: table
+description: Master data for individual football players.
+facts:
+  - Join with player_attributes using player.player_api_id = player_attributes.player_api_id (NOT player_fifa_api_id)
+  - For birthday filtering, use proper date comparisons: birthday > '1990' for after 1990s
+  - Height and weight are numeric fields for physical comparisons
+  - Always use DISTINCT when selecting player names to avoid duplicates
+sql_examples:
+  - description: Get players by name pattern
+    sql: "SELECT * FROM player WHERE player_name LIKE 'Aaron%'"
+  - description: Find players born after 1990s
+    sql: "SELECT COUNT(id) FROM player WHERE birthday > '1990' AND player_name LIKE 'Aaron%'"
+  - description: Get heaviest player
+    sql: "SELECT * FROM player ORDER BY weight DESC NULLS LAST LIMIT 1"
+columns:
+- name: id
+  description: Surrogate primary key for the player row.
+- name: player_api_id
+  description: Unique API identifier for the player (referenced by match table).
+- name: player_name
+  description: Full name of the player.
+- name: player_fifa_api_id
+  description: Unique identifier aligning with FIFA database.
+- name: birthday
+  description: Player date of birth.
+- name: height
+  description: Player height in centimeters.
+- name: weight
+  description: Player weight in pounds (or dataset units).
+...
+---
+schema: public
+name: team
+type: table
+description: Master data for football clubs/teams.
+columns:
+- name: id
+  description: Surrogate primary key for the team row.
+- name: team_api_id
+  description: Unique API identifier for the team (referenced by match table).
+- name: team_fifa_api_id
+  description: Team identifier used in FIFA database.
+- name: team_long_name
+  description: Full official club name.
+- name: team_short_name
+  description: Common abbreviated club name.
+...
+---
+schema: public
+name: player_attributes
+type: table
+description: Contains temporal FIFA player skill ratings and physical/behavioral attributes
+  for each player.
+facts:
+  - Join with player table using player_attributes.player_api_id = player.player_api_id
+  - For maximum/minimum values, use WHERE field = (SELECT MAX/MIN(field)) instead of ORDER BY LIMIT
+  - Date field requires proper handling: SUBSTR(date, 1, 10) for date part extraction
+  - For percentage calculations, always CAST to REAL and use NULLIF for division
+  - Multiple records per player over time - filter by date when needed
+sql_examples:
+  - description: Get players with maximum overall rating
+    sql: "SELECT DISTINCT p.player_name FROM player p JOIN player_attributes pa ON p.player_api_id = pa.player_api_id WHERE pa.overall_rating = (SELECT MAX(overall_rating) FROM player_attributes)"
+  - description: Calculate average rating for height range
+    sql: "SELECT CAST(SUM(pa.overall_rating) AS REAL) / NULLIF(COUNT(pa.id), 0) FROM player p JOIN player_attributes pa ON p.player_api_id = pa.player_api_id WHERE p.height > 170"
+  - description: Get players with specific skills
+    sql: "SELECT DISTINCT p.player_name FROM player p JOIN player_attributes pa ON p.player_api_id = pa.player_api_id WHERE pa.volleys > 70 AND pa.dribbling > 70"
+  - description: Compare two players' ratings
+    sql: "SELECT (SUM(CASE WHEN p.player_name = 'Player1' THEN pa.overall_rating ELSE 0 END) - SUM(CASE WHEN p.player_name = 'Player2' THEN pa.overall_rating ELSE 0 END)) * 100 / NULLIF(SUM(CASE WHEN p.player_name = 'Player2' THEN pa.overall_rating ELSE 0 END), 0) FROM player p JOIN player_attributes pa ON p.player_api_id = pa.player_api_id"
+columns:
+- name: id
+  description: Surrogate primary key for the player attribute record.
+- name: player_fifa_api_id
+  description: Identifier of the player in the official FIFA dataset.
+- name: player_api_id
+  description: Foreign key linking to the internal player table.
+- name: date
+  description: Timestamp when the attribute snapshot was recorded.
+- name: overall_rating
+  description: Composite overall rating assigned to the player.
+- name: potential
+  description: Projected peak rating the player could reach.
+- name: preferred_foot
+  description: Whether the player favors right or left foot.
+- name: attacking_work_rate
+  description: Qualitative level of effort the player makes when attacking.
+- name: defensive_work_rate
+  description: Qualitative level of effort the player makes when defending.
+- name: crossing
+  description: Numeric rating of the player's crossing ability.
+- name: finishing
+  description: Numeric rating of the player's finishing skill.
+- name: heading_accuracy
+  description: Numeric rating of accuracy when heading the ball.
+- name: short_passing
+  description: Numeric rating of short-range passing ability.
+- name: volleys
+  description: Numeric rating of volley shooting skill.
+- name: dribbling
+  description: Numeric rating of dribbling control.
+- name: curve
+  description: Numeric rating for curved shots or passes ability.
+- name: free_kick_accuracy
+  description: Numeric rating of free-kick precision.
+- name: long_passing
+  description: Numeric rating of long-range passing accuracy.
+- name: ball_control
+  description: Numeric rating of first touch and overall ball control.
+- name: acceleration
+  description: Numeric rating of how quickly the player reaches top speed.
+- name: sprint_speed
+  description: Numeric rating of straight-line running speed.
+- name: agility
+  description: Numeric rating of agility and nimbleness.
+- name: reactions
+  description: Numeric rating of responsiveness to play situations.
+- name: balance
+  description: Numeric rating of balance while moving or under challenge.
+- name: shot_power
+  description: Numeric rating of shot power.
+- name: jumping
+  description: Numeric rating of vertical leap.
+- name: stamina
+  description: Numeric rating of endurance over a match.
+- name: strength
+  description: Numeric rating of physical strength.
+- name: long_shots
+  description: Numeric rating of long-distance shooting accuracy.
+- name: aggression
+  description: Numeric rating of player's aggression level.
+- name: interceptions
+  description: Numeric rating of ability to intercept passes.
+- name: positioning
+  description: Numeric rating of attacking positioning awareness.
+- name: vision
+  description: Numeric rating of vision and playmaking awareness.
+- name: penalties
+  description: Numeric rating of penalty kick ability.
+- name: marking
+  description: Numeric rating of defensive marking ability.
+- name: standing_tackle
+  description: Numeric rating of standing tackle skill.
+- name: sliding_tackle
+  description: Numeric rating of sliding tackle skill.
+- name: gk_diving
+  description: Numeric rating of goalkeeper diving ability.
+- name: gk_handling
+  description: Numeric rating of goalkeeper handling.
+- name: gk_kicking
+  description: Numeric rating of goalkeeper kicking accuracy/power.
+- name: gk_positioning
+  description: Numeric rating of goalkeeper positioning.
+- name: gk_reflexes
+  description: Numeric rating of goalkeeper reflex saves.
+...
+---
+schema: public
+name: team_attributes
+type: table
+description: Stores periodic tactical and style attributes for each football team.
+facts:
+  - Join with team table using team_attributes.team_api_id = team.team_api_id
+  - buildUpPlaySpeed is a numeric rating for team build-up speed
+  - Class fields (e.g., chanceCreationPassingClass) contain categorical values like 'Safe'
+  - For top N teams, use ORDER BY with LIMIT, not MAX grouping
+sql_examples:
+  - description: Get teams with specific chance creation style
+    sql: "SELECT DISTINCT t.team_short_name FROM team t JOIN team_attributes ta ON t.team_api_id = ta.team_api_id WHERE ta.chanceCreationPassingClass = 'Safe'"
+  - description: Get top teams by build-up speed
+    sql: "SELECT ta.buildUpPlaySpeed FROM team t JOIN team_attributes ta ON t.team_api_id = ta.team_api_id ORDER BY ta.buildUpPlaySpeed DESC LIMIT 4"
+columns:
+- name: id
+  description: Surrogate primary key for the team attribute record.
+- name: team_fifa_api_id
+  description: Identifier of the team in the FIFA dataset.
+- name: team_api_id
+  description: Foreign key linking to internal team table.
+- name: date
+  description: Timestamp when the team attribute snapshot was captured.
+- name: buildupplayspeed
+  description: Numeric rating for speed of build-up play.
+- name: buildupplayspeedclass
+  description: Categorical description of build-up play speed.
+- name: buildupplaydribbling
+  description: Numeric rating for dribbling during build-up play.
+- name: buildupplaydribblingclass
+  description: Class label describing build-up dribbling tendency.
+- name: buildupplaypassing
+  description: Numeric rating for passing during build-up play.
+- name: buildupplaypassingclass
+  description: Class label describing build-up passing approach.
+- name: buildupplaypositioningclass
+  description: Categorical description of team positioning during build-up (e.g.,
+    organised).
+- name: chancecreationpassing
+  description: Numeric rating for passing in chance creation phase.
+- name: chancecreationpassingclass
+  description: Class label describing chance creation passing style.
+- name: chancecreationcrossing
+  description: Numeric rating for crossing in chance creation.
+- name: chancecreationcrossingclass
+  description: Categorical description of crossing tendency in attack.
+- name: chancecreationshooting
+  description: Numeric rating for shooting frequency/quality in chance creation.
+- name: chancecreationshootingclass
+  description: Class label describing shooting approach in attack.
+- name: chancecreationpositioningclass
+  description: Categorical description of attacking positioning strategy.
+- name: defencepressure
+  description: Numeric rating of defensive pressure level.
+- name: defencepressureclass
+  description: Class label describing defensive pressure style.
+- name: defenceaggression
+  description: Numeric rating of defensive aggression.
+- name: defenceaggressionclass
+  description: Class label describing aggression level in defense.
+- name: defenceteamwidth
+  description: Numeric rating of how wide the defensive line is kept.
+- name: defenceteamwidthclass
+  description: Categorical description of defensive team width strategy.
+- name: defencedefenderlineclass
+  description: Class label describing the defensive line approach (e.g., offside trap).
+...
