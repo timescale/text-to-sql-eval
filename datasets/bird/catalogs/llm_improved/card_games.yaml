@@ -1,0 +1,319 @@
+---
+type: header
+schema_version: '1'
+...
+---
+schema: public
+name: cards
+type: table
+description: 'Contains detailed information and metadata about individual Magic: The
+  Gathering cards, including identifiers, attributes, text, and availability flags.'
+columns:
+- name: id
+  description: Surrogate primary key for each card record.
+- name: artist
+  description: Name of the card's illustrator.
+- name: asciiname
+  description: ASCII-only version of the card name, used for simplified matching.
+- name: availability
+  description: Comma-separated list of platforms where the card is available (e.g., paper, mtgo). This is different from sets.isforeignonly flag - use the appropriate boolean flag for foreign availability questions.
+- name: bordercolor
+  description: Border color category of the printed card.
+- name: cardkingdomfoilid
+  description: Card Kingdom store identifier for foil version.
+- name: cardkingdomid
+  description: Card Kingdom store identifier for non-foil version.
+- name: coloridentity
+  description: Set of mana colors in the card's color identity.
+- name: colorindicator
+  description: Colors shown by the small dot indicator on the card, if any.
+- name: colors
+  description: Actual colors of the card as printed.
+- name: convertedmanacost
+  description: Numeric converted mana cost (CMC) of the card.
+- name: dueldeck
+  description: Code of the Duel Deck product this card belongs to, if applicable.
+- name: edhrecrank
+  description: Ranking on EDHREC website indicating commander popularity.
+- name: faceconvertedmanacost
+  description: CMC of the face for double-faced or split cards.
+- name: facename
+  description: Name of the specific face for multi-faced cards.
+- name: flavorname
+  description: Special name used in flavor text or story spotlights. This is NOT the same as foreign language data - use foreign_data table for translated flavor text.
+- name: flavortext
+  description: Narrative or quotation flavor text printed on the card.
+- name: frameeffects
+  description: Comma-separated list of visual frame effects (e.g., nyxtouched).
+- name: frameversion
+  description: Version of the card frame template (e.g., 2003, 2015).
+- name: hand
+  description: Hand modifier value printed on Vanguard cards.
+- name: hasalternativedecklimit
+  description: Flag indicating if the card has an alternative deck-building limit.
+- name: hascontentwarning
+  description: Flag indicating if the card image may require a content warning.
+- name: hasfoil
+  description: Flag showing if a foil printing exists.
+- name: hasnonfoil
+  description: Flag showing if a non-foil printing exists.
+- name: isalternative
+  description: Flag for alternative art or special alternate versions.
+- name: isfullart
+  description: Flag indicating a full-art style card.
+- name: isonlineonly
+  description: Flag indicating prints that exist only on digital platforms.
+- name: isoversized
+  description: Flag marking oversized promotional cards.
+- name: ispromo
+  description: Flag indicating promotional card print.
+- name: isreprint
+  description: Flag showing this printing is a reprint of an older card.
+- name: isreserved
+  description: Flag whether the card is on the reserved list.
+- name: isstarter
+  description: Flag indicating a starter-level simplified card.
+- name: isstoryspotlight
+  description: Flag marking story spotlight cards in the storyline.
+- name: istextless
+  description: Flag for textless promo versions.
+- name: istimeshifted
+  description: Flag indicating timeshifted special sheet cards.
+- name: keywords
+  description: Comma-separated list of rules keywords appearing on the card.
+- name: layout
+  description: Card layout type (normal, split, transform, etc.).
+- name: leadershipskills
+  description: Marks if the card can be a commander, oathbreaker, etc.
+- name: life
+  description: Life modifier value for Vanguard cards.
+- name: loyalty
+  description: Starting loyalty for planeswalker cards.
+- name: manacost
+  description: Mana cost string in curly-brace notation.
+- name: mcmid
+  description: Cardmarket (MKM) product identifier.
+- name: mcmmetaid
+  description: Cardmarket meta-product identifier.
+- name: mtgarenaid
+  description: Magic Arena internal card identifier.
+- name: mtgjsonv4id
+  description: UUID from the MTGJSON v4 database.
+- name: mtgofoilid
+  description: Magic Online foil identifier.
+- name: mtgoid
+  description: Magic Online non-foil identifier. When checking if cards appear on Magic Online, use mtgoid IS NOT NULL or sets.mtgocode IS NOT NULL.
+- name: multiverseid
+  description: Wizards of the Coast multiverse ID for this printing.
+- name: name
+  description: Official English name of the card.
+- name: number
+  description: Collector number within its set.
+- name: originalreleasedate
+  description: Original release date for this card face, if earlier than set release.
+- name: originaltext
+  description: Oracle text as originally printed.
+- name: originaltype
+  description: Type line as originally printed.
+- name: otherfaceids
+  description: List of UUIDs for the other faces of the same card.
+- name: power
+  description: Printed power value for creatures.
+- name: printings
+  description: Comma-separated list of set codes this card has appeared in.
+- name: promotypes
+  description: List of promotion types for this printing.
+- name: purchaseurls
+  description: JSON object of store URLs where the card can be purchased.
+- name: rarity
+  description: Rarity level of the printing (common, uncommon, etc.).
+- name: scryfallid
+  description: Scryfall unique card identifier.
+- name: scryfallillustrationid
+  description: Scryfall illustration UUID for this artwork.
+- name: scryfalloracleid
+  description: Scryfall oracle UUID shared by all printings of a card.
+- name: setcode
+  description: Three-letter code of the set this card belongs to.
+- name: side
+  description: Indicates card side for double-faced cards (a or b).
+- name: subtypes
+  description: Comma-separated list of creature or card subtypes.
+- name: supertypes
+  description: Comma-separated list of supertypes such as Legendary.
+- name: tcgplayerproductid
+  description: TCGPlayer product identifier.
+- name: text
+  description: Current oracle rules text of the card.
+- name: toughness
+  description: Printed toughness value for creatures.
+- name: type
+  description: Full type line including supertypes, types, and subtypes.
+- name: types
+  description: Primary card types present, comma-separated.
+- name: uuid
+  description: MTGJSON universal unique identifier for this card face.
+- name: variations
+  description: UUIDs of variant printings or arts.
+- name: watermark
+  description: Watermark symbol printed behind the text box, if any.
+...
+---
+schema: public
+name: foreign_data
+type: table
+description: Stores translations of card name, type, text, and flavor text for various
+  foreign languages, keyed by the card's UUID.
+columns:
+- name: id
+  description: Surrogate primary key for each foreign text record.
+- name: flavortext
+  description: Localized flavor text string.
+- name: language
+  description: Language of the translation (e.g., French, German).
+- name: multiverseid
+  description: Multiverse ID of the localized printing.
+- name: name
+  description: Localized card name.
+- name: text
+  description: Localized oracle text.
+- name: type
+  description: Localized type line.
+- name: uuid
+  description: UUID referencing the corresponding English card in the cards table.
+...
+---
+schema: public
+name: legalities
+type: table
+description: Lists legality status of each card across different Magic play formats
+  using the card's UUID.
+columns:
+- name: id
+  description: Surrogate primary key for each legality entry.
+- name: format
+  description: Name of the constructed format (e.g., standard, commander).
+- name: status
+  description: Legality status in the format (Legal, Banned, Restricted).
+- name: uuid
+  description: UUID of the card whose legality is specified.
+...
+---
+schema: public
+name: set_translations
+type: table
+description: Contains translated names of Magic set codes in various languages.
+columns:
+- name: id
+  description: Surrogate primary key for each set translation row.
+- name: language
+  description: Language of the set name translation.
+- name: setcode
+  description: Three-letter code of the set being translated, referencing sets.code.
+- name: translation
+  description: Localized name of the set.
+...
+---
+schema: public
+name: sets
+type: table
+description: 'Catalog of Magic: The Gathering expansion sets with metadata such as
+  size, release date, and product codes.'
+columns:
+- name: id
+  description: Surrogate primary key for each set.
+- name: basesetsize
+  description: Number of cards in the base set excluding variants. When questions mention 'under 100', use basesetsize < 100, not < 10.
+- name: block
+  description: Block or product family the set belongs to.
+- name: booster
+  description: JSON describing booster collation information.
+- name: code
+  description: Unique three- or four-letter code identifying the set.
+- name: isfoilonly
+  description: Flag if the set is printed exclusively in foil.
+- name: isforeignonly
+  description: Flag if the set was released only in non-English languages.
+- name: isnonfoilonly
+  description: Flag if the set is available only in non-foil.
+- name: isonlineonly
+  description: Flag marking digital-only sets.
+- name: ispartialpreview
+  description: Flag indicating the set data is only a preview, not complete.
+- name: keyrunecode
+  description: Keyrune icon code representing the set symbol.
+- name: mcmid
+  description: Cardmarket set identifier.
+- name: mcmidextras
+  description: Cardmarket extra identifier for variants.
+- name: mcmname
+  description: Set name as used by Cardmarket.
+- name: mtgocode
+  description: Magic Online set code, if different.
+- name: name
+  description: Official English name of the set.
+- name: parentcode
+  description: Code of the parent set for supplemental products.
+- name: releasedate
+  description: Official release date of the set.
+- name: tcgplayergroupid
+  description: TCGPlayer group identifier for the set.
+- name: totalsetsize
+  description: Total number of cards in the set including all variants.
+- name: type
+  description: Classification of the set (core, expansion, masters, etc.).
+...
+---
+type: sql_example
+sql: |
+  SELECT CAST(SUM(CASE WHEN condition1 AND condition2 THEN 1 ELSE 0 END) AS REAL) * 100 / NULLIF(COUNT(*), 0) AS percentage
+  FROM table_name
+description: Calculate percentages using conditional SUM divided by total count, multiplied by 100. Always use CAST AS REAL and NULLIF for safe division.
+...
+---
+type: sql_example
+sql: |
+  SELECT CASE WHEN COUNT(*) > 0 THEN 'YES' ELSE 'NO' END
+  FROM table1 t1
+  JOIN table2 t2 ON t1.id = t2.id
+  WHERE conditions
+description: Return YES/NO answers using CASE WHEN with COUNT check rather than returning actual data rows.
+...
+---
+type: sql_example
+sql: |
+  SELECT t1.field, t2.translation
+  FROM cards t1
+  JOIN foreign_data t2 ON t1.uuid = t2.uuid
+  WHERE t2.language = 'target_language'
+description: Access foreign language translations through foreign_data table, not through cards table fields like flavorname.
+...
+---
+type: sql_example
+sql: |
+  SELECT c.name, l.format
+  FROM cards c
+  JOIN legalities l ON c.uuid = l.uuid
+  WHERE l.status = 'Legal'
+description: Always join with legalities table when questions involve card legality, banned status, or play formats.
+...
+---
+type: fact
+description: |
+  When calculating proportions "among X cards", the denominator should be COUNT of X cards. When calculating proportions "of all cards", the denominator should be COUNT of all cards. Pay careful attention to the question wording.
+...
+---
+type: fact
+description: |
+  For foreign availability questions, use sets.isforeignonly boolean flag, not the availability text field which contains platform information.
+...
+---
+type: fact
+description: |
+  INNER JOIN vs LEFT JOIN affects results significantly. Use INNER JOIN when you need records that exist in both tables, LEFT JOIN when you need all records from the left table regardless of matches.
+...
+---
+type: fact
+description: |
+  When questions ask for set information based on card names, use the card's setcode to join with sets.code, not direct set name matching which may be ambiguous.
+...

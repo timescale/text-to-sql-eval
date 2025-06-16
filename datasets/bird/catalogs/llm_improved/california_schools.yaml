@@ -1,0 +1,320 @@
+---
+type: header
+schema_version: '1'
+...
+---
+schema: public
+name: frpm
+type: table
+description: Contains annual counts and percentages of enrollment, free meals, and
+  free or reduced-price meal eligibility for each California public school, along
+  with basic school and charter characteristics.
+columns:
+- name: cdscode
+  description: Unique 14-digit California Department of Education school identifier. Use this field to join with schools.cdscode and satscores.cds.
+- name: Academic Year
+  description: School year the FRPM data pertain to.
+- name: County Code
+  description: Two-digit county identifier.
+- name: District Code
+  description: Numeric district identifier within the county.
+- name: School Code
+  description: School identifier within the district.
+- name: County Name
+  description: Name of the county where the school is located.
+- name: District Name
+  description: Name of the governing school district or county office.
+- name: School Name
+  description: Official name of the school.
+- name: District Type
+  description: Category of local education agency, e.g., unified, elementary, COE.
+- name: School Type
+  description: Broad type of school such as elementary, middle, high, or K-12.
+- name: Educational Option Type
+  description: Designation of instructional option (e.g., Traditional, Alternative).
+- name: NSLP Provision Status
+  description: National School Lunch Program provision designation. Value "Multiple Provision Types" indicates schools offering multiple meal program provisions.
+- name: Charter School (Y/N)
+  description: Flag indicating whether the school is a charter (1) or not (0). Non-chartered schools have value 0.
+- name: Charter School Number
+  description: Charter authorization number if applicable.
+- name: Charter Funding Type
+  description: Indicates whether the charter is directly or locally funded.
+- name: irc
+  description: Indicator for independent reporting charter (1=yes).
+- name: Low Grade
+  description: Lowest grade level served at the school during the year. This defines the grade span served, not a filter for calculations.
+- name: High Grade
+  description: Highest grade level served at the school during the year. This defines the grade span served, not a filter for calculations.
+- name: Enrollment (K-12)
+  description: Total K-12 student enrollment count. This is the pre-calculated total for kindergarten through 12th grade students. Use this field when questions refer to "K-12", "grades 1 through 12", or similar grade span terminology.
+- name: Free Meal Count (K-12)
+  description: Number of K-12 students eligible for free meals. This is a subset of students who qualify for completely free meals.
+- name: Percent (%) Eligible Free (K-12)
+  description: Proportion of K-12 enrollment eligible for free meals. This is pre-calculated as a percentage.
+- name: FRPM Count (K-12)
+  description: Number of K-12 students eligible for free or reduced-price meals. FRPM stands for "Free and Reduced Price Meals" and includes both free and reduced-price meal recipients.
+- name: Percent (%) Eligible FRPM (K-12)
+  description: Percentage of K-12 students eligible for free or reduced-price meals.
+- name: Enrollment (Ages 5-17)
+  description: "Enrollment count limited to students aged 5–17."
+- name: Free Meal Count (Ages 5-17)
+  description: "Number of 5–17 year olds eligible for free meals."
+- name: Percent (%) Eligible Free (Ages 5-17)
+  description: "Percentage of 5–17 enrollment eligible for free meals."
+- name: FRPM Count (Ages 5-17)
+  description: "Number of 5–17 year olds eligible for free or reduced meals."
+- name: Percent (%) Eligible FRPM (Ages 5-17)
+  description: "Proportion of 5–17 enrollment eligible for free or reduced meals."
+- name: 2013-14 CALPADS Fall 1 Certification Status
+  description: Indicator whether 2013-14 CALPADS Fall 1 data were certified.
+...
+---
+schema: public
+name: satscores
+type: table
+description: Stores SAT performance metrics, participation, and senior enrollment
+  for each California school, district, or county.
+columns:
+- name: cds
+  description: 14-digit California school, district, or county code serving as primary key. Use this field to join with schools.cdscode and frpm.cdscode.
+- name: rtype
+  description: 'Reporting level: S=school, D=district, C=county, or other aggregate.'
+- name: sname
+  description: School name when reporting at the school level.
+- name: dname
+  description: District name associated with the record.
+- name: cname
+  description: County name associated with the record.
+- name: enroll12
+  description: Number of 12th-grade students enrolled.
+- name: numtsttakr
+  description: Count of students who took the SAT. Use this as the denominator when calculating rates or percentages involving SAT test takers. When calculating excellence rates, use NULLIF(numtsttakr, 0) to handle division by zero safely.
+- name: avgscrread
+  description: Average SAT critical reading score.
+- name: avgscrmath
+  description: Average SAT mathematics score.
+- name: avgscrwrite
+  description: Average SAT writing score.
+- name: numge1500
+  description: Number of SAT test takers scoring 1500 or higher combined. This field represents students with high SAT performance. Use this when questions refer to "students scoring 1500 or more", "test score greater than or equal to 1500", or similar high-performance criteria.
+...
+---
+schema: public
+name: schools
+type: table
+description: Provides master directory information and attributes for every California
+  public school, including location, status, grades, contacts, and charter details.
+columns:
+- name: cdscode
+  description: 14-digit unique CDE code for the school, primary key. Use this field to join with frpm.cdscode and satscores.cds.
+- name: ncesdist
+  description: NCES district identifier.
+- name: ncesschool
+  description: NCES school identifier.
+- name: statustype
+  description: Operational status of the school (e.g., Active, Closed). Schools with StatusType='Merged' have been merged with other institutions.
+- name: county
+  description: Name of the county where the school is located.
+- name: district
+  description: Name of the school district or county office.
+- name: school
+  description: Official school name.
+- name: street
+  description: Physical street address of the school.
+- name: streetabr
+  description: Abbreviated form of the street address.
+- name: city
+  description: City in which the school is located.
+- name: zip
+  description: Five- or nine-digit ZIP code.
+- name: state
+  description: State abbreviation, always 'CA'.
+- name: mailstreet
+  description: Mailing street address. This is the "postal street address" referenced in questions about mailing addresses.
+- name: mailstrabr
+  description: Abbreviated mailing street address.
+- name: mailcity
+  description: City for mailing address.
+- name: mailzip
+  description: ZIP code for mailing address.
+- name: mailstate
+  description: State abbreviation for mailing address.
+- name: phone
+  description: Primary phone number.
+- name: ext
+  description: Phone extension, if any.
+- name: website
+  description: School or district website URL.
+- name: opendate
+  description: Date the school first opened.
+- name: closeddate
+  description: Date the school closed, if applicable.
+- name: charter
+  description: Indicator whether the school operates as a charter (1=yes, 0=no). Non-chartered schools have value 0.
+- name: charternum
+  description: Assigned charter number.
+- name: fundingtype
+  description: Denotes whether the charter is directly or locally funded.
+- name: doc
+  description: District of Charter code as integer. DOC=31 indicates "State Special Schools", DOC=52 indicates "Elementary School District", DOC=54 indicates "Unified School District". Cast to integer when filtering (e.g., DOC::integer = 54).
+- name: doctype
+  description: Type description for district of charter (e.g., COE, Unified).
+- name: soc
+  description: School of Charter code as integer. SOC=62 indicates "Intermediate/Middle Schools". Cast to integer when filtering (e.g., SOC::integer = 62).
+- name: soctype
+  description: Type description for school of charter.
+- name: edopscode
+  description: Education option code such as TRAD, ALTERN, etc.
+- name: edopsname
+  description: Full name of the education option designation.
+- name: eilcode
+  description: Economic Impact Aid program code if any.
+- name: eilname
+  description: Economic Impact Aid program name.
+- name: gsoffered
+  description: Grade span offered by the school (e.g., "K-8" for Kindergarten to 8th grade).
+- name: gsserved
+  description: Grade span currently served.
+- name: virtual
+  description: Indicates whether the school is virtual (Y/N/P).
+- name: magnet
+  description: Flag for magnet school status (1=yes, 0=no). Schools offering magnet programs have value 1.
+- name: latitude
+  description: Latitude coordinate of the school location.
+- name: longitude
+  description: Longitude coordinate of the school location.
+- name: admfname1
+  description: First name of primary administrator contact. Schools can have up to 3 administrators.
+- name: admlname1
+  description: Last name of primary administrator contact.
+- name: admemail1
+  description: Email address of primary administrator.
+- name: admfname2
+  description: First name of secondary administrator contact.
+- name: admlname2
+  description: Last name of secondary administrator contact.
+- name: admemail2
+  description: Email of secondary administrator.
+- name: admfname3
+  description: First name of additional administrator contact.
+- name: admlname3
+  description: Last name of additional administrator contact.
+- name: admemail3
+  description: Email of additional administrator.
+- name: lastupdate
+  description: Date the record was last updated.
+...
+---
+type: sql_example
+sql: |
+  SELECT T1.column1, T2.column2, T3.column3
+  FROM satscores AS T1 
+  INNER JOIN schools AS T2 ON T1.cds = T2.cdscode
+  INNER JOIN frpm AS T3 ON T2.cdscode = T3.cdscode
+  WHERE condition
+description: Standard three-table join pattern for queries involving SAT scores, school information, and meal program data.
+...
+---
+type: sql_example
+sql: |
+  SELECT school_field
+  FROM schools 
+  ORDER BY numeric_field DESC NULLS LAST 
+  LIMIT 1 OFFSET n-1
+description: Get the nth highest/lowest value using LIMIT and OFFSET. For the 7th highest, use OFFSET 6.
+...
+---
+type: sql_example
+sql: |
+  SELECT CAST(numerator_field AS REAL) / NULLIF(denominator_field, 0) AS rate
+  FROM table_name
+description: Calculate rates and percentages safely by casting to REAL and using NULLIF to prevent division by zero errors.
+...
+---
+type: sql_example
+sql: |
+  SELECT T2.AdmFName1, T2.AdmLName1, T2.AdmFName2, T2.AdmLName2, T2.AdmFName3, T2.AdmLName3
+  FROM schools AS T2
+  WHERE condition
+description: Select all administrator names when questions ask about school administration or administrators.
+...
+---
+type: fact
+description: |
+  "K-12" and "grades 1 through 12" refer to the same concept - students from kindergarten through 12th grade. Use the pre-calculated "Enrollment (K-12)" field rather than filtering by grade ranges when these terms appear in questions.
+...
+---
+type: fact
+description: |
+  "Complete address" includes Street, City, State, and Zip code fields from the schools table.
+...
+---
+type: fact
+description: |
+  "Postal street address" and "mailing street" both refer to the mailstreet field in the schools table.
+...
+---
+type: fact
+description: |
+  Each school can have up to 3 administrators with separate name and email fields (admfname1/admlname1/admemail1, admfname2/admlname2/admemail2, admfname3/admlname3/admemail3). When questions ask about "administrators" or "administration", include all relevant administrator fields.
+...
+---
+type: fact
+description: |
+  "Excellence rate" is calculated as numge1500 / numtsttakr (number of students scoring 1500+ divided by total test takers).
+...
+---
+type: fact
+description: |
+  "Eligible free rate" or "percent eligible for free meals" should be calculated as "Free Meal Count (K-12)" / "Enrollment (K-12)" when not using a pre-calculated percentage field.
+...
+---
+type: fact
+description: |
+  When questions mention both enrollment/meal data AND SAT scores, you typically need to join all three tables (schools, frpm, satscores) using the relationship schools.cdscode = frpm.cdscode = satscores.cds.
+...
+---
+type: sql_example
+sql: |
+  SELECT field
+  FROM table1 t1
+  JOIN table2 t2 ON join_condition
+  WHERE CAST(t1.numge1500 AS REAL) / NULLIF(t1.numtsttakr, 0) > threshold
+description: Calculate excellence rate safely with proper casting and NULLIF to handle zero test takers. Always use this pattern for excellence rate calculations.
+...
+---
+type: sql_example  
+sql: |
+  SELECT school_field
+  FROM schools
+  ORDER BY ABS(numeric_field) DESC NULLS LAST
+  LIMIT 1
+description: Find records with maximum absolute values using ABS() function and proper NULL handling with NULLS LAST.
+...
+---
+type: sql_example
+sql: |
+  SELECT sname, funding_field
+  FROM satscores s1
+  JOIN frpm f1 ON s1.cds = f1.cdscode  
+  WHERE district_condition
+  GROUP BY sname, funding_field
+  HAVING CAST(SUM(s1.avgscrmath) AS REAL) / NULLIF(COUNT(s1.cds), 0) > threshold
+description: Calculate average of averages by summing values and dividing by count, not using AVG() directly on already-averaged values.
+...
+---
+type: fact
+description: |
+  Pre-calculated percentage fields like "Percent (%) Eligible Free (K-12)" should be used when available rather than manually calculating ratios. However, when questions specify calculation formulas, compute the ratio manually using the specified numerator and denominator fields.
+...
+---
+type: fact
+description: |
+  The "fundingtype" field is in the schools table, not the frpm table. For locally funded schools, use schools.fundingtype = 'Locally funded', not frpm fields.
+...
+---
+type: fact
+description: |
+  DOC and SOC fields should be cast to integers when filtering (DOC::integer = 54, SOC::integer = 62) as they are stored as text but represent numeric codes.
+...

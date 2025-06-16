@@ -1,0 +1,260 @@
+---
+type: header
+schema_version: '1'
+...
+---
+schema: public
+name: badges
+type: table
+description: Stores each badge awarded to a user, including the badge name and the
+  date it was granted.
+facts:
+  - Use COUNT(DISTINCT userid) when counting unique users with badges
+  - Badge date field requires proper date extraction functions like EXTRACT(YEAR FROM date)
+  - For percentage calculations, use NULLIF to avoid division by zero
+columns:
+- name: id
+  description: Unique identifier for the badge record.
+- name: userid
+  description: Identifier of the user who received the badge.
+- name: name
+  description: Text label of the badge awarded.
+- name: date
+  description: Timestamp when the badge was granted.
+...
+---
+schema: public
+name: comments
+type: table
+description: Holds comments made on posts, along with scores, authorship and timing
+  information.
+columns:
+- name: id
+  description: Unique identifier for the comment.
+- name: postid
+  description: Identifier of the post the comment belongs to.
+- name: score
+  description: Net score (upvotes minus downvotes) of the comment.
+- name: text
+  description: Content of the comment.
+- name: creationdate
+  description: Timestamp when the comment was created.
+- name: userid
+  description: Identifier of the user who wrote the comment, if registered.
+- name: userdisplayname
+  description: Display name shown for the commenter when no user account is linked.
+...
+---
+schema: public
+name: postlinks
+type: table
+description: Links related posts together and categorizes the relationship type.
+columns:
+- name: id
+  description: "Unique identifier for the post\u2013post link."
+- name: creationdate
+  description: Timestamp when the link between posts was created.
+- name: postid
+  description: Identifier of the source post in the link.
+- name: relatedpostid
+  description: Identifier of the target or related post.
+- name: linktypeid
+  description: Numeric code indicating the type of relationship (e.g., duplicate,
+    related).
+...
+---
+schema: public
+name: tags
+type: table
+description: Defines each tag used on posts, including usage count and links to excerpt
+  and wiki posts.
+columns:
+- name: id
+  description: Unique identifier for the tag.
+- name: tagname
+  description: Text of the tag as shown on posts.
+- name: count
+  description: Number of times the tag has been applied to posts.
+- name: excerptpostid
+  description: Identifier of the post containing the tag's excerpt description, if
+    any.
+- name: wikipostid
+  description: Identifier of the community-editable wiki post for the tag.
+...
+---
+schema: public
+name: users
+type: table
+description: Stores user profiles and activity statistics for all registered accounts.
+facts:
+  - Use proper date handling with lastaccessdate field: EXTRACT() or DATE() functions
+  - For user activity queries, join with posts using users.id = posts.owneruserid
+  - DisplayName is the primary field for user identification in queries
+  - Reputation indicates user influence level - higher reputation = more influential
+sql_examples:
+  - description: Get users by display name
+    sql: "SELECT * FROM users WHERE displayname = 'username'"
+  - description: Count users by access date
+    sql: "SELECT COUNT(*) FROM users WHERE EXTRACT(YEAR FROM lastaccessdate) > 2014"
+  - description: Find most influential user by reputation
+    sql: "SELECT * FROM users ORDER BY reputation DESC LIMIT 1"
+columns:
+- name: id
+  description: Unique identifier for the user.
+- name: reputation
+  description: Current reputation score of the user.
+- name: creationdate
+  description: Timestamp when the user account was created.
+- name: displayname
+  description: Public display name chosen by the user.
+- name: lastaccessdate
+  description: Most recent timestamp when the user accessed the site.
+- name: websiteurl
+  description: Personal or professional website URL provided by the user.
+- name: location
+  description: Free-form text of the user's reported location.
+- name: aboutme
+  description: Markdown/HTML biography entered by the user.
+- name: views
+  description: Number of times the user's profile has been viewed.
+- name: upvotes
+  description: Total upvotes the user has given to others.
+- name: downvotes
+  description: Total downvotes the user has cast.
+- name: accountid
+  description: Identifier linking to the network-wide account, if applicable.
+- name: age
+  description: Age in years provided by the user, if any.
+- name: profileimageurl
+  description: URL of the user's avatar image.
+...
+---
+schema: public
+name: posthistory
+type: table
+description: Records each revision made to a post, storing the content snapshot, edit
+  metadata and the user who performed the change.
+columns:
+- name: id
+  description: Unique identifier for the post history record.
+- name: posthistorytypeid
+  description: Code indicating the type of revision event (e.g., initial body, title
+    change, tag edit).
+- name: postid
+  description: Identifier of the post whose history this record belongs to.
+- name: revisionguid
+  description: Globally-unique identifier grouping all changes that occurred in a
+    single revision action.
+- name: creationdate
+  description: Timestamp when this particular history entry was created.
+- name: userid
+  description: User who made the edit, referencing the users table.
+- name: text
+  description: Body text captured for the post at this revision step (may be title,
+    tags or body depending on type).
+- name: comment
+  description: Optional edit comment supplied by the user describing the change.
+- name: userdisplayname
+  description: Display name of the editor when the user no longer exists or was unregistered.
+...
+---
+schema: public
+name: posts
+type: table
+description: Stores all questions and answers posted on the site along with metadata
+  such as scores, dates, owners and counts.
+facts:
+  - The posts table has ownerdisplayname field that can be used directly without joining users table
+  - For getting user details like DisplayName, join with users table: INNER JOIN users ON posts.owneruserid = users.id
+  - Use proper date functions: EXTRACT(YEAR FROM creationdate) for year filtering
+  - The creationdate field contains timestamp data requiring proper date handling
+  - For post ownership queries, can filter directly on posts.ownerdisplayname
+  - For complex user data, always join with users table using posts.owneruserid = users.id
+sql_examples:
+  - description: Get posts by specific user display name
+    sql: "SELECT * FROM posts WHERE ownerdisplayname = 'username'"
+  - description: Get post owner details by joining users table
+    sql: "SELECT u.displayname, p.title FROM posts p INNER JOIN users u ON p.owneruserid = u.id WHERE p.id = 123"
+  - description: Count posts by year
+    sql: "SELECT COUNT(*) FROM posts WHERE EXTRACT(YEAR FROM creationdate) = 2010"
+  - description: Get posts with user reputation
+    sql: "SELECT p.*, u.reputation FROM posts p INNER JOIN users u ON p.owneruserid = u.id WHERE u.reputation > 1000"
+columns:
+- name: id
+  description: Unique identifier for each post.
+- name: posttypeid
+  description: Indicates whether the post is a question, answer, etc.
+- name: acceptedanswerid
+  description: For questions, the id of the post that has been marked as the accepted
+    answer.
+- name: creationdate
+  description: Timestamp when the post was originally created.
+- name: score
+  description: Current score of the post (upvotes minus downvotes).
+- name: viewcount
+  description: Number of times the post has been viewed.
+- name: body
+  description: HTML-formatted body content of the post.
+- name: owneruserid
+  description: User who originally created the post.
+- name: lastactivitydate
+  description: Timestamp of the most recent activity (edit, comment, vote) on the
+    post.
+- name: title
+  description: Title of the post (questions only).
+- name: tags
+  description: Concatenated list of tags applied to the post, each wrapped in angle
+    brackets.
+- name: answercount
+  description: Number of answers the question currently has.
+- name: commentcount
+  description: Number of comments on the post.
+- name: favoritecount
+  description: How many users have marked this post as a favorite.
+- name: lasteditoruserid
+  description: User who last edited the post, if any.
+- name: lasteditdate
+  description: Timestamp of the most recent edit to the post.
+- name: communityowneddate
+  description: Date when the post became community-owned, if applicable.
+- name: parentid
+  description: For answers and comments converted to posts, the id of the parent question.
+- name: closeddate
+  description: Date the question was closed, if it has been closed.
+- name: ownerdisplayname
+  description: Display name of the original poster when the user record is unavailable.
+- name: lasteditordisplayname
+  description: Display name of the last editor when the user record is unavailable.
+...
+---
+schema: public
+name: votes
+type: table
+description: Logs every vote cast on posts, including type, date, voter and optional
+  bounty amount.
+facts:
+  - BountyAmount field is used for bounty-related votes
+  - Join with posts using votes.postid = posts.id for post-related vote queries
+  - Join with users using votes.userid = users.id for voter information
+  - For ratio calculations (votes vs posts), be careful with numerator/denominator order
+sql_examples:
+  - description: Find votes with bounty amount
+    sql: "SELECT * FROM votes WHERE bountyamount = 50"
+  - description: Get votes with user and post information
+    sql: "SELECT v.*, u.displayname, p.title FROM votes v JOIN users u ON v.userid = u.id JOIN posts p ON v.postid = p.id"
+columns:
+- name: id
+  description: Unique identifier for the vote.
+- name: postid
+  description: Post that received the vote.
+- name: votetypeid
+  description: Code describing the kind of vote (upvote, downvote, accept, bounty,
+    etc.).
+- name: creationdate
+  description: Date the vote was applied.
+- name: userid
+  description: User who cast the vote, if recorded.
+- name: bountyamount
+  description: Point value of a bounty associated with the vote, if the vote represents
+    a bounty award.
+...
