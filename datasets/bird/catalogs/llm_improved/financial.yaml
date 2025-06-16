@@ -48,9 +48,28 @@ columns:
 - name: gender
   description: Client's gender code (e.g., M or F).
 - name: birth_date
-  description: Date of birth of the client.
+  description: Date of birth for the client.
 - name: district_id
-  description: Identifier of the client's district, referencing district table.
+  description: Identifier of the district where the client resides, referencing district table.
+...
+---
+type: fact
+description: |
+  Region names in district.A3 field are stored in lowercase (e.g., 'east Bohemia', 'north Bohemia'). Always use lowercase in string comparisons.
+...
+---
+type: fact
+description: |
+  The frequency field uses Czech terms: 'POPLATEK PO OBRATU' means 'issuance after transaction', 'POPLATEK MESICNE' means 'monthly issuance'.
+...
+---
+type: sql_example
+sql: |
+  SELECT COUNT(*) 
+  FROM account a
+  JOIN district d ON a.district_id = d.district_id
+  WHERE d.A3 = 'east bohemia' AND a.frequency = 'POPLATEK PO OBRATU'
+description: Use lowercase for region names in A3 field. Be precise with Czech frequency terms.
 ...
 ---
 schema: public
