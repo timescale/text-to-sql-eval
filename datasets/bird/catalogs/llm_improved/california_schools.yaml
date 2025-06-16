@@ -213,7 +213,7 @@ sql: |
   INNER JOIN schools AS T2 ON T1.cds = T2.cdscode
   INNER JOIN frpm AS T3 ON T2.cdscode = T3.cdscode
   WHERE condition
-description: Standard three-table join pattern for queries involving SAT scores, school information, and meal program data.
+description: Standard three-table join pattern for queries involving SAT scores, school information, and meal program data. Always use this pattern when questions involve both SAT performance metrics AND meal program data, even if the question doesn't explicitly mention all three tables.
 ...
 ---
 type: sql_example
@@ -301,7 +301,7 @@ sql: |
   WHERE district_condition
   GROUP BY sname, funding_field
   HAVING CAST(SUM(s1.avgscrmath) AS REAL) / NULLIF(COUNT(s1.cds), 0) > threshold
-description: Calculate average of averages by summing values and dividing by count, not using AVG() directly on already-averaged values.
+description: Calculate average of averages by summing values and dividing by count, not using AVG() directly on already-averaged values. When questions ask for "average of average" calculations, always use SUM(field)/COUNT(records) pattern, never AVG(field).
 ...
 ---
 type: fact
@@ -316,5 +316,33 @@ description: |
 ---
 type: fact
 description: |
-  DOC and SOC fields should be cast to integers when filtering (DOC::integer = 54, SOC::integer = 62) as they are stored as text but represent numeric codes.
+  DOC and SOC fields should be cast to integers when filtering (DOC::integer = 54, SOC::integer = 62) as they are stored as text but represent numeric codes. Never use doctype or soctype as string values for filtering - always use the numeric DOC/SOC fields with integer casting.
+...
+---
+type: sql_example
+sql: |
+  SELECT field1, field2
+  FROM table1 t1
+  WHERE condition1
+  AND (t1.field - t1.other_field) > (
+    SELECT AVG(t2.field - t2.other_field) 
+    FROM table1 t2 
+    JOIN table3 t3 ON t2.key = t3.key
+    WHERE t3.filter_condition
+  )
+description: When calculating differences above average, ensure the subquery uses the same filtering conditions as the main query to calculate the correct baseline average.
+...
+---
+type: sql_example
+sql: |
+  SELECT field
+  FROM table
+  ORDER BY ABS(numeric_field) DESC NULLS LAST
+  LIMIT 1
+description: For "highest" values that refer to maximum absolute values, use ORDER BY with ABS() and LIMIT rather than subqueries with MAX(ABS()). This pattern avoids issues with multiple records having the same maximum value.
+...
+---
+type: fact
+description: |
+  When questions ask for schools with specific performance metrics AND meal eligibility data, always join satscores, schools, and frpm tables even if the question doesn't explicitly mention all three. The complete join pattern is: satscores JOIN schools ON satscores.cds = schools.cdscode JOIN frpm ON schools.cdscode = frpm.cdscode.
 ...
