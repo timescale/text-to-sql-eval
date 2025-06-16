@@ -107,7 +107,7 @@ def load(
     """
     Load the datasets into the database.
     """
-    if not (datasets_dir / "spider" / "catalogs" / catalog).exists():
+    if not (datasets_dir / dataset / "catalogs" / catalog).exists():
         raise ValueError(f"Catalog {catalog} not found")
 
     datasets = os.listdir(datasets_dir) if dataset == "all" else [dataset]
