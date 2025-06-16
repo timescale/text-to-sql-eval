@@ -84,7 +84,7 @@ columns:
 ...
 ---
 type: fact
-description: Join with yearmonth table using customers.customerid = yearmonth.customerid for consumption data
+description: Join with yearmonth table using customers.customerid = yearmonth.customerid for consumption data. Always use proper JOINs instead of subqueries with IN when combining customer and consumption data.
 ...
 ---
 type: fact
@@ -92,11 +92,61 @@ description: Currency field values include 'CZK' and 'EUR' for Czech and Euro cu
 ...
 ---
 type: fact
-description: Segment field contains values like 'SME', 'LAM' for business classifications
+description: Segment field contains values like 'SME', 'LAM' for business classifications. For gas stations, segment includes 'Discount' among other values.
+...
+---
+type: sql_example
+sql: |
+  SELECT CAST(SUM(CASE WHEN condition THEN CAST(field AS FLOAT) ELSE 0 END) AS REAL) * 100 / NULLIF(COUNT(*), 0)
+  FROM table1 t1 
+  JOIN table2 t2 ON t1.id = t2.id
+  WHERE t1.filter_condition
+description: Calculate percentages with proper JOINs and FLOAT casting. Use JOINs instead of subqueries for denominator calculations.
+...
+---
+type: fact
+description: |
+  When questions specify yearmonth periods (like "June 2013" = "201306"), always join with yearmonth table and filter by yearmonth.date, not by transaction.date which has different format and meaning.
+...
+---
+type: sql_example
+sql: |
+  SELECT SUM(CASE WHEN t1.field = 'value1' THEN CAST(t2.amount AS FLOAT) ELSE 0 END) - 
+         SUM(CASE WHEN t1.field = 'value2' THEN CAST(t2.amount AS FLOAT) ELSE 0 END)
+  FROM table1 t1
+  JOIN table2 t2 ON t1.id = t2.id
+  WHERE filter_condition
+description: Calculate differences between groups using conditional SUM with CASE WHEN. Always cast numeric fields to FLOAT for calculations.
 ...
 ---
 type: fact
 description: "Country field uses country codes: 'CZE' for Czech Republic, 'SVK' for Slovakia"
+...
+---
+type: sql_example
+sql: |
+  SELECT SUBSTR(date, 1, 4) AS year, SUBSTR(date, 5, 2) AS month
+  FROM yearmonth
+  WHERE SUBSTR(date, 1, 4) = '2013'
+description: Extract year and month from yearmonth.date field using SUBSTR(). Date format is YYYYMM, so year is first 4 characters, month is characters 5-6.
+...
+---
+type: sql_example
+sql: |
+  SELECT CAST(consumption AS FLOAT) 
+  FROM yearmonth 
+  WHERE calculation_needed
+description: Always cast consumption to FLOAT when performing calculations as specified in questions. Use CAST(consumption AS FLOAT) or consumption::FLOAT.
+...
+---
+type: sql_example
+sql: |
+  SELECT SUM(CAST(consumption AS FLOAT))
+  FROM yearmonth 
+  WHERE SUBSTR(date, 1, 4) = '2012'
+  GROUP BY SUBSTR(date, 5, 2)
+  ORDER BY SUM(consumption) DESC LIMIT 1
+description: Find highest monthly consumption by grouping by month (SUBSTR(date, 5, 2)) and using SUM(), not MAX() of individual records.
 ...
 ---
 type: fact
@@ -196,4 +246,76 @@ description: Filter by specific month (September 2013)
 type: sql_example
 sql: "SELECT SUM(CASE WHEN c.currency = 'CZK' THEN CAST(y.consumption AS float) ELSE 0 END) - SUM(CASE WHEN c.currency = 'EUR' THEN CAST(y.consumption AS float) ELSE 0 END) FROM customers c JOIN yearmonth y ON c.customerid = y.customerid WHERE SUBSTR(y.date, 1, 4) = '2012'"
 description: Calculate consumption difference by currency
+...
+---
+type: fact
+description: "IMPORTANT: Always use CAST(consumption AS float) for any arithmetic calculations"
+...
+---
+type: fact
+description: "yearmonth.date uses YYYYMM format: '201309' means September 2013"
+...
+---
+type: fact
+description: "Extract year with SUBSTR(date, 1, 4), month with SUBSTR(date, 5, 2)"
+...
+---
+type: fact
+description: "For date ranges in YYYYMM format, use BETWEEN '201301' AND '201312' for 2013"
+...
+---
+type: fact
+description: "Use COUNT(*) FILTER (WHERE condition) for PostgreSQL conditional counting"
+...
+---
+type: fact
+description: "For monthly aggregation, GROUP BY SUBSTR(date, 5, 2) and SUM consumption"
+...
+---
+type: fact
+description: "Join transactions_1k with yearmonth table only when customer-month data is needed"
+...
+---
+type: fact
+description: "For percentage calculations, remember to multiply by 100 for percentage format"
+...
+---
+type: sql_example
+sql: "SELECT SUBSTR(y.date, 5, 2) FROM customers c JOIN yearmonth y ON c.customerid = y.customerid WHERE SUBSTR(y.date, 1, 4) = '2013' AND c.segment = 'SME' GROUP BY SUBSTR(y.date, 5, 2) ORDER BY SUM(CAST(y.consumption AS float)) DESC LIMIT 1"
+description: Find peak consumption month for segment
+...
+---
+type: sql_example
+sql: "SELECT COUNT(*) FILTER (WHERE country = 'CZE' AND segment = 'Discount') - COUNT(*) FILTER (WHERE country = 'SVK' AND segment = 'Discount') FROM gasstations"
+description: Compare discount stations between countries
+...
+---
+type: sql_example
+sql: "SELECT (COUNT(DISTINCT c.customerid)::float / (SELECT COUNT(DISTINCT customerid) FROM customers WHERE segment = 'LAM')) * 100 FROM yearmonth y JOIN customers c ON y.customerid = c.customerid WHERE CAST(y.consumption AS float) > 46.73 AND c.segment = 'LAM'"
+description: Calculate percentage of LAM customers with high consumption
+...
+---
+type: sql_example
+sql: "SELECT SUM(CAST(consumption AS float)) FROM yearmonth WHERE SUBSTR(date, 1, 4) = '2012' GROUP BY SUBSTR(date, 5, 2) ORDER BY SUM(CAST(consumption AS float)) DESC LIMIT 1"
+description: Find highest monthly consumption total
+...
+---
+type: sql_example
+sql: "SELECT DISTINCT p.description FROM products p JOIN transactions_1k t ON p.productid = t.productid JOIN yearmonth y ON t.customerid = y.customerid WHERE y.date = '201309'"
+description: Get products consumed in specific month
+...
+---
+type: sql_example
+sql: "SELECT DISTINCT g.country FROM gasstations g JOIN transactions_1k t ON g.gasstationid = t.gasstationid JOIN yearmonth y ON t.customerid = y.customerid WHERE y.date = '201306'"
+description: Get countries with transactions in specific month
+...
+---
+type: sql_example
+sql: "SELECT COUNT(DISTINCT c.customerid) FROM customers c JOIN yearmonth y ON c.customerid = y.customerid WHERE c.currency = 'EUR' AND CAST(y.consumption AS float) > 1000"
+description: Count EUR customers with high consumption
+...
+---
+type: sql_example
+sql: "SELECT CAST(SUM(CASE WHEN c.currency = 'EUR' THEN 1 ELSE 0 END) AS REAL) * 100 / NULLIF(COUNT(t.customerid), 0) FROM transactions_1k t JOIN customers c ON t.customerid = c.customerid WHERE t.date = '2012-08-25'"
+description: Calculate percentage of EUR customers on specific date
 ...
