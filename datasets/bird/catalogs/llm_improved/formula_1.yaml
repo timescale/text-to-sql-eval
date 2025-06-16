@@ -3,17 +3,6 @@ type: header
 schema_version: '1'
 ...
 ---
-facts:
-  - Qualifying times: lower values = better performance (MIN = best lap time)
-  - Q1, Q2, Q3 represent different qualifying periods
-  - Drivers eliminated in Q1 are those with 5 worst (highest) times
-  - Use ORDER BY time ASC for best times, DESC for worst times
-sql_examples:
-  - description: Get best qualifying time in Q2
-    sql: "SELECT d.surname FROM drivers d JOIN qualifying q ON d.driverid = q.driverid WHERE q.raceid = 19 ORDER BY q.q2 ASC NULLS FIRST LIMIT 1"
-  - description: Get drivers eliminated in Q1 (5 worst times)
-    sql: "SELECT d.driverRef FROM qualifying q JOIN drivers d ON d.driverId = q.driverId WHERE q.raceId = 20 ORDER BY q.q1 DESC NULLS LAST LIMIT 5"
----
 schema: public
 name: constructorresults
 type: table
@@ -159,9 +148,46 @@ columns:
 - name: position
   description: Driver's track position at the end of the lap.
 - name: time
-  description: Lap time in minutes and seconds format.
+  description: Lap time in minutes and seconds format (e.g., '1:27.123').
 - name: milliseconds
   description: Lap time expressed in milliseconds.
+...
+---
+type: fact
+description: |
+  For qualifying elimination, "drivers eliminated in first period" means the 5 drivers with the highest Q1 times (slowest). Use ORDER BY q1 DESC LIMIT 5, not position filters.
+...
+---
+type: fact
+description: |
+  For "best lap time" queries, use ORDER BY time ASC LIMIT 1 instead of subqueries with MIN(). This handles NULL values better and is more reliable.
+...
+---
+type: fact
+description: |
+  Time format patterns: lap times like "0:01:27" should be matched with LIKE '1:27%', not '0:01:27%'. The leading zero and colon are often omitted in the time field.
+...
+---
+type: sql_example
+sql: |
+  SELECT d.driverref
+  FROM qualifying q
+  JOIN drivers d ON q.driverid = d.driverid
+  WHERE q.raceid = 20
+  ORDER BY q.q1 DESC NULLS LAST
+  LIMIT 5
+description: Find drivers eliminated in first qualifying period (5 slowest Q1 times) using ORDER BY LIMIT pattern.
+...
+---
+type: sql_example
+sql: |
+  SELECT d.surname
+  FROM qualifying q
+  JOIN drivers d ON q.driverid = d.driverid
+  WHERE q.raceid = 19
+  ORDER BY q.q2 ASC NULLS FIRST
+  LIMIT 1
+description: Find driver with best (minimum) qualifying time using ORDER BY ASC LIMIT 1 for proper NULL handling.
 ...
 ---
 schema: public
@@ -306,4 +332,30 @@ columns:
   description: primary key for each status type.
 - name: status
   description: text describing the race outcome, such as 'Finished' or 'Accident'.
+...
+---
+type: fact
+description: "Qualifying times: lower values = better performance (MIN = best lap time)"
+...
+---
+type: fact
+description: "Q1, Q2, Q3 represent different qualifying periods"
+...
+---
+type: fact
+description: Drivers eliminated in Q1 are those with 5 worst (highest) times
+...
+---
+type: fact
+description: Use ORDER BY time ASC for best times, DESC for worst times
+...
+---
+type: sql_example
+sql: "SELECT d.surname FROM drivers d JOIN qualifying q ON d.driverid = q.driverid WHERE q.raceid = 19 ORDER BY q.q2 ASC NULLS FIRST LIMIT 1"
+description: Get best qualifying time in Q2
+...
+---
+type: sql_example
+sql: "SELECT d.driverRef FROM qualifying q JOIN drivers d ON d.driverId = q.driverId WHERE q.raceId = 20 ORDER BY q.q1 DESC NULLS LAST LIMIT 5"
+description: Get drivers eliminated in Q1 (5 worst times)
 ...

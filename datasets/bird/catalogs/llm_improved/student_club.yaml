@@ -161,3 +161,33 @@ columns:
 - name: short_state
   description: Two-letter USPS abbreviation for the state.
 ...
+---
+type: fact
+description: |
+  Do not add extra filter conditions unless explicitly stated in the question. If a question mentions "students from Student_Club who attended an event", don't add additional filters about link_to_major unless specifically requested.
+...
+---
+type: fact
+description: |
+  For date extraction from event_date field, use SUBSTR(event_date, 1, 4) to get the year as specified in questions.
+...
+---
+type: sql_example
+sql: |
+  SELECT event_name FROM event e
+  JOIN attendance a ON e.event_id = a.link_to_event
+  GROUP BY e.event_id, e.event_name
+  HAVING COUNT(a.link_to_member) > 10
+  EXCEPT 
+  SELECT event_name FROM event WHERE type = 'Meeting'
+description: Use EXCEPT to exclude specific types from results. EXCEPT removes rows that match the second query from the first query results.
+...
+---
+type: sql_example
+sql: |
+  SELECT SUM(CASE WHEN SUBSTR(e.event_date, 1, 4) = '2019' THEN b.spent ELSE 0 END) -
+         SUM(CASE WHEN SUBSTR(e.event_date, 1, 4) = '2020' THEN b.spent ELSE 0 END)
+  FROM event e
+  JOIN budget b ON e.event_id = b.link_to_event
+description: Calculate differences between years using conditional SUM with CASE WHEN and SUBSTR for year extraction.
+...

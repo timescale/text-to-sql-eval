@@ -94,9 +94,9 @@ columns:
 - name: pic
   description: Plasmin inhibitor complex level.
 - name: tat
-  description: "Thrombin\u2013antithrombin complex concentration."
+  description: "Thrombin-antithrombin complex concentration."
 - name: tat2
-  description: "Second measurement or repeat of thrombin\u2013antithrombin complex."
+  description: "Second measurement or repeat of thrombin-antithrombin complex."
 - name: U-PRO
   description: Qualitative or quantitative urine protein result.
 - name: igg
@@ -153,4 +153,31 @@ columns:
   description: Indicator of whether the patient was admitted (+/-).
 - name: diagnosis
   description: Initial or main clinical diagnosis for the patient.
+...
+---
+type: fact
+description: |
+  When joining patient and laboratory tables, use DISTINCT in SELECT clause to avoid duplicate patient records since one patient can have multiple lab results.
+...
+---
+type: fact
+description: |
+  Age calculation when patient initially arrived: EXTRACT(YEAR FROM "First Date") - EXTRACT(YEAR FROM Birthday). The "First Date" comes first in the subtraction, not Birthday.
+...
+---
+type: sql_example
+sql: |
+  SELECT SUM(CASE WHEN condition1 THEN 1.0 ELSE 0 END) / NULLIF(SUM(CASE WHEN condition2 THEN 1 ELSE 0 END), 0)
+  FROM table
+  WHERE filter_condition
+description: Calculate ratios using SUM with CASE WHEN and NULLIF for safe division. Cast numerator to REAL for decimal results.
+...
+---
+type: sql_example
+sql: |
+  SELECT DISTINCT p.id, p.sex, p.birthday
+  FROM patient p
+  JOIN laboratory l ON p.id = l.id
+  WHERE l.field > threshold
+description: Use DISTINCT when selecting patient information joined with laboratory data to avoid duplicate patient records.
 ...

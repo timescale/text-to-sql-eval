@@ -8,10 +8,6 @@ name: badges
 type: table
 description: Stores each badge awarded to a user, including the badge name and the
   date it was granted.
-facts:
-  - Use COUNT(DISTINCT userid) when counting unique users with badges
-  - Badge date field requires proper date extraction functions like EXTRACT(YEAR FROM date)
-  - For percentage calculations, use NULLIF to avoid division by zero
 columns:
 - name: id
   description: Unique identifier for the badge record.
@@ -86,18 +82,6 @@ schema: public
 name: users
 type: table
 description: Stores user profiles and activity statistics for all registered accounts.
-facts:
-  - Use proper date handling with lastaccessdate field: EXTRACT() or DATE() functions
-  - For user activity queries, join with posts using users.id = posts.owneruserid
-  - DisplayName is the primary field for user identification in queries
-  - Reputation indicates user influence level - higher reputation = more influential
-sql_examples:
-  - description: Get users by display name
-    sql: "SELECT * FROM users WHERE displayname = 'username'"
-  - description: Count users by access date
-    sql: "SELECT COUNT(*) FROM users WHERE EXTRACT(YEAR FROM lastaccessdate) > 2014"
-  - description: Find most influential user by reputation
-    sql: "SELECT * FROM users ORDER BY reputation DESC LIMIT 1"
 columns:
 - name: id
   description: Unique identifier for the user.
@@ -163,22 +147,6 @@ name: posts
 type: table
 description: Stores all questions and answers posted on the site along with metadata
   such as scores, dates, owners and counts.
-facts:
-  - The posts table has ownerdisplayname field that can be used directly without joining users table
-  - For getting user details like DisplayName, join with users table: INNER JOIN users ON posts.owneruserid = users.id
-  - Use proper date functions: EXTRACT(YEAR FROM creationdate) for year filtering
-  - The creationdate field contains timestamp data requiring proper date handling
-  - For post ownership queries, can filter directly on posts.ownerdisplayname
-  - For complex user data, always join with users table using posts.owneruserid = users.id
-sql_examples:
-  - description: Get posts by specific user display name
-    sql: "SELECT * FROM posts WHERE ownerdisplayname = 'username'"
-  - description: Get post owner details by joining users table
-    sql: "SELECT u.displayname, p.title FROM posts p INNER JOIN users u ON p.owneruserid = u.id WHERE p.id = 123"
-  - description: Count posts by year
-    sql: "SELECT COUNT(*) FROM posts WHERE EXTRACT(YEAR FROM creationdate) = 2010"
-  - description: Get posts with user reputation
-    sql: "SELECT p.*, u.reputation FROM posts p INNER JOIN users u ON p.owneruserid = u.id WHERE u.reputation > 1000"
 columns:
 - name: id
   description: Unique identifier for each post.
@@ -187,7 +155,7 @@ columns:
 - name: acceptedanswerid
   description: For questions, the id of the post that has been marked as the accepted
     answer.
-- name: creationdate
+- name: creaiondate
   description: Timestamp when the post was originally created.
 - name: score
   description: Current score of the post (upvotes minus downvotes).
@@ -197,7 +165,7 @@ columns:
   description: HTML-formatted body content of the post.
 - name: owneruserid
   description: User who originally created the post.
-- name: lastactivitydate
+- name: lasactivitydate
   description: Timestamp of the most recent activity (edit, comment, vote) on the
     post.
 - name: title
@@ -232,16 +200,6 @@ name: votes
 type: table
 description: Logs every vote cast on posts, including type, date, voter and optional
   bounty amount.
-facts:
-  - BountyAmount field is used for bounty-related votes
-  - Join with posts using votes.postid = posts.id for post-related vote queries
-  - Join with users using votes.userid = users.id for voter information
-  - For ratio calculations (votes vs posts), be careful with numerator/denominator order
-sql_examples:
-  - description: Find votes with bounty amount
-    sql: "SELECT * FROM votes WHERE bountyamount = 50"
-  - description: Get votes with user and post information
-    sql: "SELECT v.*, u.displayname, p.title FROM votes v JOIN users u ON v.userid = u.id JOIN posts p ON v.postid = p.id"
 columns:
 - name: id
   description: Unique identifier for the vote.
@@ -257,4 +215,140 @@ columns:
 - name: bountyamount
   description: Point value of a bounty associated with the vote, if the vote represents
     a bounty award.
+...
+---
+type: fact
+description: Join posts with users using posts.OwnerUserId = users.Id to get owner DisplayName
+...
+---
+type: fact
+description: DisplayName is stored in users table, not in posts.ownerdisplayname field. The posts.ownerdisplayname field may be empty or outdated. Always JOIN posts with users using posts.owneruserid = users.id to get the current displayname.
+...
+---
+type: fact
+description: Use TO_CHAR(CAST(field AS TIMESTAMP), 'YYYY') for extracting year from date fields. For simple date comparisons, use DATE(field) > 'YYYY-MM-DD' format. Always cast date fields to proper types before comparison.
+...
+---
+type: fact
+description: Use CAST(expression AS REAL) and NULLIF for percentage calculations to avoid division by zero
+...
+---
+type: fact
+description: Join badges with users using badges.userid = users.id for user badge information
+...
+---
+type: fact
+description: Join postHistory with posts using postHistory.PostId = posts.Id for post revision data
+...
+---
+type: fact
+description: Join votes with posts using votes.PostId = posts.Id for voting information
+...
+---
+type: fact
+description: Join comments with users using comments.UserId = users.Id for commenter information
+...
+---
+type: fact
+description: Use COUNT DISTINCT when counting unique users to avoid duplicates
+...
+---
+type: fact
+description: LastAccessDate is a date field requiring proper date comparison operators
+...
+---
+type: fact
+description: Posts with tags use Tags field which contains comma-separated tag names
+...
+---
+type: fact
+description: For post ownership queries, always join posts with users table on OwnerUserId. Never use posts.ownerdisplayname directly - it may be NULL or outdated. The authoritative source for user display names is users.displayname.
+...
+---
+type: fact
+description: BountyAmount is found in votes table, not posts table
+...
+---
+type: fact
+description: Use WHERE field = (SELECT MAX/MIN(field)) pattern for finding maximum/minimum values
+...
+---
+type: sql_example
+sql: "SELECT u.DisplayName FROM users u JOIN posts p ON u.Id = p.OwnerUserId WHERE p.Title = 'Eliciting priors from experts'"
+description: Get post owner by title
+...
+---
+type: sql_example
+sql: "SELECT COUNT(*) FROM users WHERE TO_CHAR(CAST(LastAccessDate AS TIMESTAMP), 'YYYY') > '2014'"
+description: Count users by year comparison
+...
+---
+type: sql_example
+sql: "SELECT COUNT(p.Id) FROM users u JOIN posts p ON u.Id = p.OwnerUserId WHERE u.DisplayName = 'Tiago Pasqualini'"
+description: Count posts by user display name
+...
+---
+type: sql_example
+sql: "SELECT CAST(COUNT(DISTINCT v.UserId) AS REAL) * 100 / NULLIF(COUNT(DISTINCT p.Id), 0) FROM posts p LEFT JOIN votes v ON p.Id = v.PostId WHERE v.BountyAmount = 50"
+description: Calculate percentage with bounty votes
+...
+---
+type: sql_example
+sql: "SELECT UserId FROM badges GROUP BY UserId HAVING COUNT(Name) > 5"
+description: Get users with more than 5 badges
+...
+---
+type: sql_example
+sql: "SELECT u.DisplayName FROM users u JOIN comments c ON u.Id = c.UserId WHERE c.Text = 'thank you user93!'"
+description: Get user who made specific comment
+...
+---
+type: sql_example
+sql: "SELECT p.Id FROM posts p JOIN users u ON p.OwnerUserId = u.Id WHERE u.DisplayName = 'slashnick' ORDER BY p.AnswerCount DESC LIMIT 1"
+description: Get post with most answers by user
+...
+---
+type: sql_example
+sql: "SELECT p.Tags FROM posts p JOIN users u ON p.OwnerUserId = u.Id WHERE u.DisplayName = 'Mark Meckes' AND p.CommentCount = 0"
+description: Get tags for posts without comments by user
+...
+---
+type: sql_example
+sql: "SELECT p.Id, p.Title FROM posts p JOIN users u ON p.OwnerUserId = u.Id WHERE u.DisplayName = 'Harvey Motulsky' ORDER BY p.ViewCount DESC LIMIT 1"
+description: Get most viewed post by user
+...
+---
+type: sql_example
+sql: "SELECT CAST(COUNT(pl.Id) AS REAL) / NULLIF(12, 0) FROM postLinks pl JOIN posts p ON pl.PostId = p.Id WHERE p.AnswerCount <= 2 AND TO_CHAR(CAST(pl.CreationDate AS TIMESTAMP), 'YYYY') = '2010'"
+description: Calculate average monthly links for posts with few answers
+...
+---
+type: sql_example
+sql: "SELECT CAST(SUM(CASE WHEN TO_CHAR(CAST(b.Date AS TIMESTAMP), 'YYYY') = '2010' THEN 1 ELSE 0 END) AS REAL) * 100 / NULLIF(COUNT(b.Id), 0) - CAST(SUM(CASE WHEN TO_CHAR(CAST(b.Date AS TIMESTAMP), 'YYYY') = '2011' THEN 1 ELSE 0 END) AS REAL) * 100 / NULLIF(COUNT(b.Id), 0) FROM badges b WHERE b.Name = 'Student'"
+description: Calculate percentage difference between years for specific badge. For percentage difference calculations, use subtraction of individual year percentages, not ratios.
+...
+---
+type: sql_example
+sql: |
+  SELECT COUNT(subquery.userid) 
+  FROM (SELECT userid FROM badges GROUP BY userid HAVING COUNT(name) > 5) AS subquery
+description: Count users with more than X badges using subquery pattern. Use subquery with GROUP BY and HAVING, then COUNT the outer results.
+...
+---
+type: sql_example
+sql: |
+  SELECT CAST(COUNT(votes.id) AS REAL) / NULLIF(COUNT(posts.id), 0) 
+  FROM votes JOIN posts ON votes.userid = posts.owneruserid 
+  WHERE posts.owneruserid = user_id
+description: Calculate ratios between user activities. Pay attention to which entity is numerator vs denominator based on question wording.
+...
+---
+type: fact
+description: |
+  When questions ask for exact text matches, pay attention to punctuation like exclamation marks. "thank you user93!" is different from "thank you user93".
+...
+---
+type: fact
+description: |
+  For average monthly calculations, use CAST(COUNT(*) AS REAL) / 12, not AVG() of monthly groups. The question typically wants total count divided by 12 months.
 ...

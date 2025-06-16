@@ -268,7 +268,7 @@ type: sql_example
 sql: |
   SELECT CAST(SUM(CASE WHEN condition1 AND condition2 THEN 1 ELSE 0 END) AS REAL) * 100 / NULLIF(COUNT(*), 0) AS percentage
   FROM table_name
-description: Calculate percentages using conditional SUM divided by total count, multiplied by 100. Always use CAST AS REAL and NULLIF for safe division.
+description: Calculate percentages using conditional SUM divided by total count, multiplied by 100. Always use CAST AS REAL and NULLIF for safe division. When questions ask for "percentage" or "proportion", always return a calculated percentage value, never return raw IDs or counts.
 ...
 ---
 type: sql_example
@@ -277,7 +277,7 @@ sql: |
   FROM table1 t1
   JOIN table2 t2 ON t1.id = t2.id
   WHERE conditions
-description: Return YES/NO answers using CASE WHEN with COUNT check rather than returning actual data rows.
+description: Return YES/NO answers using CASE WHEN with COUNT check rather than returning actual data rows. Questions asking "did", "is there", "does", or "is" typically require YES/NO answers, not raw data.
 ...
 ---
 type: sql_example
@@ -286,7 +286,7 @@ sql: |
   FROM cards t1
   JOIN foreign_data t2 ON t1.uuid = t2.uuid
   WHERE t2.language = 'target_language'
-description: Access foreign language translations through foreign_data table, not through cards table fields like flavorname.
+description: Access foreign language translations through foreign_data table, not through cards table fields like flavorname. The flavorname field in cards table is NOT foreign language data - it's for special English names in flavor text.
 ...
 ---
 type: sql_example
@@ -305,7 +305,7 @@ description: |
 ---
 type: fact
 description: |
-  For foreign availability questions, use sets.isforeignonly boolean flag, not the availability text field which contains platform information.
+  For foreign availability questions, use sets.isforeignonly boolean flag, not the availability text field which contains platform information. The availability field contains platform data like "paper, mtgo", not geographic availability.
 ...
 ---
 type: fact
@@ -316,4 +316,32 @@ description: |
 type: fact
 description: |
   When questions ask for set information based on card names, use the card's setcode to join with sets.code, not direct set name matching which may be ambiguous.
+...
+---
+type: sql_example
+sql: |
+  SELECT s.translation 
+  FROM set_translations s
+  WHERE s.setcode IN (SELECT c.setcode FROM cards c WHERE c.name = 'Card Name')
+  AND s.language = 'Target Language'
+description: Find set translations for sets containing specific cards. First get setcode from cards table, then find translations using that setcode.
+...
+---
+type: fact
+description: |
+  Pay attention to exact language names in queries. Use 'Portuguese (Brazil)' not 'Portuguese (Brasil)', and be precise with language specifications in the foreign_data and set_translations tables.
+...
+---
+type: fact
+description: |
+  When calculating proportions, pay careful attention to the denominator. "Proportion of X among Y" means COUNT(X)/COUNT(Y), while "proportion of X" usually means COUNT(X)/COUNT(all records).
+...
+---
+type: sql_example
+sql: |
+  SELECT c.name, l.format
+  FROM cards c
+  JOIN legalities l ON c.uuid = l.uuid  
+  WHERE c.condition AND l.status = 'Legal'
+description: When questions ask for cards AND their legal formats, always join with legalities table and include format information in the result.
 ...
