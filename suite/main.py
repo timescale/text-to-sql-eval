@@ -107,11 +107,8 @@ def load(
     """
     Load the datasets into the database.
     """
-    if not (datasets_dir / "spider" / "catalogs" / catalog).exists():
-        raise ValueError(f"Catalog {catalog} not found")
-
     datasets = os.listdir(datasets_dir) if dataset == "all" else [dataset]
-    print("Loading datasets...")
+    print(f"Loading datasets using catalog {catalog}...")
     for i in range(len(datasets)):
         if i > 0:
             print()
@@ -155,9 +152,10 @@ def load(
                         load_sql_file(db_url, sql_file)
                         i += 1
                 print("      Loading descriptions")
-                with (
-                    datasets_dir / dataset / "catalogs" / catalog / f"{name}.yaml"
-                ).open("r") as fp:
+                catalog_file = datasets_dir / dataset / "catalogs" / catalog / f"{name}.yaml"
+                if not catalog_file.exists():
+                    raise ValueError(f"Catalog {catalog} not found")
+                with catalog_file.open("r") as fp:
                     for doc in safe_load_all(fp):
                         if doc["type"] != "table":
                             continue
