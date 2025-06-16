@@ -7,15 +7,6 @@ schema: public
 name: customers
 type: table
 description: Stores each customer along with their market segment and preferred currency.
-facts:
-  - Join with yearmonth table using customers.customerid = yearmonth.customerid for consumption data
-  - Currency field values include 'CZK' and 'EUR' for Czech and Euro customers
-  - Segment field contains values like 'SME', 'LAM' for business classifications
-sql_examples:
-  - description: Get customers by currency
-    sql: "SELECT * FROM customers WHERE currency = 'EUR'"
-  - description: Join customers with consumption data
-    sql: "SELECT c.*, y.consumption FROM customers c JOIN yearmonth y ON c.customerid = y.customerid"
 columns:
 - name: customerid
   description: Unique identifier for the customer.
@@ -30,15 +21,6 @@ name: gasstations
 type: table
 description: Lists gas stations with their chain affiliation, country, and market
   segment category.
-facts:
-  - "Country field uses country codes: 'CZE' for Czech Republic, 'SVK' for Slovakia"
-  - Segment field contains values like 'Discount' for gas station positioning
-  - Join with transactions_1k using gasstations.gasstationid = transactions_1k.gasstationid
-sql_examples:
-  - description: Count discount stations by country
-    sql: "SELECT country, COUNT(*) FROM gasstations WHERE segment = 'Discount' GROUP BY country"
-  - description: Calculate difference in discount stations between countries
-    sql: "SELECT SUM(CASE WHEN country = 'CZE' THEN 1 ELSE 0 END) - SUM(CASE WHEN country = 'SVK' THEN 1 ELSE 0 END) FROM gasstations WHERE segment = 'Discount'"
 columns:
 - name: gasstationid
   description: Unique identifier for the gas station.
@@ -66,18 +48,6 @@ name: transactions_1k
 type: table
 description: Holds individual fuel purchase transactions including date/time, customer,
   station, product, amount and price.
-facts:
-  - Date field uses standard date format (YYYY-MM-DD)
-  - Join with yearmonth table for monthly consumption filtering
-  - Join with customers, gasstations, and products for complete transaction details
-  - For percentage calculations, count customers who made transactions on specific dates
-sql_examples:
-  - description: Get transactions by date
-    sql: "SELECT * FROM transactions_1k WHERE date = '2012-08-25'"
-  - description: Get transactions in Czech Republic
-    sql: "SELECT t.* FROM transactions_1k t JOIN gasstations g ON t.gasstationid = g.gasstationid WHERE g.country = 'CZE'"
-  - description: Calculate percentage of EUR customers on specific date
-    sql: "SELECT CAST(SUM(CASE WHEN c.currency = 'EUR' THEN 1 ELSE 0 END) AS REAL) * 100 / NULLIF(COUNT(t.customerid), 0) FROM transactions_1k t JOIN customers c ON t.customerid = c.customerid WHERE t.date = '2012-08-25'"
 columns:
 - name: transactionid
   description: Unique identifier for each transaction.
@@ -103,21 +73,6 @@ schema: public
 name: yearmonth
 type: table
 description: Summarizes monthly fuel consumption per customer.
-facts:
-  - Date field uses YYYYMM format (e.g., '201309' for September 2013)
-  - Extract year using SUBSTR(date, 1, 4) and month using SUBSTR(date, 5, 2)
-  - Always CAST consumption AS float for arithmetic calculations
-  - Join with customers table using yearmonth.customerid = customers.customerid
-  - For monthly aggregations, GROUP BY SUBSTR(date, 5, 2) for month grouping
-sql_examples:
-  - description: Filter by year 2012
-    sql: "SELECT * FROM yearmonth WHERE SUBSTR(date, 1, 4) = '2012'"
-  - description: Get consumption by month in 2013
-    sql: "SELECT SUBSTR(date, 5, 2) as month, SUM(CAST(consumption AS float)) FROM yearmonth WHERE SUBSTR(date, 1, 4) = '2013' GROUP BY SUBSTR(date, 5, 2)"
-  - description: Filter by specific month (September 2013)
-    sql: "SELECT * FROM yearmonth WHERE date = '201309'"
-  - description: Calculate consumption difference by currency
-    sql: "SELECT SUM(CASE WHEN c.currency = 'CZK' THEN CAST(y.consumption AS float) ELSE 0 END) - SUM(CASE WHEN c.currency = 'EUR' THEN CAST(y.consumption AS float) ELSE 0 END) FROM customers c JOIN yearmonth y ON c.customerid = y.customerid WHERE SUBSTR(y.date, 1, 4) = '2012'"
 columns:
 - name: customerid
   description: Identifier of the customer for the consumption summary.
@@ -126,4 +81,119 @@ columns:
     summary.
 - name: consumption
   description: Total fuel consumption for the customer during the specified month.
+...
+---
+type: fact
+description: Join with yearmonth table using customers.customerid = yearmonth.customerid for consumption data
+...
+---
+type: fact
+description: Currency field values include 'CZK' and 'EUR' for Czech and Euro customers
+...
+---
+type: fact
+description: Segment field contains values like 'SME', 'LAM' for business classifications
+...
+---
+type: fact
+description: "Country field uses country codes: 'CZE' for Czech Republic, 'SVK' for Slovakia"
+...
+---
+type: fact
+description: Segment field contains values like 'Discount' for gas station positioning
+...
+---
+type: fact
+description: Join with transactions_1k using gasstations.gasstationid = transactions_1k.gasstationid
+...
+---
+type: fact
+description: Date field uses standard date format (YYYY-MM-DD)
+...
+---
+type: fact
+description: Join with yearmonth table for monthly consumption filtering
+...
+---
+type: fact
+description: Join with customers, gasstations, and products for complete transaction details
+...
+---
+type: fact
+description: For percentage calculations, count customers who made transactions on specific dates
+...
+---
+type: fact
+description: Date field uses YYYYMM format (e.g., '201309' for September 2013)
+...
+---
+type: fact
+description: Extract year using SUBSTR(date, 1, 4) and month using SUBSTR(date, 5, 2)
+...
+---
+type: fact
+description: Always CAST consumption AS float for arithmetic calculations
+...
+---
+type: fact
+description: Join with customers table using yearmonth.customerid = customers.customerid
+...
+---
+type: fact
+description: For monthly aggregations, GROUP BY SUBSTR(date, 5, 2) for month grouping
+...
+---
+type: sql_example
+sql: "SELECT * FROM customers WHERE currency = 'EUR'"
+description: Get customers by currency
+...
+---
+type: sql_example
+sql: "SELECT c.*, y.consumption FROM customers c JOIN yearmonth y ON c.customerid = y.customerid"
+description: Join customers with consumption data
+...
+---
+type: sql_example
+sql: "SELECT country, COUNT(*) FROM gasstations WHERE segment = 'Discount' GROUP BY country"
+description: Count discount stations by country
+...
+---
+type: sql_example
+sql: "SELECT SUM(CASE WHEN country = 'CZE' THEN 1 ELSE 0 END) - SUM(CASE WHEN country = 'SVK' THEN 1 ELSE 0 END) FROM gasstations WHERE segment = 'Discount'"
+description: Calculate difference in discount stations between countries
+...
+---
+type: sql_example
+sql: "SELECT * FROM transactions_1k WHERE date = '2012-08-25'"
+description: Get transactions by date
+...
+---
+type: sql_example
+sql: "SELECT t.* FROM transactions_1k t JOIN gasstations g ON t.gasstationid = g.gasstationid WHERE g.country = 'CZE'"
+description: Get transactions in Czech Republic
+...
+---
+type: sql_example
+sql: "SELECT CAST(SUM(CASE WHEN c.currency = 'EUR' THEN 1 ELSE 0 END) AS REAL) * 100 / NULLIF(COUNT(t.customerid), 0) FROM transactions_1k t JOIN customers c ON t.customerid = c.customerid WHERE t.date = '2012-08-25'"
+description: Calculate percentage of EUR customers on specific date
+...
+---
+type: sql_example
+sql: "SELECT * FROM yearmonth WHERE SUBSTR(date, 1, 4) = '2012'"
+description: Filter by year 2012
+...
+---
+type: sql_example
+sql: "SELECT SUBSTR(date, 5, 2) as month, SUM(CAST(consumption AS float)) FROM yearmonth WHERE SUBSTR(date, 1, 4) = '2013' GROUP BY SUBSTR(date, 5, 2)"
+description: Get consumption by month in 2013
+...
+---
+type: sql_example
+sql: "SELECT * FROM yearmonth WHERE date = '201309'"
+description: Filter by specific month (September 2013)
+...
+---
+type: sql_example
+sql: "SELECT SUM(CASE WHEN c.currency = 'CZK' THEN CAST(y.consumption AS float) ELSE 0 END) - SUM(CASE WHEN c.currency = 'EUR' THEN CAST(y.consumption AS float) ELSE 0 END) FROM customers c JOIN yearmonth y ON c.customerid = y.customerid WHERE SUBSTR(y.date, 1, 4) = '2012'"
+description: Calculate consumption difference by currency
 ...

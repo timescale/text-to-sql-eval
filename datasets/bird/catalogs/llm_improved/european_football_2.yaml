@@ -32,15 +32,6 @@ name: match
 type: table
 description: Detailed match records including participants, players, scores, positional
   coordinates, in-game events and betting odds.
-facts:
-  - Season field uses format like '2008/2009' for season identification
-  - Join with league table using match.league_id = league.id
-  - For counting matches per league, GROUP BY league_id and use COUNT(*)
-sql_examples:
-  - description: Count matches per league in a season
-    sql: "SELECT league_id, COUNT(*) as match_count FROM match WHERE season = '2008/2009' GROUP BY league_id"
-  - description: Get league with most matches in season
-    sql: "SELECT l.name FROM league l JOIN match m ON l.id = m.league_id WHERE m.season = '2008/2009' GROUP BY l.name HAVING COUNT(m.id) = (SELECT MAX(match_count) FROM (SELECT COUNT(m2.id) AS match_count FROM match m2 WHERE m2.season = '2008/2009' GROUP BY m2.league_id))"
 columns:
 - name: id
   description: Surrogate primary key for the match row.
@@ -278,18 +269,6 @@ schema: public
 name: player
 type: table
 description: Master data for individual football players.
-facts:
-  - Join with player_attributes using player.player_api_id = player_attributes.player_api_id (NOT player_fifa_api_id)
-  - For birthday filtering, use proper date comparisons: birthday > '1990' for after 1990s
-  - Height and weight are numeric fields for physical comparisons
-  - Always use DISTINCT when selecting player names to avoid duplicates
-sql_examples:
-  - description: Get players by name pattern
-    sql: "SELECT * FROM player WHERE player_name LIKE 'Aaron%'"
-  - description: Find players born after 1990s
-    sql: "SELECT COUNT(id) FROM player WHERE birthday > '1990' AND player_name LIKE 'Aaron%'"
-  - description: Get heaviest player
-    sql: "SELECT * FROM player ORDER BY weight DESC NULLS LAST LIMIT 1"
 columns:
 - name: id
   description: Surrogate primary key for the player row.
@@ -329,21 +308,6 @@ name: player_attributes
 type: table
 description: Contains temporal FIFA player skill ratings and physical/behavioral attributes
   for each player.
-facts:
-  - Join with player table using player_attributes.player_api_id = player.player_api_id
-  - For maximum/minimum values, use WHERE field = (SELECT MAX/MIN(field)) instead of ORDER BY LIMIT
-  - Date field requires proper handling: SUBSTR(date, 1, 10) for date part extraction
-  - For percentage calculations, always CAST to REAL and use NULLIF for division
-  - Multiple records per player over time - filter by date when needed
-sql_examples:
-  - description: Get players with maximum overall rating
-    sql: "SELECT DISTINCT p.player_name FROM player p JOIN player_attributes pa ON p.player_api_id = pa.player_api_id WHERE pa.overall_rating = (SELECT MAX(overall_rating) FROM player_attributes)"
-  - description: Calculate average rating for height range
-    sql: "SELECT CAST(SUM(pa.overall_rating) AS REAL) / NULLIF(COUNT(pa.id), 0) FROM player p JOIN player_attributes pa ON p.player_api_id = pa.player_api_id WHERE p.height > 170"
-  - description: Get players with specific skills
-    sql: "SELECT DISTINCT p.player_name FROM player p JOIN player_attributes pa ON p.player_api_id = pa.player_api_id WHERE pa.volleys > 70 AND pa.dribbling > 70"
-  - description: Compare two players' ratings
-    sql: "SELECT (SUM(CASE WHEN p.player_name = 'Player1' THEN pa.overall_rating ELSE 0 END) - SUM(CASE WHEN p.player_name = 'Player2' THEN pa.overall_rating ELSE 0 END)) * 100 / NULLIF(SUM(CASE WHEN p.player_name = 'Player2' THEN pa.overall_rating ELSE 0 END), 0) FROM player p JOIN player_attributes pa ON p.player_api_id = pa.player_api_id"
 columns:
 - name: id
   description: Surrogate primary key for the player attribute record.
@@ -435,16 +399,6 @@ schema: public
 name: team_attributes
 type: table
 description: Stores periodic tactical and style attributes for each football team.
-facts:
-  - Join with team table using team_attributes.team_api_id = team.team_api_id
-  - buildUpPlaySpeed is a numeric rating for team build-up speed
-  - Class fields (e.g., chanceCreationPassingClass) contain categorical values like 'Safe'
-  - For top N teams, use ORDER BY with LIMIT, not MAX grouping
-sql_examples:
-  - description: Get teams with specific chance creation style
-    sql: "SELECT DISTINCT t.team_short_name FROM team t JOIN team_attributes ta ON t.team_api_id = ta.team_api_id WHERE ta.chanceCreationPassingClass = 'Safe'"
-  - description: Get top teams by build-up speed
-    sql: "SELECT ta.buildUpPlaySpeed FROM team t JOIN team_attributes ta ON t.team_api_id = ta.team_api_id ORDER BY ta.buildUpPlaySpeed DESC LIMIT 4"
 columns:
 - name: id
   description: Surrogate primary key for the team attribute record.
@@ -497,4 +451,123 @@ columns:
   description: Categorical description of defensive team width strategy.
 - name: defencedefenderlineclass
   description: Class label describing the defensive line approach (e.g., offside trap).
+...
+---
+type: fact
+description: Season field uses format like '2008/2009' for season identification
+...
+---
+type: fact
+description: Join with league table using match.league_id = league.id
+...
+---
+type: fact
+description: For counting matches per league, GROUP BY league_id and use COUNT(*)
+...
+---
+type: fact
+description: Join with player_attributes using player.player_api_id = player_attributes.player_api_id (NOT player_fifa_api_id)
+...
+---
+type: fact
+description: "For birthday filtering, use proper date comparisons: birthday > '1990' for after 1990s"
+...
+---
+type: fact
+description: Height and weight are numeric fields for physical comparisons
+...
+---
+type: fact
+description: Always use DISTINCT when selecting player names to avoid duplicates
+...
+---
+type: fact
+description: Join with player table using player_attributes.player_api_id = player.player_api_id
+...
+---
+type: fact
+description: For maximum/minimum values, use WHERE field = (SELECT MAX/MIN(field)) instead of ORDER BY LIMIT
+...
+---
+type: fact
+description: "Date field requires proper handling: SUBSTR(date, 1, 10) for date part extraction"
+...
+---
+type: fact
+description: For percentage calculations, always CAST to REAL and use NULLIF for division
+...
+---
+type: fact
+description: Multiple records per player over time - filter by date when needed
+...
+---
+type: fact
+description: Join with team table using team_attributes.team_api_id = team.team_api_id
+...
+---
+type: fact
+description: buildUpPlaySpeed is a numeric rating for team build-up speed
+...
+---
+type: fact
+description: "Class fields (e.g., chanceCreationPassingClass) contain categorical values like 'Safe'"
+...
+---
+type: fact
+description: "For top N teams, use ORDER BY with LIMIT, not MAX grouping"
+...
+---
+type: sql_example
+sql: "SELECT league_id, COUNT(*) as match_count FROM match WHERE season = '2008/2009' GROUP BY league_id"
+description: Count matches per league in a season
+...
+---
+type: sql_example
+sql: "SELECT l.name FROM league l JOIN match m ON l.id = m.league_id WHERE m.season = '2008/2009' GROUP BY l.name HAVING COUNT(m.id) = (SELECT MAX(match_count) FROM (SELECT COUNT(m2.id) AS match_count FROM match m2 WHERE m2.season = '2008/2009' GROUP BY m2.league_id))"
+description: Get league with most matches in season
+...
+---
+type: sql_example
+sql: "SELECT * FROM player WHERE player_name LIKE 'Aaron%'"
+description: Get players by name pattern
+...
+---
+type: sql_example
+sql: "SELECT COUNT(id) FROM player WHERE birthday > '1990' AND player_name LIKE 'Aaron%'"
+description: Find players born after 1990s
+...
+---
+type: sql_example
+sql: "SELECT * FROM player ORDER BY weight DESC NULLS LAST LIMIT 1"
+description: Get heaviest player
+...
+---
+type: sql_example
+sql: "SELECT DISTINCT p.player_name FROM player p JOIN player_attributes pa ON p.player_api_id = pa.player_api_id WHERE pa.overall_rating = (SELECT MAX(overall_rating) FROM player_attributes)"
+description: Get players with maximum overall rating
+...
+---
+type: sql_example
+sql: "SELECT CAST(SUM(pa.overall_rating) AS REAL) / NULLIF(COUNT(pa.id), 0) FROM player p JOIN player_attributes pa ON p.player_api_id = pa.player_api_id WHERE p.height > 170"
+description: Calculate average rating for height range
+...
+---
+type: sql_example
+sql: "SELECT DISTINCT p.player_name FROM player p JOIN player_attributes pa ON p.player_api_id = pa.player_api_id WHERE pa.volleys > 70 AND pa.dribbling > 70"
+description: Get players with specific skills
+...
+---
+type: sql_example
+sql: "SELECT (SUM(CASE WHEN p.player_name = 'Player1' THEN pa.overall_rating ELSE 0 END) - SUM(CASE WHEN p.player_name = 'Player2' THEN pa.overall_rating ELSE 0 END)) * 100 / NULLIF(SUM(CASE WHEN p.player_name = 'Player2' THEN pa.overall_rating ELSE 0 END), 0) FROM player p JOIN player_attributes pa ON p.player_api_id = pa.player_api_id"
+description: Compare two players' ratings
+...
+---
+type: sql_example
+sql: "SELECT DISTINCT t.team_short_name FROM team t JOIN team_attributes ta ON t.team_api_id = ta.team_api_id WHERE ta.chanceCreationPassingClass = 'Safe'"
+description: Get teams with specific chance creation style
+...
+---
+type: sql_example
+sql: "SELECT ta.buildUpPlaySpeed FROM team t JOIN team_attributes ta ON t.team_api_id = ta.team_api_id ORDER BY ta.buildUpPlaySpeed DESC LIMIT 4"
+description: Get top teams by build-up speed
 ...

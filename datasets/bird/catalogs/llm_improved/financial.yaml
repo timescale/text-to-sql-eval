@@ -8,15 +8,6 @@ name: account
 type: table
 description: Stores basic information for each bank account, including its associated
   district, statement frequency and the date the account was opened.
-facts:
-  - Frequency field contains coded values like 'POPLATEK PO OBRATU' for issuance after transaction
-  - Join with district table using account.district_id = district.district_id
-  - Date field represents account opening date
-sql_examples:
-  - description: Get accounts with specific frequency
-    sql: "SELECT * FROM account WHERE frequency = 'POPLATEK PO OBRATU'"
-  - description: Join account with district information
-    sql: "SELECT a.account_id, d.A3, d.A11 FROM account a JOIN district d ON a.district_id = d.district_id"
 columns:
 - name: account_id
   description: Primary key uniquely identifying each bank account.
@@ -186,4 +177,26 @@ columns:
   description: Code of the counterparty bank involved, if any.
 - name: account
   description: Counterparty account number associated with the transaction.
+...
+---
+type: fact
+description: Frequency field contains coded values like 'POPLATEK PO OBRATU' for issuance after transaction
+...
+---
+type: fact
+description: Join with district table using account.district_id = district.district_id
+...
+---
+type: fact
+description: Date field represents account opening date
+...
+---
+type: sql_example
+sql: "SELECT * FROM account WHERE frequency = 'POPLATEK PO OBRATU'"
+description: Get accounts with specific frequency
+...
+---
+type: sql_example
+sql: "SELECT a.account_id, d.A3, d.A11 FROM account a JOIN district d ON a.district_id = d.district_id"
+description: Join account with district information
 ...

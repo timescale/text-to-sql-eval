@@ -3,17 +3,6 @@ type: header
 schema_version: '1'
 ...
 ---
-facts:
-  - Qualifying times: lower values = better performance (MIN = best lap time)
-  - Q1, Q2, Q3 represent different qualifying periods
-  - Drivers eliminated in Q1 are those with 5 worst (highest) times
-  - Use ORDER BY time ASC for best times, DESC for worst times
-sql_examples:
-  - description: Get best qualifying time in Q2
-    sql: "SELECT d.surname FROM drivers d JOIN qualifying q ON d.driverid = q.driverid WHERE q.raceid = 19 ORDER BY q.q2 ASC NULLS FIRST LIMIT 1"
-  - description: Get drivers eliminated in Q1 (5 worst times)
-    sql: "SELECT d.driverRef FROM qualifying q JOIN drivers d ON d.driverId = q.driverId WHERE q.raceId = 20 ORDER BY q.q1 DESC NULLS LAST LIMIT 5"
----
 schema: public
 name: constructorresults
 type: table
@@ -306,4 +295,30 @@ columns:
   description: primary key for each status type.
 - name: status
   description: text describing the race outcome, such as 'Finished' or 'Accident'.
+...
+---
+type: fact
+description: "Qualifying times: lower values = better performance (MIN = best lap time)"
+...
+---
+type: fact
+description: "Q1, Q2, Q3 represent different qualifying periods"
+...
+---
+type: fact
+description: Drivers eliminated in Q1 are those with 5 worst (highest) times
+...
+---
+type: fact
+description: Use ORDER BY time ASC for best times, DESC for worst times
+...
+---
+type: sql_example
+sql: "SELECT d.surname FROM drivers d JOIN qualifying q ON d.driverid = q.driverid WHERE q.raceid = 19 ORDER BY q.q2 ASC NULLS FIRST LIMIT 1"
+description: Get best qualifying time in Q2
+...
+---
+type: sql_example
+sql: "SELECT d.driverRef FROM qualifying q JOIN drivers d ON d.driverId = q.driverId WHERE q.raceId = 20 ORDER BY q.q1 DESC NULLS LAST LIMIT 5"
+description: Get drivers eliminated in Q1 (5 worst times)
 ...
