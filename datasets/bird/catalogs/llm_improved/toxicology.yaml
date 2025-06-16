@@ -54,5 +54,37 @@ columns:
 - name: molecule_id
   description: Unique identifier for the molecule.
 - name: label
-  description: Optional label or property associated with the molecule.
+  description: Optional label or property associated with the molecule (e.g., '+' for carcinogenic, '-' for non-carcinogenic).
+...
+---
+type: fact
+description: |
+  For "average number of X atoms in Y molecules", first group by molecule_id to count X atoms per molecule, then calculate AVG() of those counts. Don't calculate overall averages across all atoms.
+...
+---
+type: fact
+description: |
+  When listing elements or labels for a specific molecule, use DISTINCT to avoid duplicate entries since molecules can have multiple atoms of the same element.
+...
+---
+type: sql_example
+sql: |
+  SELECT AVG(element_count) 
+  FROM (
+    SELECT a.molecule_id, COUNT(a.element) AS element_count
+    FROM atom a
+    JOIN bond b ON a.molecule_id = b.molecule_id
+    WHERE b.bond_type = '-' AND a.element = 'o'
+    GROUP BY a.molecule_id
+  ) AS subquery
+description: Calculate average number of specific atoms per molecule. Group by molecule first, then average the per-molecule counts.
+...
+---
+type: sql_example
+sql: |
+  SELECT DISTINCT a.element, m.label
+  FROM atom a
+  JOIN molecule m ON a.molecule_id = m.molecule_id
+  WHERE m.molecule_id = 'TR060'
+description: Use DISTINCT when listing elements and properties for a specific molecule to avoid duplicates.
 ...
