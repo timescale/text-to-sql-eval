@@ -31,7 +31,7 @@ type: table
 description: Lists gas stations with their chain affiliation, country, and market
   segment category.
 facts:
-  - Country field uses country codes: 'CZE' for Czech Republic, 'SVK' for Slovakia
+  - "Country field uses country codes: 'CZE' for Czech Republic, 'SVK' for Slovakia"
   - Segment field contains values like 'Discount' for gas station positioning
   - Join with transactions_1k using gasstations.gasstationid = transactions_1k.gasstationid
 sql_examples:
