@@ -138,3 +138,44 @@ columns:
 - name: race
   description: Textual description of the character race.
 ...
+---
+type: fact
+description: |
+  Only include joins and conditions that are explicitly mentioned in the question. Don't add extra conditions for superpowers, attributes, or other characteristics unless specifically requested.
+...
+---
+type: fact
+description: |
+  Pay attention to calculation order in subtraction problems. "Marvel - DC" means Marvel Comics count minus DC Comics count, not the reverse.
+...
+---
+type: sql_example
+sql: |
+  SELECT s.superhero_name
+  FROM superhero s
+  JOIN colour c1 ON s.eye_colour_id = c1.id
+  JOIN colour c2 ON s.hair_colour_id = c2.id  
+  WHERE c1.colour = 'Blue' AND c2.colour = 'Blond'
+description: Query for physical characteristics (eye color, hair color) without adding unrelated joins for superpowers or other attributes.
+...
+---
+type: sql_example
+sql: |
+  SELECT 
+    (CAST(COUNT(*) AS REAL) * 100 / NULLIF((SELECT COUNT(*) FROM superhero), 0)) AS percentage,
+    CAST(SUM(CASE WHEN p.publisher_name = 'Marvel Comics' THEN 1 ELSE 0 END) AS REAL) AS marvel_count
+  FROM superhero s
+  JOIN publisher p ON s.publisher_id = p.id
+  JOIN alignment a ON s.alignment_id = a.id
+  WHERE a.alignment = 'Bad'
+description: Calculate percentage and conditional count in single query with proper casting and null handling.
+...
+---
+type: sql_example  
+sql: |
+  SELECT SUM(CASE WHEN p.publisher_name = 'Marvel Comics' THEN 1 ELSE 0 END) - 
+         SUM(CASE WHEN p.publisher_name = 'DC Comics' THEN 1 ELSE 0 END)
+  FROM superhero s
+  JOIN publisher p ON s.publisher_id = p.id
+description: Calculate difference between publishers using conditional SUM. Follow the exact order specified in the question (Marvel - DC, not DC - Marvel).
+...
