@@ -571,3 +571,90 @@ type: sql_example
 sql: "SELECT ta.buildUpPlaySpeed FROM team t JOIN team_attributes ta ON t.team_api_id = ta.team_api_id ORDER BY ta.buildUpPlaySpeed DESC LIMIT 4"
 description: Get top teams by build-up speed
 ...
+---
+type: fact
+description: "CRITICAL: Join player with player_attributes using player_api_id, NOT player_fifa_api_id"
+...
+---
+type: fact
+description: For finding maximum values in attributes, use WHERE field = (SELECT MAX(field)) pattern
+...
+---
+type: fact
+description: Always use DISTINCT when selecting player names to avoid duplicates from multiple attribute records
+...
+---
+type: fact
+description: For percentage calculations between two players, use SUM with CASE and proper CAST AS REAL
+...
+---
+type: fact
+description: "Date filtering: use SUBSTR(date, 1, 10) = 'YYYY-MM-DD' for exact date matching"
+...
+---
+type: fact
+description: Player height is stored in centimeters, use for maximum/minimum height comparisons
+...
+---
+type: fact
+description: For player skill comparisons, join both player and player_attributes tables
+...
+---
+type: sql_example
+sql: "SELECT p.player_name FROM player p JOIN player_attributes pa ON p.player_api_id = pa.player_api_id WHERE pa.overall_rating = (SELECT MAX(overall_rating) FROM player_attributes)"
+description: Get players with maximum overall rating using correct join
+...
+---
+type: sql_example
+sql: "SELECT DISTINCT p.player_name FROM player p JOIN player_attributes pa ON p.player_api_id = pa.player_api_id WHERE pa.volleys > 70 AND pa.dribbling > 70"
+description: Get players with specific skill levels
+...
+---
+type: sql_example
+sql: "SELECT (SUM(CASE WHEN p.player_name = 'Player1' THEN pa.overall_rating ELSE 0 END) - SUM(CASE WHEN p.player_name = 'Player2' THEN pa.overall_rating ELSE 0 END)) * 100 / NULLIF(SUM(CASE WHEN p.player_name = 'Player2' THEN pa.overall_rating ELSE 0 END), 0) FROM player p JOIN player_attributes pa ON p.player_api_id = pa.player_api_id WHERE SUBSTR(pa.date, 1, 10) = '2013-07-12'"
+description: Calculate percentage difference between two players on specific date
+...
+---
+type: sql_example
+sql: "SELECT COUNT(id) FROM player WHERE birthday > '1990-12-31' AND player_name LIKE 'Aaron%'"
+description: Count players by birth year and name pattern
+...
+---
+type: sql_example
+sql: "SELECT p.id, pa.finishing, pa.curve FROM player p JOIN player_attributes pa ON p.player_api_id = pa.player_api_id WHERE p.weight = (SELECT MAX(weight) FROM player)"
+description: Get attributes of player with maximum weight
+...
+---
+type: sql_example
+sql: "SELECT l.name FROM league l JOIN match m ON l.id = m.league_id WHERE m.season = '2008/2009' GROUP BY l.name HAVING COUNT(m.id) = (SELECT MAX(match_count) FROM (SELECT COUNT(m2.id) AS match_count FROM match m2 WHERE m2.season = '2008/2009' GROUP BY m2.league_id))"
+description: Get league with most matches using proper subquery pattern
+...
+---
+type: sql_example
+sql: "SELECT CAST(SUM(pa.overall_rating) AS REAL) / NULLIF(COUNT(pa.id), 0) FROM player p JOIN player_attributes pa ON p.player_api_id = pa.player_api_id WHERE p.height > 170 AND TO_CHAR(CAST(pa.date AS TIMESTAMP), 'YYYY') BETWEEN '2010' AND '2015'"
+description: Calculate average rating with proper casting and date filtering
+...
+---
+type: sql_example
+sql: |
+  SELECT field
+  FROM table 
+  ORDER BY field DESC NULLS LAST
+  LIMIT N
+description: For "top N" or "highest/lowest" queries, use ORDER BY with LIMIT, not GROUP BY with MAX/MIN aggregation.
+...
+---
+type: sql_example
+sql: |
+  SELECT result FROM (
+    SELECT AVG(field) AS result, 'Max' AS category FROM table WHERE condition = (SELECT MAX(field) FROM table)
+    UNION
+    SELECT AVG(field) AS result, 'Min' AS category FROM table WHERE condition = (SELECT MIN(field) FROM table)
+  ) subquery ORDER BY result DESC LIMIT 1
+description: Compare statistics between MIN and MAX groups using UNION pattern, not simple GROUP BY.
+...
+---
+type: fact
+description: |
+  For "top N" queries, use ORDER BY field ASC/DESC NULLS LAST LIMIT N instead of complex GROUP BY with MAX/MIN subqueries. Simple ordering is more reliable and efficient.
+...
