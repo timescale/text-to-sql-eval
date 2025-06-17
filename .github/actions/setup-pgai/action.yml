@@ -11,6 +11,8 @@ runs:
     - run: git clone https://github.com/timescale/pgai/
       working-directory: ../
       shell: bash
+      env:
+        GIT_LFS_SKIP_SMUDGE: 1
     - run: git checkout ${{ inputs.branch }}
       shell: bash
       working-directory: ../pgai
