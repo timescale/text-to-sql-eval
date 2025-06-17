@@ -48,7 +48,7 @@ on:
         type: choice
         options:
           - semantic_search
-          - entire_schema
+          - entire_catalog
           - specific_ids
         default: 'semantic_search'
       llm_judge:
