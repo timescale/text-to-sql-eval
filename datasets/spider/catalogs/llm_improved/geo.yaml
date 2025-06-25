@@ -1,0 +1,124 @@
+---
+type: header
+schema_version: '1'
+...
+---
+schema: public
+name: border_info
+type: table
+description: Lists each U.S. state alongside another state that shares a land
+  border with it.
+columns:
+- name: state_name
+  description: Lowercase name of the U.S. state whose borders are being listed.
+- name: border
+  description: Lowercase name of a neighboring state that borders the listed
+    state.
+...
+---
+schema: public
+name: city
+type: table
+description: Stores population figures and location details for cities
+  worldwide, primarily in the USA.
+columns:
+- name: city_name
+  description: Lowercase name of the city.
+- name: population
+  description: Population count of the city.
+- name: country_name
+  description: Lowercase name of the country in which the city is located.
+- name: state_name
+  description: Lowercase name of the state or first-level administrative region
+    containing the city, if applicable.
+...
+---
+schema: public
+name: highlow
+type: table
+description: Provides the highest and lowest geographic elevations and their locations
+  for each U.S. state.
+columns:
+- name: state_name
+  description: Lowercase name of the U.S. state.
+- name: highest_elevation
+  description: Elevation in feet of the state's highest point.
+- name: lowest_point
+  description: Lowercase name of the eographic location representing the
+    state's lowest point.
+- name: highest_point
+  description: Lowercase name of the geographic location representing the
+    state's highest elevation.
+- name: lowest_elevation
+  description: Elevation in feet of the state's lowest point.
+...
+---
+schema: public
+name: lake
+type: table
+description: Catalogues lakes with their surface areas and geographic locations by
+  country and state.
+columns:
+- name: lake_name
+  description: Lowercase name of the lake.
+- name: area
+  description: Surface area of the lake, presumably in square kilometers.
+- name: country_name
+  description: Lowercase name of the country where the lake is located.
+- name: state_name
+  description: Lowercase name of the state or regional subdivision containing the
+    lake, if applicable.
+...
+---
+schema: public
+name: mountain
+type: table
+description: Lists mountains with their elevations and the country and state in which
+  they are found.
+columns:
+- name: mountain_name
+  description: Lowercase name of the mountain.
+- name: mountain_altitude
+  description: Elevation of the mountain in feet.
+- name: country_name
+  description: Lowercase name of the country where the mountain is situated.
+- name: state_name
+  description: ''
+...
+---
+schema: public
+name: river
+type: table
+description: Each row lists a river with its total length, the country it flows in,
+  and a specific state or region it traverses.
+columns:
+- name: river_name
+  description: Lowercase name of the river.
+- name: length
+  description: Total length of the river in kilometers (or another distance unit).
+- name: country_name
+  description: Lowercase name of the country where the river is located; cannot be NULL.
+- name: traverse
+  description: Lowercase name of the state that the river passes through.
+...
+---
+schema: public
+name: state
+type: table
+description: Each row contains details about a U.S. state including its population,
+  land area, capital city, and population density.
+columns:
+- name: state_name
+  description: Lowercase name of the state.
+- name: population
+  description: Resident population count of the state.
+- name: area
+  description: Total land area of the state, likely in square kilometers.
+- name: country_name
+  description: Lowercase name of the country to which the state belongs; cannot be NULL.
+- name: capital
+  description: Lowercase name of the official capital city of the state.
+- name: density
+  description: Population density of the state, calculated as population per unit
+    area.
+...
