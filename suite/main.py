@@ -152,7 +152,9 @@ def load(
                         load_sql_file(db_url, sql_file)
                         i += 1
                 print("      Loading descriptions")
-                catalog_file = datasets_dir / dataset / "catalogs" / catalog / f"{name}.yaml"
+                catalog_file = (
+                    datasets_dir / dataset / "catalogs" / catalog / f"{name}.yaml"
+                )
                 if not catalog_file.exists():
                     raise ValueError(f"Catalog {catalog} not found")
                 with catalog_file.open("r") as fp:

@@ -108,10 +108,7 @@ async def run(
             if i > 0:
                 fp.write("\n")
             message = result["messages"][i]
-            if isinstance(message, str):
-                fp.write(f"{message}")
-            else:
-                fp.write(f"{message['role']}:\n{message['content']}")
+            fp.write(f"{json.dumps(message, indent=2)}\n")
     if "error" in result and result["error"] is not None:
         raise (
             result["error"]
@@ -261,6 +258,7 @@ async def run(
         "expected_query": gold_query,
         "duration": duration,
         "usage": usage,
+        "messages": result["messages"],
     }
 
     if context_mode == "specific_ids":

@@ -7,6 +7,13 @@ import pgai.semantic_catalog as sc
 import psycopg
 import pydantic_ai
 from psycopg.sql import SQL, Identifier
+from pydantic_ai.messages import (
+    ModelRequest,
+    ModelResponse,
+    SystemPromptPart,
+    ToolCallPart,
+    UserPromptPart,
+)
 
 from ..types import ContextMode, Provider, TextToSql
 from ..utils import get_db_url_from_connection, get_git_info
@@ -72,6 +79,24 @@ async def setup(
         sc = await create(tcon, "default", embedding_name=None, embedding_config=config)
         with yaml_file.open("r") as f:
             await sc.import_catalog(tcon, tcon, f, None)
+
+
+def message_to_json(message: ModelRequest | ModelResponse) -> dict:
+    parts = []
+    for msg_part in message.parts:
+        if isinstance(msg_part, SystemPromptPart):
+            parts.append({"role": "system", "content": msg_part.content})
+        elif isinstance(msg_part, UserPromptPart):
+            parts.append({"role": "user", "content": msg_part.content})
+        elif isinstance(msg_part, ToolCallPart):
+            parts.append(
+                {
+                    "role": "tool",
+                    "name": msg_part.tool_name,
+                    "arguments": msg_part.args_as_dict(),
+                }
+            )
+    return {"parts": parts}
 
 
 async def text_to_sql(
@@ -142,7 +167,9 @@ async def text_to_sql(
 
     return {
         "error": None,
-        "messages": [str(x) for x in response.messages],
+        "messages": [
+            (message_to_json(x[0]), message_to_json(x[1])) for x in response.messages
+        ],
         "query": response.sql_statement,
         "usage": {
             "cached_tokens": response.usage.details.get("cached_tokens", 0)
