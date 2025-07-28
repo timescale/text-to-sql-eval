@@ -2,30 +2,49 @@
 
 ## Getting Started
 
-First you must checkout the [`pgai`](https://github.com/timescale/pgai/) repo next
-to this one.
+You will need to have the following installed:
 
-Install [`uv`](https://docs.astral.sh/uv/), and then run the following:
+* [`git`](https://git-scm.com/)
+* [`docker`](https://www.docker.com/)
+* [`just`](https://just.systems/)
+* [`Python 3.12+`](https://www.python.org/)
+* [`uv`](https://docs.astral.sh/uv/)
+
+To get started, clone the [`pgai`](https://github.com/timescale/pgai) and setup
+its dependencies:
 
 ```bash
+git clone https://github.com/timescale/pgai.git
+cd pgai
+just pgai install
+```
+
+Then clone this repository and set it up:
+
+```bash
+git clone https://github.com/timescale/text-to-sql-eval
+cd text-to-sql
 uv sync
 cp .env.sample .env
 ```
 
-You will then need to edit the `.env` file, plugging in the appropriate values for
-the LLM provider you wish to use. You may omit any that you don't plan to use.
+You will then need to open the `.env` file and configure it, adding the API keys
+for the provider/models that you are interested in comparing for.
 
-You will need to run a DB to run the eval suite. You can get a simple PG instance
-in Docker by doing:
+Finally, you will need to run a DB to run the eval suite and store the results.
+You can get a simple PG instance in Docker by doing:
 
 ```bash
 docker run -d --name text-to-sql-eval \
-    -p 127.0.0.1:5555:5432 \
+    -p 127.0.0.1:5432:5432 \
     -e POSTGRES_HOST_AUTH_METHOD=trust \
     timescale/timescaledb-ha:pg17
 ```
 
-You will want to edit the `.env` file with connection details for your DB.
+You can run separate database servers for running the eval suite as well as for
+where to store the results, e.g. running a server locally for running the suite
+and a cloud database to store results. You will need to configure the `DSN` values
+in the `.env` file when doing this.
 
 ## Running the suite
 
