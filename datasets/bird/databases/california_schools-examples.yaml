@@ -1,0 +1,70 @@
+---
+type: sql_example
+sql: SELECT School, Street, City, Zip FROM schools WHERE (EXTRACT(YEAR FROM OpenDate)
+  BETWEEN 2000 AND 2005) AND StatusType = 'Active' ORDER BY Zip DESC NULLS LAST LIMIT
+  3;
+description: Demonstrates use of date extraction and filtering for a year range along
+  with ordering and limiting results. Useful for finding currently active schools
+  opened in a specific date span, ordered by zip.
+...
+---
+type: sql_example
+sql: SELECT T1."District Name", COUNT(DISTINCT T1."School Name") AS school_count FROM
+  frpm AS T1 WHERE T1."Academic Year" = '2019-2020' GROUP BY T1."District Name" HAVING
+  AVG(T1."Percent (%) Eligible Free (K-12)") > 20;
+description: Uses GROUP BY and HAVING with an average aggregate to find districts
+  with unusually high free meal eligibility. Illustrates aggregate filtering by average
+  percentage.
+...
+---
+type: sql_example
+sql: SELECT T2.School, T1.AvgScrMath FROM satscores AS T1 INNER JOIN schools AS T2
+  ON T1.cds = T2.cdscode WHERE T2.charter = 1 AND T1.AvgScrMath > (SELECT AVG(AvgScrMath)
+  FROM satscores) ORDER BY T1.AvgScrMath DESC;
+description: Shows a correlated subquery combined with JOIN and filtering for charter
+  schools with above-average math SAT scores.
+...
+---
+type: sql_example
+sql: SELECT County, COUNT(*) FROM schools WHERE Magnet = 1 GROUP BY County ORDER BY
+  COUNT(*) DESC LIMIT 1;
+description: Demonstrates aggregation and ordering to find the county with the most
+  magnet schools.
+...
+---
+type: sql_example
+sql: SELECT sname, (CAST(numtsttakr AS REAL) / NULLIF(enroll12, 0)) AS sat_participation_rate
+  FROM satscores WHERE enroll12 > 0 ORDER BY sat_participation_rate DESC NULLS LAST
+  LIMIT 5;
+description: Calculates participation rates as a computed column and orders by that
+  rate, handling possible division by zero.
+...
+---
+type: sql_example
+sql: SELECT GSoffered, COUNT(*) FROM schools WHERE virtual = 'F' GROUP BY GSoffered;
+description: Shows how to group exclusively virtual schools by the grade span they
+  offer.
+...
+---
+type: sql_example
+sql: SELECT cdscode, "Enrollment (K-12)" + "Enrollment (Ages 5-17)" AS total_enrollment
+  FROM frpm ORDER BY total_enrollment DESC LIMIT 10;
+description: Demonstrates creating a derived column using arithmetic between two enrollment
+  columns and ordering the results for summary analysis.
+...
+---
+type: sql_example
+sql: SELECT T1."School Name", T1."FRPM Count (K-12)", T1."Enrollment (K-12)", CASE
+  WHEN T1."Enrollment (K-12)" > 0 THEN 100.0 * T1."FRPM Count (K-12)" / T1."Enrollment
+  (K-12)" ELSE NULL END AS "FRPM Eligible Rate (%)" FROM frpm AS T1 WHERE T1."District
+  Type" = 'Unified' ORDER BY "FRPM Eligible Rate (%)" DESC NULLS LAST LIMIT 5;
+description: Shows conditional calculation of percentages with potential null handling,
+  and sorts schools by highest free or reduced-price meal eligibility within a specific
+  district type.
+...
+---
+type: sql_example
+sql: SELECT statustype, COUNT(*) FROM schools GROUP BY statustype;
+description: Illustrates a simple group and count to quickly summarize institution
+  statuses, a common aggregation pattern.
+...

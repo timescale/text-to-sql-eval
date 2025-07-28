@@ -1,0 +1,125 @@
+---
+type: sql_example
+sql: 'SELECT COUNT(DISTINCT a.atom_id) AS num_atoms, COUNT(DISTINCT b.bond_id) AS
+  num_bonds, m.molecule_id
+
+  FROM molecule m
+
+  LEFT JOIN atom a ON m.molecule_id = a.molecule_id
+
+  LEFT JOIN bond b ON m.molecule_id = b.molecule_id
+
+  GROUP BY m.molecule_id'
+description: Demonstrates aggregation and joining multiple tables to get the number
+  of atoms and bonds per molecule. Useful for quickly summarizing molecular complexity
+  and visualizing their structural properties.
+...
+---
+type: sql_example
+sql: "SELECT b.bond_type, COUNT(*) AS num_bonds\nFROM bond b\nWHERE b.molecule_id\
+  \ = 'TR008' \nGROUP BY b.bond_type\nORDER BY num_bonds DESC, b.bond_type\nLIMIT\
+  \ 1"
+description: Finds the most common bond type within a specific molecule by grouping
+  and ordering the bond counts. Highlights how business logic often prioritizes frequency
+  within a subset.
+...
+---
+type: sql_example
+sql: 'SELECT a.element, COUNT(DISTINCT a.molecule_id) AS carcinogenic_molecule_count
+
+  FROM atom a
+
+  JOIN molecule m ON a.molecule_id = m.molecule_id
+
+  WHERE m.label = ''+''
+
+  GROUP BY a.element
+
+  ORDER BY carcinogenic_molecule_count DESC'
+description: Shows how to count the distinct carcinogenic molecules (label = '+')
+  containing each element. Both JOIN and GROUP BY are used to answer a nuanced question
+  across tables.
+...
+---
+type: sql_example
+sql: 'SELECT DISTINCT c.bond_id
+
+  FROM connected c
+
+  JOIN atom a1 ON c.atom_id = a1.atom_id
+
+  JOIN atom a2 ON c.atom_id2 = a2.atom_id
+
+  WHERE a1.element = ''n'' AND a2.element = ''p'' OR a1.element = ''p'' AND a2.element
+  = ''n'''
+description: "Finds bonds linking nitrogen and phosphorus by joining the connected\
+  \ table to atom twice \u2013 a key SQL pattern for symmetric relationships."
+...
+---
+type: sql_example
+sql: "SELECT COUNT(DISTINCT a.atom_id) FILTER (WHERE a.element = 'c') * 100.0 /\n\
+  \       NULLIF(COUNT(DISTINCT a.atom_id),0) AS percent_carbon\nFROM atom a\nJOIN\
+  \ bond b ON a.molecule_id = b.molecule_id\nWHERE b.bond_type = '='"
+description: Calculates the percentage of atoms that are carbon among those in molecules
+  with at least one double bond. Uses SQL's FILTER, NULLIF, arithmetic, and JOIN.
+...
+---
+type: sql_example
+sql: "SELECT label, AVG(atom_count) FROM (\n  SELECT m.label, COUNT(*) AS atom_count\n\
+  \  FROM atom a\n  JOIN molecule m ON a.molecule_id = m.molecule_id\n  GROUP BY m.label,\
+  \ a.molecule_id\n) grouped\nGROUP BY label"
+description: Demonstrates a subquery to get an average per-group metric (average atom
+  count by label). GROUP BY inside and outside the subquery is a common pattern for
+  grouped statistics.
+...
+---
+type: sql_example
+sql: 'SELECT a.element
+
+  FROM atom a
+
+  LEFT JOIN connected c ON a.atom_id = c.atom_id
+
+  WHERE c.atom_id IS NULL'
+description: Finds elements of atoms that are not involved in any bond by using a
+  LEFT JOIN to the connected table followed by filtering NULLs. Exemplifies 'find
+  unconnected records' logic.
+...
+---
+type: sql_example
+sql: 'SELECT DISTINCT a.element
+
+  FROM atom a
+
+  JOIN molecule m ON a.molecule_id = m.molecule_id
+
+  WHERE m.label = ''+'' AND SUBSTRING(a.atom_id FROM ''.{6}$'') BETWEEN ''021'' AND
+  ''025'''
+description: Extracts substring patterns from atom_id to define a range, then filters
+  by label. Shows SQL string manipulation and pattern-based filtering for business
+  rules based on IDs.
+...
+---
+type: sql_example
+sql: "SELECT m.label, \n  ROUND(100.0 * COUNT(DISTINCT CASE WHEN a.element = 'f' THEN\
+  \ m.molecule_id END) / NULLIF(COUNT(DISTINCT m.molecule_id),0), 2) AS percent_with_fluorine\n\
+  FROM molecule m\nLEFT JOIN atom a ON m.molecule_id = a.molecule_id\nWHERE m.label\
+  \ = '+'\nGROUP BY m.label"
+description: Shows how to compute the fraction of carcinogenic molecules that contain
+  at least one fluorine atom, with label-based grouping and CASE evaluation. Illustrates
+  a subtle filtering and grouping business logic.
+...
+---
+type: sql_example
+sql: 'SELECT b.bond_type, COUNT(DISTINCT b.molecule_id) AS num_molecules
+
+  FROM bond b
+
+  GROUP BY b.bond_type
+
+  ORDER BY num_molecules DESC
+
+  LIMIT 1'
+description: Finds the bond type that is found in the most molecules overall, emphasizing
+  aggregation over a different primary key (molecule) and not just count of bonds.
+...

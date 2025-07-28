@@ -1,0 +1,76 @@
+---
+type: sql_example
+sql: SELECT SUM(CASE WHEN Country = 'CZE' THEN 1 ELSE 0 END) - SUM(CASE WHEN Country
+  = 'SVK' THEN 1 ELSE 0 END) FROM gasstations WHERE Segment = 'Discount'
+description: "This query computes the difference in the number of 'Discount' gas stations\
+  \ between the Czech Republic ('CZE') and Slovakia ('SVK'). It uses conditional aggregation\u2014\
+  SUM with CASE\u2014to count by country and subtracts the counts for a comparative\
+  \ business metric."
+...
+---
+type: sql_example
+sql: SELECT SUBSTR(Date, 1, 4) AS year, SUM(CAST(Consumption AS float)) AS total_consumption
+  FROM yearmonth GROUP BY year ORDER BY total_consumption DESC LIMIT 1
+description: This query shows how to extract the year part from a string date stored
+  as 'YYYYMM', aggregate fuel consumption by year, cast values to float, and order
+  for the top result. This is useful for year-over-year trend analysis.
+...
+---
+type: sql_example
+sql: SELECT T1.CustomerID FROM customers AS T1 INNER JOIN yearmonth AS T2 ON T1.CustomerID
+  = T2.CustomerID WHERE T1.Segment = 'SME' AND SUBSTR(T2.Date, 1, 4) = '2013' GROUP
+  BY T1.CustomerID HAVING SUM(T2.Consumption) > 1000
+description: This demonstrates a grouped query with a JOIN, filtering on a segment
+  and year, and a HAVING clause that applies a business rule to aggregate results
+  (customers in SME who consumed more than 1000 in 2013).
+...
+---
+type: sql_example
+sql: SELECT T3.Description FROM transactions_1k AS T1 INNER JOIN products AS T3 ON
+  T1.ProductID = T3.ProductID WHERE T1.Date = '2012-08-24'
+description: This example shows joining transaction data to the products catalog to
+  retrieve product descriptions for transactions on a specific day. This combines
+  transactional analytics with master data enrichment.
+...
+---
+type: sql_example
+sql: SELECT CAST(SUM(CASE WHEN Currency = 'EUR' THEN 1 ELSE 0 END) AS REAL) / NULLIF(SUM(CASE
+  WHEN Currency = 'CZK' THEN 1 ELSE 0 END), 0) AS eur_to_czk_customer_ratio FROM customers
+description: This query calculates the ratio of customers preferring EUR vs CZK. It
+  uses conditional aggregation and NULLIF to prevent division by zero, typical in
+  business ratios and KPI calculations.
+...
+---
+type: sql_example
+sql: SELECT DISTINCT T2.Country FROM transactions_1k AS T1 INNER JOIN gasstations
+  AS T2 ON T1.GasStationID = T2.GasStationID WHERE T1.Date BETWEEN '2013-06-01' AND
+  '2013-06-30'
+description: Here, DISTINCT with JOIN and a date range filter demonstrates how to
+  obtain a list of unique countries that had transactions at their stations for a
+  given month. Useful for footprint or penetration analyses.
+...
+---
+type: sql_example
+sql: SELECT SUM(Consumption) FROM yearmonth WHERE CustomerID = 4 AND Date BETWEEN
+  '201308' AND '201311'
+description: This query shows period-based aggregation for a single customer, summing
+  fuel consumed between August and November 2013. Demonstrates time slicing using
+  lexicographical string comparison on periods stored as 'YYYYMM'.
+...
+---
+type: sql_example
+sql: SELECT T2.Segment, COUNT(*) FROM transactions_1k AS T1 INNER JOIN customers AS
+  T2 ON T1.CustomerID = T2.CustomerID WHERE T1.Date = '2012-08-25' GROUP BY T2.Segment
+description: "Illustrates grouping transactions by customer segment for a specific\
+  \ date, using a JOIN, to analyze which segment had the most activity on that date\u2014\
+  a typical group-by business intelligence metric."
+...
+---
+type: sql_example
+sql: SELECT AVG(T2.Consumption) / 12.0 FROM customers AS T1 INNER JOIN yearmonth AS
+  T2 ON T1.CustomerID = T2.CustomerID WHERE T1.Segment = 'KAM' AND SUBSTR(T2.Date,
+  1, 4) = '2012'
+description: This demonstrates using arithmetic and aggregate AVG in combination,
+  to derive annualized averages for a business segment within a year. Shows calculation
+  of per-month yearly averages.
+...
